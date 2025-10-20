@@ -20,7 +20,6 @@ public class PlayerDataManager : MonoBehaviour
     
     [SerializeField] private NetworkManager networkManager;
 
-    public Action DataSaveStart;
     public Action DataSaveSuccess; 
     
 
@@ -98,8 +97,6 @@ public class PlayerDataManager : MonoBehaviour
     {
         Debug.LogWarning("SaveData started");
         
-        DataSaveStart?.Invoke();
-        
         var newPlayerData = new PlayerData(_bestScore, _currentLevel, _currentXp, _completedAchievementIds/*,  _ownedSkinIds, _currentSkin, _skinShards*/);
         
         networkManager.WebSocketCommandHandler.SendSetUserDataRequestCommand(newPlayerData, OnDataSaveSuccess, OnDataSaveError);    
@@ -145,6 +142,7 @@ public class PlayerDataManager : MonoBehaviour
             if (_currentLevel >= 5) BuySkin("HellFire");
             if (_currentLevel >= 10) BuySkin("AtomicBreak");*/
         }
+        LoadingComplete.LoadingCompleteAction?.Invoke();
     }
 
     private void InitEmptyDatabase()

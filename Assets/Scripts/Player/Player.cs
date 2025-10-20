@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
     [Header("Managing scripts")]
     [SerializeField] private ItemSpawner itemSpawner;
     [SerializeField] private GameManager gameManager;
-    [SerializeField] private GameUI gameUI;
+    // [SerializeField] private GameUI gameUI;
     [SerializeField] private AudioManager audioManager;
     
     [Header("Snake Settings")]

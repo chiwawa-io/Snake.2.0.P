@@ -10,13 +10,13 @@ public class AudioManager : MonoBehaviour
     private void OnEnable()
     {
         Player.AudioPlay += AudioPlay;
-        GameUI.GameStart += GameStart;
+        // GameUI.GameStart += GameStart;
     }
 
     private void OnDisable()
     {
         Player.AudioPlay -= AudioPlay;
-        GameUI.GameStart -= GameStart;
+        // GameUI.GameStart -= GameStart;
     }
 
     private void GameStart()

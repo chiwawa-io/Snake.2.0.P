@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using Luxodd.Game.Scripts.Network;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -19,7 +18,11 @@ public class GameManager : MonoBehaviour
     public static Action OnResetGame;
     public static Action OnContinueGame;
     public static Action<int> OnGameOver;
+    public static Action OnSaveStart;
     public static Action<int, string> OnError;
+
+    public static Action OnGameOverSequenceCompleted;
+    public static Action<string> StateChange;
     
     private int _errorCode;
     private string _errorMessage;
@@ -32,9 +35,9 @@ public class GameManager : MonoBehaviour
     private void OnEnable() 
     {
         Player.UpdateScore += UpdateScore;
-        GameUI.GameStart += GameStart;
-        GameUI.Exit += ExitWithoutErrors;
-        GameUI.OnDifficultySelect += DifficultySelect;
+        // GameUI.GameStart += GameStart;
+        // GameUI.Exit += ExitWithoutErrors;
+        // GameUI.OnDifficultySelect += DifficultySelect;
         playerDataManager.DataSaveSuccess += ExitWithoutErrors;
 
         OnResetGame += ResetGame; 
@@ -44,9 +47,9 @@ public class GameManager : MonoBehaviour
     private void OnDisable()
     {
         Player.UpdateScore -= UpdateScore;
-        GameUI.GameStart -= GameStart;
-        GameUI.Exit -= ExitWithoutErrors;
-        GameUI.OnDifficultySelect -= DifficultySelect;
+        // GameUI.GameStart -= GameStart;
+        // GameUI.Exit -= ExitWithoutErrors;
+        // GameUI.OnDifficultySelect -= DifficultySelect;
         playerDataManager.DataSaveSuccess -= ExitWithoutErrors;
         
         OnResetGame -= ResetGame; 
@@ -54,6 +57,11 @@ public class GameManager : MonoBehaviour
     }
     
     private void GameStart()
+    {
+        StartNewGame();
+    }
+    
+    public void StartNewGame()
     {
         LevelBegin();
         gameComponents.SetActive(true);
@@ -65,8 +73,11 @@ public class GameManager : MonoBehaviour
         _currentScore = 0;
         _gameTime = 0;
     }
+    
     private void DifficultySelect(string difficulty) => _currentDifficulty = difficulty;
     public string GetCurrentDifficulty() => _currentDifficulty;
+    public int GetCurrentScore() => _currentScore;
+
 
     private void LevelBegin()
     {
@@ -85,36 +96,23 @@ public class GameManager : MonoBehaviour
         _errorCode = code;
         _errorMessage = msg;
     }
-    
-    private void OnSessionOptionContinueSuccess(SessionOptionAction sessionOptionAction)
+
+    public void ContinueGame()
     {
-        switch (sessionOptionAction)
-        {
-            case SessionOptionAction.Restart:
-                Restart();
-                break;
-            case SessionOptionAction.Continue:
-                OnContinueGame?.Invoke();
-                _gameActive = true;
-                break;
-            case SessionOptionAction.End:
-            case SessionOptionAction.Cancel:
-                LevelEnd();
-                playerDataManager.Save(_currentScore);
-                break;
-            default:
-                Debug.LogError("SessionOptionAction not implemented");
-                break;
-        }
+        OnContinueGame?.Invoke();
+        _gameActive = true;
     }
 
-    private void Restart()
+    public void PrepareForRestart()
     {
         _canRestart = true;
         LevelEnd();
-        playerDataManager.UpdateScore(_currentScore);
-        OnResetGame?.Invoke();
-        _gameActive = true;
+    }
+    
+    public void PrepareForEnd()
+    {
+        _canRestart = false;
+        LevelEnd();
     }
     
     private void UpdateScore(int lengthOfSnake, Vector2 position)
@@ -124,12 +122,12 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-        OnGameOver?.Invoke(_currentScore);
-        StartCoroutine(WaitAndShowPopup());
-        
         playerDataManager.AddExperience(Mathf.RoundToInt(_gameTime));
         _gameActive = false;
+        StartCoroutine(WaitAndShowPopup());
+        OnGameOver?.Invoke(_currentScore);
     }
+
     private void LevelEnd()
     {
         networkManager.WebSocketCommandHandler.SendLevelEndRequestCommand(0, _currentScore, OnLevelEndSuccess, OnLevelEndError);
@@ -138,7 +136,9 @@ public class GameManager : MonoBehaviour
 
     private void OnLevelEndSuccess()
     {
-        if (_canRestart) LevelBegin();
+        if (_canRestart)
+        {
+        }
         Debug.LogWarning($"Level ended successfully");
     }
 
@@ -168,6 +168,6 @@ public class GameManager : MonoBehaviour
     private IEnumerator WaitAndShowPopup()
     {
         yield return new WaitForSeconds(3f);
-        networkManager.WebSocketService.SendSessionOptionContinue(OnSessionOptionContinueSuccess);
+        OnGameOverSequenceCompleted?.Invoke();
     }
 }

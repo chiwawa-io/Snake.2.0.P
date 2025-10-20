@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: NetworkSettingsDescriptor
   m_EditorClassIdentifier: 
   <ServerAddress>k__BackingField: wss://app.luxodd.com/ws
-  <DeveloperDebugToken>k__BackingField: luxodd_Ecgp3Ss1_K279cNNjwR93QMcmfA1HKUuf
+  <DeveloperDebugToken>k__BackingField: luxodd_b8zTFgjB_PKyojJ1mPn3nxgFaEVkVX9qp

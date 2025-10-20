@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class LoadingComplete : MonoBehaviour
 {
-    [SerializeField] private int waitTime;
     [SerializeField] private NetworkManager networkManager;
     [SerializeField] private PlayerDataManager playerDataManager;
 
@@ -12,7 +11,11 @@ public class LoadingComplete : MonoBehaviour
  
     private void Start()
     {
-        StartCoroutine(LoadingRoutine());
+        LoadingStart();
+    }
+    private void LoadingStart()
+    {
+        networkManager.WebSocketService.ConnectToServer(OnConnectionSuccess, OnConnectionFailure);
     }
 
     private void OnConnectionSuccess()
@@ -20,14 +23,10 @@ public class LoadingComplete : MonoBehaviour
         networkManager.HealthStatusCheckService.Activate();
         playerDataManager.LoadData();
     }
-    private void OnConnectionFailure() {GameManager.OnError?.Invoke(1, "Connection Failure"); }
 
-    private IEnumerator LoadingRoutine()
+    private void OnConnectionFailure()
     {
-        networkManager.WebSocketService.ConnectToServer(OnConnectionSuccess, OnConnectionFailure);
-        
-        yield return new WaitForSeconds(waitTime);
-        
-        LoadingCompleteAction?.Invoke();
+        GameManager.OnError?.Invoke(1, "Connection Failure");
     }
+
 }
