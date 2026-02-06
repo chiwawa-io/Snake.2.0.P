@@ -110,7 +110,9 @@ namespace Game.Core
 
         public void ReviveGame()
         {
+            Time.timeScale = 1;
             SetState(GameState.InGame);
+            OnGameStarted?.Invoke();
         }
 
         public void AddScore(int amount, Vector2 position)
@@ -124,8 +126,8 @@ namespace Game.Core
         {
             if (!_isPlaying) return;
             _isPlaying = false;
-            gamePlayComponents.SetActive(false);
             
+            Time.timeScale = 0;
             OnGameOver?.Invoke(CurrentScore); 
             SetState(GameState.GameOver);
         }

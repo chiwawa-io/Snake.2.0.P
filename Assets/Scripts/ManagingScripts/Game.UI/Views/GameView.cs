@@ -23,6 +23,7 @@ namespace Game.UI
         private void OnEnable()
         {
             GameManager.OnScoreChanged += UpdateScore;
+            GameManager.OnGameOver += StopAllAnim;
             
             AchievGameListener.OnAchievementCompleted += ShowAchievementToast;
             
@@ -34,6 +35,7 @@ namespace Game.UI
         private void OnDisable()
         {
             GameManager.OnScoreChanged -= UpdateScore;
+            GameManager.OnGameOver -= StopAllAnim;
             
             AchievGameListener.OnAchievementCompleted -= ShowAchievementToast;
 
@@ -86,6 +88,11 @@ namespace Game.UI
             
             CancelInvoke(nameof(HideAchievementToast));
             Invoke(nameof(HideAchievementToast), 3.0f);
+        }
+
+        private void StopAllAnim(int a)
+        {
+            floatingScoreText.gameObject.SetActive(false);
         }
 
         private IEnumerator HideFloatingTextRoutine()
