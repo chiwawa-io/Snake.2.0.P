@@ -1,9 +1,7 @@
-using UnityEngine;
-
-namespace Luxodd.Game.Scripts
+namespace Luxodd.Game
 {
     public static class PluginVersion
     {
-        public const string Version = "1.0.4";
+        public const string Version = "1.0.10";
     }
 }

@@ -1,167 +1,119 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 using Luxodd.Game.Scripts.Network;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using UnityEngine;
+using Game.Core;
 
 public class PlayerDataManager : MonoBehaviour
 {
+    [SerializeField] private NetworkManager networkManager;
+    [SerializeField] private GameManager gameManager;
+
     private int _bestScore;
     private int _currentXp;
     private int _currentLevel;
-    //private int _skinShards;
-    //private string _currentSkin;
-    
-    public int BestScore => _bestScore;
-    
     private HashSet<string> _completedAchievementIds = new();
-    //private HashSet<string> _ownedSkinIds = new();
-    
-    [SerializeField] private NetworkManager networkManager;
 
-    public Action DataSaveSuccess; 
-    
+    public event Action OnDataLoaded;
+    public event Action OnDataSaved;
+
+    public int GetBestScore() => _bestScore;
+    public int GetLevel() => _currentLevel;
+    public float GetExpNormalized() => (_currentXp / 1000f); 
 
     public void LoadData()
     {
         networkManager.WebSocketCommandHandler.SendGetUserDataRequestCommand(OnDataLoadSuccess, OnDataLoadError);
     }
 
-    public void Save(int score)
+    public void SaveGameSession(int score)
     {
-        if (score > _bestScore)
-            _bestScore = score;
-        
-        SaveData();
+        if (score > _bestScore) _bestScore = score;
+
+        int xpGained = score / 10; 
+        AddExperience(xpGained);
+
+        SaveDataInternal();
     }
 
-    public void UpdateScore(int score)
+    private void AddExperience(int amount)
     {
-        if (score > _bestScore)
-            _bestScore = score;
+        _currentXp += amount;
+        while (_currentXp >= 1000)
+        {
+            _currentXp -= 1000;
+            _currentLevel++;
+        }
+    }
+
+    public void UnlockAchievement(string achievementId)
+    {
+        if (_completedAchievementIds.Add(achievementId))
+        {
+            SaveDataInternal();
+        }
     }
 
     public bool IsAchievementCompleted(string achievementId)
     {
-        return _completedAchievementIds.Contains(achievementId);
-    }
-    /*public bool IsSkinOwned(string achievementId)
-    {
-        return _ownedSkinIds.Contains(achievementId);
-    }*/
-
-    public void CompleteAchievement(string achievementId)
-    {
-        if (_completedAchievementIds.Add(achievementId))
-        {
-            //_skinShards += 5;
-            // SaveData();
-        }
-    }
-    /*public void BuySkin(string id)
-    {
-        if (_ownedSkinIds.Add(id))
-        {
-            SaveData();
-        }
-    }*/
-
-    /*public void SetSkin(string skin)
-    {
-        _currentSkin = skin;
-        SaveData();
-    }
-    
-    public string GetCurrentSkin() => _currentSkin;
-    public int GetShardsNum() => _skinShards;*/
-    public int GetExp() => _currentXp;
-    public int GetLevel() => _currentLevel;
-    //public void Buy(int cost) => _skinShards -= cost;
-    
-    public void AddExperience(int experience)
-    {
-        _currentXp += experience;
-        
-        if (_currentXp < 1000)
-            return;
-            
-        _currentXp -= 1000;
-        _currentLevel++;
-            
-        /*if (_currentLevel >= 5) BuySkin("HellFire");
-        if (_currentLevel >= 10) BuySkin("AtomicBreak");*/
+        if (_completedAchievementIds.Contains(achievementId))
+            return true;
+        return false;
     }
 
-    private void SaveData()
+    private void SaveDataInternal()
     {
-        Debug.LogWarning("SaveData started");
-        
-        var newPlayerData = new PlayerData(_bestScore, _currentLevel, _currentXp, _completedAchievementIds/*,  _ownedSkinIds, _currentSkin, _skinShards*/);
-        
-        networkManager.WebSocketCommandHandler.SendSetUserDataRequestCommand(newPlayerData, OnDataSaveSuccess, OnDataSaveError);    
-    }
-
-    private void OnDataSaveSuccess()
-    {
-        DataSaveSuccess?.Invoke();
-        Debug.LogWarning("Data Saved successfully");
+        var data = new PlayerData(_bestScore, _currentLevel, _currentXp, _completedAchievementIds);
+        networkManager.WebSocketCommandHandler.SendSetUserDataRequestCommand(data, 
+            () => {
+                OnDataSaved?.Invoke(); 
+                Debug.Log("Data Sync Success");
+            }, 
+            (code, msg) => gameManager.OnError(code, msg)
+        );
     }
 
     private void OnDataLoadSuccess(object response)
     {
-        if (response == null) return;
-        
-        var userDataPayload = (UserDataPayload)response;
-        var userDataRaw = userDataPayload.Data;
-        var userDataObject = (JObject)userDataRaw;
-        
-        if (userDataObject == null || userDataObject["user_data"] == null)
+        try 
         {
-            InitEmptyDatabase();
+            var payload = (UserDataPayload)response;
+            var json = (JObject)payload.Data;
+            
+            if (json != null && json["user_data"] != null)
+            {
+                var loaded = JsonConvert.DeserializeObject<PlayerData>(json["user_data"].ToString());
+                _bestScore = loaded.BestScore;
+                _currentLevel = loaded.Level;
+                _currentXp = loaded.Xp;
+                _completedAchievementIds = loaded.CompletedAchievementIds ?? new HashSet<string>();
+            }
+            else
+            {
+                InitEmpty();
+            }
+        }
+        catch
+        {
+            InitEmpty();
         }
 
-        var loadedPlayerData = JsonConvert.DeserializeObject<PlayerData>(userDataObject["user_data"]?.ToString() ?? string.Empty);
-
-        if (loadedPlayerData == null)
-        {
-            InitEmptyDatabase();
-        }
-        else
-        {
-            _bestScore = loadedPlayerData.BestScore;
-            _currentLevel = loadedPlayerData.Level;
-            _currentXp = loadedPlayerData.Xp;
-            _completedAchievementIds = loadedPlayerData.CompletedAchievementIds ?? new HashSet<string>();
-
-            /*_ownedSkinIds = loadedPlayerData.OwnedSkins ?? new HashSet<string>();
-            _ownedSkinIds.Add("Default");
-            _currentSkin = loadedPlayerData.CurrentSkin ??  "Default";
-            _skinShards = loadedPlayerData.SkinShards;
-
-            if (_currentLevel >= 5) BuySkin("HellFire");
-            if (_currentLevel >= 10) BuySkin("AtomicBreak");*/
-        }
-        LoadingComplete.LoadingCompleteAction?.Invoke();
+        OnDataLoaded?.Invoke();
     }
 
-    private void InitEmptyDatabase()
+    private void OnDataLoadError(int code, string msg)
+    {
+        InitEmpty();
+        gameManager.OnError(code, msg);
+    }
+
+    private void InitEmpty()
     {
         _bestScore = 0;
+        _currentLevel = 1;
         _currentXp = 0;
-        _currentLevel = 0;
         _completedAchievementIds = new HashSet<string>();
-        /*_currentSkin = "Default";*/
-    }
-
-    private void OnDataSaveError(int code, string message)
-    {
-        GameManager.OnError?.Invoke(code, message);
-    }
-
-    private void OnDataLoadError(int code, string message)
-    {
-        _bestScore = 0;
-        GameManager.OnError?.Invoke(code, message);
     }
 }

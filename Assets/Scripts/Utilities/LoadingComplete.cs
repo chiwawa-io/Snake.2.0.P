@@ -1,11 +1,12 @@
 using System;
-using System.Collections;
 using UnityEngine;
+using Game.Core;
 
 public class LoadingComplete : MonoBehaviour
 {
     [SerializeField] private NetworkManager networkManager;
     [SerializeField] private PlayerDataManager playerDataManager;
+    [SerializeField] private GameManager gameManager;
 
     public static Action LoadingCompleteAction;
  
@@ -22,11 +23,12 @@ public class LoadingComplete : MonoBehaviour
     {
         networkManager.HealthStatusCheckService.Activate();
         playerDataManager.LoadData();
+        LoadingCompleteAction?.Invoke();
     }
 
     private void OnConnectionFailure()
     {
-        GameManager.OnError?.Invoke(1, "Connection Failure");
+        gameManager.OnError(1, "Connection Failure");
     }
 
 }

@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Game.Core;
 
 public class Player : MonoBehaviour
 {
@@ -10,7 +11,6 @@ public class Player : MonoBehaviour
     [Header("Managing scripts")]
     [SerializeField] private ItemSpawner itemSpawner;
     [SerializeField] private GameManager gameManager;
-    // [SerializeField] private GameUI gameUI;
     [SerializeField] private AudioManager audioManager;
     
     [Header("Snake Settings")]
@@ -43,7 +43,7 @@ public class Player : MonoBehaviour
     // Respawn 
     private bool _isPowerUpInvulnerable;
     private bool _isRespawnInvulnerable;
-    private bool _isMovementPaused; // Freezes the snake during respawn animation
+    private bool _isMovementPaused; 
 
     private WaitForSeconds _snakeDelay;
 
@@ -60,7 +60,7 @@ public class Player : MonoBehaviour
     public static event Action<int> UpdateLife;
     public static event Action<string, Vector2> EventMessages;
     public static event Action OnHitAction;
-    public static event Action<string> AudioPlay;
+    public static event Action<SoundType> OnPlaySound;
     public static event Action<string> OnAchieved;
     public static event Action OnPreciousFoodEaten;
     #endregion
@@ -71,9 +71,8 @@ public class Player : MonoBehaviour
     {
         _initMaxHp = maxHp;
         
-        GameManager.OnResetGame += ResetPlayer;
-        GameManager.OnContinueGame += ResetPlayer;
-        _currentDifficulty = gameManager.GetCurrentDifficulty();
+        GameManager.OnGameReset += ResetPlayer;
+        _currentDifficulty = gameManager.CurrentDifficulty;
     }
 
     private void Start() => Init();
@@ -107,8 +106,7 @@ public class Player : MonoBehaviour
 
     private void OnDisable()
     {
-        GameManager.OnResetGame -= ResetPlayer;
-        GameManager.OnContinueGame -= ResetPlayer;
+        GameManager.OnGameReset -= ResetPlayer;
     }
 
     #endregion
@@ -253,7 +251,6 @@ public class Player : MonoBehaviour
         }
         else
         {
-            // No lives left, game over.
             OnGameOver();
             StopAllCoroutines();
             itemSpawner.ResetSpawner();
@@ -283,11 +280,11 @@ public class Player : MonoBehaviour
             
             if (data.objName == "PreciousFood")
             {
-                AudioPlay?.Invoke("preciousFoodCollect");
+                OnPlaySound?.Invoke(SoundType.PreciousFoodCollect);
                 OnPreciousFoodEaten?.Invoke();
             }
             else
-                AudioPlay?.Invoke("foodCollect");
+                OnPlaySound?.Invoke(SoundType.FoodCollect);
             
             UpdateScore?.Invoke(data.scoreValue * _snakeBodyPositions.Count, itemPosition);
             itemSpawner.OnFoodCollected();
@@ -300,11 +297,11 @@ public class Player : MonoBehaviour
 
             if (data.objName == "Bomb")
             {
-                AudioPlay?.Invoke("explode");
+                OnPlaySound?.Invoke(SoundType.Explode);
                 OnAchieved?.Invoke("InstaDie");
             }
             else
-                AudioPlay?.Invoke("rockHit");
+                OnPlaySound?.Invoke(SoundType.RockHit);
             
             return false; 
         }
@@ -319,15 +316,15 @@ public class Player : MonoBehaviour
     private void OnHit()
     {
         OnHitAction?.Invoke(); 
-        AudioPlay?.Invoke("gameOver");
+        OnPlaySound?.Invoke(SoundType.GameOver);
         LifeCheck();
     }
 
     private void OnGameOver()
     {
         _isGameOver = true;
-        AudioPlay?.Invoke("gameOver");
-        gameManager.GameOver();
+        OnPlaySound?.Invoke(SoundType.GameOver);
+        gameManager.TriggerGameOver();
         OnHitAction?.Invoke();
     }
 
@@ -356,7 +353,7 @@ public class Player : MonoBehaviour
     #region Item & Snake Management
     private void ApplyPowerUp(PowerUpEffectType effectType, float duration, Vector2 position)
     {
-        AudioPlay?.Invoke("speedUp");
+        OnPlaySound?.Invoke(SoundType.SpeedUp);
         switch (effectType)
         {
             case PowerUpEffectType.SpeedUp:
@@ -426,7 +423,7 @@ public class Player : MonoBehaviour
         SpeedChanger(powerUpSpeed);
 
         yield return new WaitForSeconds(duration);
-        AudioPlay?.Invoke("speedDown");
+        OnPlaySound?.Invoke(SoundType.SpeedDown);
         EventMessages?.Invoke("Speed Down", _snakeBodyPositions[0]);
         SpeedChanger(frequency);
         _speedUpCoroutine = null;
@@ -437,7 +434,7 @@ public class Player : MonoBehaviour
         _isPowerUpInvulnerable = true;
 
         yield return new WaitForSeconds(duration);
-        AudioPlay?.Invoke("speedDown");
+        OnPlaySound?.Invoke(SoundType.SpeedDown);
         EventMessages?.Invoke("Not invulnerable", _snakeBodyPositions[0]);
         _isPowerUpInvulnerable = false;
     }

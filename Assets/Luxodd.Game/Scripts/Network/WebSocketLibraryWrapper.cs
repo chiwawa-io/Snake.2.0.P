@@ -35,6 +35,12 @@ namespace Luxodd.Game.Scripts.Network
 
         [DllImport("__Internal")]
         public static extern void SendSessionOptionsMessageWithAction(string action);
+        
+        [DllImport("__Internal")]
+        private static extern string GetParentHost();
+        
+        [DllImport("__Internal")]
+        private static extern void GetWebSocketProtocol();
 
 #if UNITY_WEBGL && !UNITY_EDITOR
         [DllImport("__Internal")] 

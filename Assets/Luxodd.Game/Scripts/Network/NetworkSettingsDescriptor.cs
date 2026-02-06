@@ -9,7 +9,7 @@ namespace Luxodd.Game.Scripts.Network
         Production,
     }
     
-    [CreateAssetMenu(menuName = "Create/Network/Settings Descriptor", fileName = "NetworkSettingsDescriptor", order = 0)]
+    [CreateAssetMenu(menuName = "Unity Plugin/Network/Settings Descriptor", fileName = "NetworkSettingsDescriptor", order = 0)]
     public class NetworkSettingsDescriptor : ScriptableObject
     {
         [field:SerializeField] public string ServerAddress { get; private set; }

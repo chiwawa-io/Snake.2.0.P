@@ -13,12 +13,14 @@ namespace Luxodd.Game.Example.Scripts
         [SerializeField] private Button _addCreditsButton;
         [SerializeField] private Button _chargeCreditsButton;
         [SerializeField] private Button _storageCommandsButton;
+        [SerializeField] private Button _controllTestButton;
 
         private Action _onConnectedToServerButtonClickedCallback;
         private Action _onGetUserProfileButtonClickedCallback;
         private Action _onAddCreditsButtonClickedCallback;
         private Action _onChargeCreditsButtonClickedCallback;
         private Action _onStorageCommandsButtonClickedCallback;
+        private Action _onControlTestButtonClickedCallback;
         private Action<bool> _onSendHealthStatusToServerButtonClickedCallback;
 
         public void SetOnConnectedToServerButtonClickedCallback(Action onConnectedToServerButtonClickedCallback)
@@ -52,6 +54,11 @@ namespace Luxodd.Game.Example.Scripts
             _onStorageCommandsButtonClickedCallback = onStorageCommandsButtonClickedCallback;
         }
         
+        public void SetOnControlTestButtonClickedCallback(Action onControlTestButtonClickedCallback)
+        {
+            _onControlTestButtonClickedCallback = onControlTestButtonClickedCallback;
+        }
+        
         private void Awake()
         {
             _connectToServerButton.onClick.AddListener(OnConnectToServerButtonClickedHandler);
@@ -60,6 +67,7 @@ namespace Luxodd.Game.Example.Scripts
             _chargeCreditsButton.onClick.AddListener(OnChargeCreditsButtonClickedHandler);
             _sendHealthStatusToServerButton.ToggleEvent.AddListener(OnSendHealthStatusToServerButtonClickedHandler);
             _storageCommandsButton.onClick.AddListener(OnStorageCommandsButtonClickedHandler);
+            _controllTestButton.onClick.AddListener(OnControlTestButtonClickedHandler);
         }
         
         private void OnConnectToServerButtonClickedHandler()
@@ -90,6 +98,11 @@ namespace Luxodd.Game.Example.Scripts
         private void OnStorageCommandsButtonClickedHandler()
         {
             _onStorageCommandsButtonClickedCallback?.Invoke();
+        }
+
+        private void OnControlTestButtonClickedHandler()
+        {
+            _onControlTestButtonClickedCallback?.Invoke();
         }
     }
 }

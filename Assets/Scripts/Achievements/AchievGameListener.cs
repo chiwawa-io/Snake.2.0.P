@@ -1,16 +1,24 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public class AchievGameListener : MonoBehaviour
 {
     [SerializeField] private List<AchievementSO> achievementsList = new();
-    [SerializeField] private PlayerDataManager playerDataManager;
+    
+    private PlayerDataManager _playerDataManager;
     
     private readonly List<string> _completedAchievements = new();
     
     public static Action<string> OnAchievementCompleted;
-    
+
+    [Inject]
+    public void Construct(PlayerDataManager playerDataManager)
+    {
+        _playerDataManager = playerDataManager;
+    }
+
     private void OnEnable()
     {
         Player.OnAchieved += AchievementComplete;
@@ -26,14 +34,14 @@ public class AchievGameListener : MonoBehaviour
     {
         foreach (var achievement in achievementsList)
         {
-            if (playerDataManager.IsAchievementCompleted(achievement.id))
+            if (_playerDataManager.IsAchievementCompleted(achievement.id))
                 _completedAchievements.Add(achievement.id);
         }
     }
 
     private void AchievementComplete(string id)
     {
-        playerDataManager.CompleteAchievement(id);
+        _playerDataManager.UnlockAchievement(id);
 
         var achievementData = GetAchievementById(id);
         

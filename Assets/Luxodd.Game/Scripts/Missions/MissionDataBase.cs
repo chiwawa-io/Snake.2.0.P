@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Luxodd.Game.Scripts.Missions
 {
-    [CreateAssetMenu(menuName = "Create/Missions/Mission Data Base", fileName = "MissionDataBase", order = 2)]
+    [CreateAssetMenu(menuName = "Unity Plugin/Missions/Mission Data Base", fileName = "MissionDataBase", order = 2)]
     public class MissionDataBase : ScriptableObject
     {
         [field: SerializeField] public List<MissionData> Missions { get; private set; }

@@ -3,7 +3,7 @@ using UnityEngine.Serialization;
 
 namespace Luxodd.Game.Scripts.Missions
 {
-    [CreateAssetMenu(menuName = "Create/Missions/Mission Data", fileName = "MissionData", order = 1)]
+    [CreateAssetMenu(menuName = "Unity Plugin/Missions/Mission Data", fileName = "MissionData", order = 1)]
     public class MissionData : ScriptableObject
     {
         [field: SerializeField] public string Id { get; private set; }

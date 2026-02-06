@@ -30,6 +30,16 @@ namespace Luxodd.Game.Example.Scripts
         private string _currentLevelTextFormat;
         private string _unityPluginVersionTextFormat;
 
+        public void ShowMainMenuPanel()
+        {
+            gameObject.SetActive(true);
+        }
+
+        public void HideMainMenuPanel()
+        {
+            gameObject.SetActive(false);
+        }
+        
         public void ShowProcessing()
         {
             _processingViewHandler.Show();
@@ -133,6 +143,11 @@ namespace Luxodd.Game.Example.Scripts
         public void SetStorageCommandButtonClickedCallback(Action onStorageCommandButtonClickedCallback)
         {
             _mainButtonViewHandler.SetOnStorageCommandsButtonClickedCallback(onStorageCommandButtonClickedCallback);
+        }
+        
+        public void SetControlTestButtonClickedCallback(Action onControlTestButtonClickedCallback)
+        {
+            _mainButtonViewHandler.SetOnControlTestButtonClickedCallback(onControlTestButtonClickedCallback);
         }
 
         public void SetClearStorageButtonCallback(Action onClearStorageButtonClickedCallback)

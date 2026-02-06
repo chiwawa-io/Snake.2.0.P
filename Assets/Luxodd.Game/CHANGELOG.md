@@ -4,9 +4,71 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [1.0.4] — 2025-09-23
+## [1.0.10] — 2026-01-12
 ### Fixed
-- WebGL template naming
+- Fixed an issue with **WebSocket connection in local WebGL builds**:
+  - The server address was resolved incorrectly when running WebGL builds locally.
+  - Updated logic now uses the correct server address, preventing connection errors during local testing.
+
+### Changed
+- Replaced the default Unity splash logo with the **Luxodd logo** displayed on WebGL game startup.
+
+## [1.0.9] — 2026-01-01
+### Added
+- Added a **full gameplay-based Controlling Test scene**:
+  - Demonstrates real-world arcade input usage in a 2D action scenario.
+  - Includes player movement, jumping, ladder interaction, shooting, and item usage.
+  - Uses adapter-based input architecture to keep gameplay logic independent from hardware.
+- Added a **Full Working Example** documentation section with a step-by-step explanation of the gameplay test scene.
+- Extended documentation to clearly distinguish between:
+  - Input visualization/debug scenes
+  - Gameplay-driven input examples
+
+### Improved
+- Documentation clarity for arcade input testing and learning workflows.
+- Onboarding experience for junior and junior+ developers working with arcade controls.
+
+## [1.0.8] — 2025-12-24
+### Added
+- Introduced a clear and unified mapping between real arcade buttons and Unity joystick inputs based on button colors.
+- Added `ArcadeControls` API for simplified input handling:
+  - `ArcadeControls.GetStick()` — returns joystick input in a convenient format (Vector2) for horizontal and vertical movement.
+  - `GetButton`, `GetButtonDown`, and `GetButtonUp` methods to query button state by `ArcadeButtonColor`, enabling color-based input logic in game code.
+- Added a dedicated Editor window that visually represents the arcade control panel with example button mappings, helping developers understand the physical layout and intended usage.
+- Added a new **Controlling Test** scene to the plugin examples:
+  - Includes a controllable square driven by joystick input.
+  - Displays approximate button placement by color, matching the real arcade layout.
+  - Highlights buttons on screen when the corresponding physical joystick buttons are pressed, making input mapping clear and intuitive.
+
+### Changed
+- Renamed the `Network` prefab to `UnityPluginPrefab` to better reflect its expanded responsibilities, including both networking and input handling.
+- Unified the plugin menu naming in the Unity Editor — all entries are now grouped under **Luxodd Unity Plugin**.
+
+### Fixed
+- Minor usability and consistency fixes across editor menus and example content.
+
+## [1.0.7] — 2025-12-10
+### Fixed
+- Fixed JavaScript bridge issue causing the error `ReferenceError: allocateUTF8 is not defined` when calling `GetParentHost` in WebGL builds.
+- Updated `.jslib` integration to properly expose UTF8 allocation utilities and ensure compatibility with the latest Unity WebGL template.
+- Improved stability of the WebGL initialization sequence.
+
+## [1.0.6] — 2025-12-09
+### Added
+- Plugin that provides access to the Developer Token and WebSocket server URL.
+- Delay (5–7 seconds) at the beginning of the game launch to wait for the event with the token and updated server address.  
+  If no new address is received within this time, the plugin connects using the previous method.
+- Updated `Network` prefab — added `LuxoddSessionBridge` class, which retrieves token and WebSocket URL data from the new plugin and notifies the system.
+- Introduced `Task`/`async`/`await` wrappers for commands to allow usage without callbacks.
+- Added the ability to retrieve the WebSocket server URL based on the parent window where the game is running, eliminating the need to pass the server address through settings.
+- Implemented backward compatibility with previous plugin versions.
+
+### Changed
+- Updated example scenes and scripts to align with the new plugin logic.
+
+## [1.0.5] — 2025-09-23
+### Fixed
+- WebGL template naming.
 
 ## [1.0.4] — 2025-09-22
 ### Added

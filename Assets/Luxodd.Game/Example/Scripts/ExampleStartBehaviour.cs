@@ -5,6 +5,7 @@ using Luxodd.Game.HelpersAndUtils.Utils;
 using Luxodd.Game.Scripts;
 using Luxodd.Game.Scripts.HelpersAndUtils;
 using Luxodd.Game.Scripts.HelpersAndUtils.Logger;
+using Luxodd.Game.Scripts.Input;
 using Luxodd.Game.Scripts.Network;
 using Luxodd.Game.Scripts.Network.CommandHandler;
 
@@ -19,11 +20,14 @@ namespace Luxodd.Game.Example.Scripts
     public class ExampleStartBehaviour : MonoBehaviour
     {
         [SerializeField] private MainMenuPanelViewHandler _mainMenuPanelViewHandler;
+        [SerializeField] private ControlExamplePanelHandler _controlExamplePanelHandler;
         
         [SerializeField] private WebSocketService _webSocketService;
         [SerializeField] private WebSocketCommandHandler _webSocketCommandHandler;
         [SerializeField] private HealthStatusCheckService _healthStatusCheckService;
         [SerializeField] private ReconnectService _reconnectService;
+        
+        [SerializeField] private ControlExampleBehaviour _controlExampleBehaviour;
 
         [SerializeField] private int _creditsToCharge = 3;
         [SerializeField] private int _creditsToAdd = 5;
@@ -60,6 +64,7 @@ namespace Luxodd.Game.Example.Scripts
             _spaceShipName.SetValue(_spaceshipNames.First());
             _level.SetValue(_levels.First());
             
+            _controlExamplePanelHandler.HidePanel();
             _mainMenuPanelViewHandler.SetUnityPluginVersion(PluginVersion.Version);
         }
         
@@ -87,6 +92,11 @@ namespace Luxodd.Game.Example.Scripts
             _mainMenuPanelViewHandler.SetClearStorageButtonCallback(OnStorageCommandsClearButtonClickedHandler);
             _mainMenuPanelViewHandler.SetSetStorageButtonCallback(OnStorageCommandsSaveButtonClickedHandler);
             _mainMenuPanelViewHandler.SetGetStorageButtonCallback(OnStorageCommandsLoadButtonClickedHandler);
+            
+            _mainMenuPanelViewHandler.SetControlTestButtonClickedCallback(OnControlTestButtonClickedHandler);
+            
+            _controlExamplePanelHandler.SetBackButtonClickCallback(OnControlTestBackButtonCLickedHandler);
+            _controlExampleBehaviour.SetArcadeButtonColorCallback(OnControlArcadeButtonButtonClickedHandler);
         }
 
         private void OnCommandProcessStateChange(CommandProcessState state)
@@ -254,6 +264,25 @@ namespace Luxodd.Game.Example.Scripts
         {
             _mainMenuPanelViewHandler.HideMainButtons();
             _mainMenuPanelViewHandler.ShowStorageCommands();
+        }
+
+        private void OnControlTestButtonClickedHandler()
+        {
+            _mainMenuPanelViewHandler.HideMainMenuPanel();
+            _controlExamplePanelHandler.ShowPanel();
+            _controlExampleBehaviour.ActivateProcess();
+        }
+
+        private void OnControlTestBackButtonCLickedHandler()
+        {
+            _controlExamplePanelHandler.HidePanel();
+            _mainMenuPanelViewHandler.ShowMainMenuPanel();
+            _controlExampleBehaviour.DeactivateProcess();
+        }
+
+        private void OnControlArcadeButtonButtonClickedHandler(ArcadeButtonColor buttonColor, bool state)
+        {
+            _controlExamplePanelHandler.SetArcadeButtonColorToggleState(buttonColor, state);
         }
 
         private void OnStorageCommandsBackButtonClickedHandler()

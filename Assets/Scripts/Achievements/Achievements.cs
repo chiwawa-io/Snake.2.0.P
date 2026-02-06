@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI; 
+using UnityEngine.UI;
+using Zenject;
 
 public class Achievements : MonoBehaviour
 {
     [Header("AchievementsDataBase")]
     [SerializeField] private List<AchievementSO> achievementsList = new();
-    [SerializeField] private PlayerDataManager playerDataManager;
 
     [Header("AchievementsUI")]
     [SerializeField] private Transform achievementsUIParent;
@@ -15,13 +15,20 @@ public class Achievements : MonoBehaviour
     [Header("Pagination")]
     [SerializeField] private int achievementsPerPage = 3; 
     
+    private PlayerDataManager _playerDataManager;
+    
     //state variables
     private int _currentPage;
     private int _totalPages;
 
+    [Inject]
+    public void Construct(PlayerDataManager playerDataManager)
+    {
+        _playerDataManager = playerDataManager;
+    }
+
     private void OnEnable()
     {
-        // Calculate total pages
         _totalPages = Mathf.CeilToInt((float)achievementsList.Count / achievementsPerPage);
 
         LoadAchievements();
@@ -61,10 +68,10 @@ public class Achievements : MonoBehaviour
             var achievementData = achievementsList[i];
             var achievementRow = Instantiate(achievementsUIPrefab, achievementsUIParent);
 
-            var isCompleted = playerDataManager.IsAchievementCompleted(achievementData.id);
+            _playerDataManager.IsAchievementCompleted(achievementData.id);
 
             var rowUI = achievementRow.GetComponent<AchievementsRowUI>();
-            rowUI.Setup(achievementData, isCompleted);
+            rowUI.Setup(achievementData, true);
         }
     }
 }

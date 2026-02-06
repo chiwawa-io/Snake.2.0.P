@@ -19,7 +19,7 @@ namespace Luxodd.Game.Scripts.Missions
         private const string MissionListResourcePath = "Missions/MissionDataBase";
         private const string ExportFileName = "missions_export.json";
 
-        [MenuItem("Tools/Luxodd/Export Missions to JSON")]
+        [MenuItem("Luxodd Unity Plugin/Missions/Export Missions to JSON")]
         public static void ExportMissions()
         {
             var missionsList = Resources.Load<MissionDataBase>(MissionListResourcePath);

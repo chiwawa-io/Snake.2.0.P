@@ -1,14 +1,22 @@
+using Game.Core;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
-[RequireComponent(typeof(Button))]
 public class ButtonSoundLinker : MonoBehaviour
 {
-    [SerializeField] private AudioManager audioManager;
+    private AudioManager _audioManager;
+
+    [Inject]
+    public void Construct(AudioManager audioManager)
+    {
+        _audioManager = audioManager;
+    }
+
     void Start()
     {
         Button button = GetComponent<Button>();
         
-        button.onClick.AddListener(() => audioManager.AudioPlay("ButtonSound"));
+        button.onClick.AddListener(() => _audioManager.PlayOneShot(SoundType.ButtonSound));
     }
 }

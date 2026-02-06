@@ -40,7 +40,7 @@ namespace Luxodd.Game.Editor
             }
         }
         
-        [MenuItem("Tools/Luxodd Plugin/Set Developer Token")]
+        [MenuItem("Luxodd Unity Plugin/First Setup/Set Developer Token")]
         public static void OpenTokenWindow()
         {
             var config = Resources.Load<NetworkSettingsDescriptor>(nameof(NetworkSettingsDescriptor));
