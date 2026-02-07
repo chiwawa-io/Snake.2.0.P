@@ -12,7 +12,6 @@ public enum GameState
     GameOver,
     Error,
     DifficultySelect,
-    DifficultySelectClose,
     Save,
     Exit
 }
@@ -62,9 +61,9 @@ namespace Game.Core
 
         private void Start()
         {
-            SetState(GameState.Loading);
+            // HandleDataLoaded();
             
-            _playerDataManager.LoadData();
+            SetState(GameState.Loading);
         }
 
         private void OnDestroy()
@@ -77,7 +76,6 @@ namespace Game.Core
         private void HandleDataLoaded()
         {
             SetState(GameState.MainMenu);
-            _inactivityDetector.StartDetector();
         }
 
         public void RequestStartGame()
@@ -99,6 +97,7 @@ namespace Game.Core
             _isPlaying = true;
             gamePlayComponents.SetActive(true);
             SetState(GameState.InGame);
+            OnScoreChanged?.Invoke(CurrentScore);
             OnGameStarted?.Invoke();
         }
 
@@ -112,6 +111,7 @@ namespace Game.Core
         {
             Time.timeScale = 1;
             SetState(GameState.InGame);
+            OnGameReset?.Invoke();
             OnGameStarted?.Invoke();
         }
 

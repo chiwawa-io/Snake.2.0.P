@@ -1,34 +1,44 @@
 using System;
 using UnityEngine;
 using Game.Core;
+using Zenject;
 
 public class LoadingComplete : MonoBehaviour
 {
-    [SerializeField] private NetworkManager networkManager;
-    [SerializeField] private PlayerDataManager playerDataManager;
-    [SerializeField] private GameManager gameManager;
+    private NetworkManager _networkManager;
+    private PlayerDataManager _playerDataManager;
+    private GameManager _gameManager;
 
     public static Action LoadingCompleteAction;
- 
+
+    [Inject]
+    public void Construct(NetworkManager networkManager, PlayerDataManager playerDataManager, GameManager gameManager)
+    {
+        _networkManager = networkManager;
+        _playerDataManager = playerDataManager;
+        _gameManager = gameManager;
+    }
+
     private void Start()
     {
         LoadingStart();
+        // LoadingCompleteAction?.Invoke();
     }
     private void LoadingStart()
     {
-        networkManager.WebSocketService.ConnectToServer(OnConnectionSuccess, OnConnectionFailure);
+        _networkManager.WebSocketService.ConnectToServer(OnConnectionSuccess, OnConnectionFailure);
     }
 
     private void OnConnectionSuccess()
     {
-        networkManager.HealthStatusCheckService.Activate();
-        playerDataManager.LoadData();
+        _networkManager.HealthStatusCheckService.Activate();
+        _playerDataManager.LoadData();
         LoadingCompleteAction?.Invoke();
     }
 
     private void OnConnectionFailure()
     {
-        gameManager.OnError(1, "Connection Failure");
+        _gameManager.OnError(1, "Connection Failure");
     }
 
 }

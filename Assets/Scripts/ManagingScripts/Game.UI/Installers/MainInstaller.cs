@@ -12,10 +12,27 @@ public class MainInstaller : MonoInstaller
 
     public override void InstallBindings()
     {
-        Container.Bind<AudioManager>().FromInstance(audioManager).AsSingle();
-        Container.Bind<PlayerDataManager>().FromInstance(playerDataManager).AsSingle();
-        Container.Bind<InactivityDetector>().FromInstance(inactivityDetector).AsSingle();
-        Container.Bind<GameManager>().FromInstance(gameManager).AsSingle();
-        Container.Bind<NetworkManager>().FromInstance(networkManager).AsSingle();
+        Container.Bind<AudioManager>()
+            .FromInstance(audioManager)
+            .AsSingle();
+        
+        Container.Bind<InactivityDetector>()
+            .FromInstance(inactivityDetector)
+            .AsSingle();
+        
+        Container.Bind<PlayerDataManager>()
+            .FromInstance(playerDataManager)
+            .AsSingle()
+            .NonLazy();
+        
+        Container.Bind<GameManager>().
+            FromInstance(gameManager).
+            AsSingle().
+            NonLazy();
+        
+        Container.Bind<NetworkManager>().
+            FromInstance(networkManager).
+            AsSingle().
+            NonLazy();
     }
 }

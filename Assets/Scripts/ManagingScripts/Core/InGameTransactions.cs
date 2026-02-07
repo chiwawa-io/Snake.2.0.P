@@ -29,6 +29,7 @@ public class InGameTransactions : MonoBehaviour
 
     private void HandleGameOver(int finalScore)
     {
+        // _gameManager.ReviveGame();
         _networkManager.WebSocketService.SendSessionOptionContinue(OnContinueDecision);
     }
 

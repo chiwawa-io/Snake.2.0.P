@@ -117,9 +117,8 @@ public class Player : MonoBehaviour
     {
         _isGameOver = false;
         maxHp = _initMaxHp;
-        
 
-        ResetSnakeState(); 
+        StartCoroutine(RespawnRoutine()); 
         
         itemSpawner.Initialize(new Vector2Int(_xBound, _yBound), _snakeBodyPositions, _currentDifficulty);
         
