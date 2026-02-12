@@ -1,33 +1,39 @@
 using System;
 using System.Collections.Generic;
+using Core.Events;
+using Services.PlayerData;
 using UnityEngine;
 using Zenject;
+
+
 
 public class AchievGameListener : MonoBehaviour
 {
     [SerializeField] private List<AchievementSO> achievementsList = new();
     
     private PlayerDataManager _playerDataManager;
+    private SignalBus _signalBus;
     
     private readonly List<string> _completedAchievements = new();
     
     public static Action<string> OnAchievementCompleted;
 
     [Inject]
-    public void Construct(PlayerDataManager playerDataManager)
+    public void Construct(PlayerDataManager playerDataManager, SignalBus signalBus)
     {
+        _signalBus = signalBus;
         _playerDataManager = playerDataManager;
     }
 
     private void OnEnable()
     {
-        Player.OnAchieved += AchievementComplete;
+        _signalBus.Subscribe<AchievementProgressSignal>(AchievementComplete);
         LoadCompletedAchievements();
     }
 
     private void OnDisable()
     {
-        Player.OnAchieved -= AchievementComplete;
+        _signalBus.Unsubscribe<AchievementProgressSignal>(AchievementComplete);
     }
 
     private void LoadCompletedAchievements()
@@ -39,15 +45,15 @@ public class AchievGameListener : MonoBehaviour
         }
     }
 
-    private void AchievementComplete(string id)
+    private void AchievementComplete(AchievementProgressSignal achievement)
     {
-        _playerDataManager.UnlockAchievement(id);
+        _playerDataManager.UnlockAchievement(achievement.AchievementId);
 
-        var achievementData = GetAchievementById(id);
+        var achievementData = GetAchievementById(achievement.AchievementId);
         
-        if (achievementData != null && !_completedAchievements.Contains(id)) OnAchievementCompleted?.Invoke(achievementData.displayName);
+        if (achievementData != null && !_completedAchievements.Contains(achievement.AchievementId)) OnAchievementCompleted?.Invoke(achievementData.displayName);
         
-        if (!_completedAchievements.Contains(id)) _completedAchievements.Add(id);
+        if (!_completedAchievements.Contains(achievement.AchievementId)) _completedAchievements.Add(achievement.AchievementId);
     }
 
     private AchievementSO GetAchievementById(string id)

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Services.PlayerData;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -71,7 +72,7 @@ public class Achievements : MonoBehaviour
             _playerDataManager.IsAchievementCompleted(achievementData.id);
 
             var rowUI = achievementRow.GetComponent<AchievementsRowUI>();
-            rowUI.Setup(achievementData, true);
+            rowUI.Setup(achievementData.displayName, true, achievementData.description);
         }
     }
 }

@@ -3250,21 +3250,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1729932194086569666
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2072868895315514956}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a05db598288183449ac8f9fec9a8657, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  screenRoot: {fileID: 2072868895315514956}
-  defaultFocusButton: {fileID: 4565459659895233253}
-  timerText: {fileID: 5394941725116577664}
 --- !u!224 &1735069236273531734
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4270,7 +4255,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 175427461771863578}
-  - component: {fileID: 1729932194086569666}
   - component: {fileID: 3544091002059270310}
   m_Layer: 5
   m_Name: Achievements
@@ -14891,7 +14875,7 @@ MonoBehaviour:
   errorView: {fileID: 5065873350677763029}
   loadingView: {fileID: 4707036107742904747}
   leaderboardView: {fileID: 6951880161164982458}
-  achievementsView: {fileID: 1729932194086569666}
+  achievementsView: {fileID: 0}
 --- !u!114 &7539617226699608664
 MonoBehaviour:
   m_ObjectHideFlags: 0

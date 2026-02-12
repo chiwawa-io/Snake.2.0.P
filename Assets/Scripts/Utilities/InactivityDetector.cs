@@ -1,72 +1,91 @@
 using System;
 using System.Collections;
+using Core.Events;
 using UnityEngine;
+using Zenject;
 
-public class InactivityDetector : MonoBehaviour
+namespace Utilities
 {
-    [SerializeField] private int inactivityTimeLimit = 30;
-
-    private float _currentTime;
-    private bool _isTimerRunning; 
-    private Coroutine _timerCoroutine;
-
-    public static event Action TimesUp;
-    public static event Action<int> OnTimerUpdate;
-
-
-    public void StartDetector()
+    public class InactivityDetector : MonoBehaviour
     {
-        _currentTime = 0f;
-        _isTimerRunning = true;
-        
-        if (_timerCoroutine != null)
-        {
-            StopCoroutine(_timerCoroutine);
-        }
-        _timerCoroutine = StartCoroutine(UpdateTimerDisplay());
-        
-        Debug.LogWarning("Inactivity Detector Started.");
-    }
+        [SerializeField] private int inactivityTimeLimit = 30;
 
-    public void StopDetector()
-    {
-        _isTimerRunning = false;
-        if (_timerCoroutine != null)
+        private float _currentTime;
+        private bool _isTimerRunning; 
+        private Coroutine _timerCoroutine;
+        private SignalBus _signalBus;
+
+        [Inject]
+        public void Construct(SignalBus signalBus)
         {
-            StopCoroutine(_timerCoroutine);
-            _timerCoroutine = null;
+            _signalBus = signalBus;
         }
 
-        Debug.LogWarning("Inactivity Detector Stopped.");
-    }
-
-    void Update()
-    {
-        if (!_isTimerRunning)
+        public void OnEnable()
         {
-            return;
+            _signalBus.Subscribe<GameStateChangedSignal>(StartDetector);
         }
 
-        _currentTime += Time.deltaTime;
-
-        if (_currentTime >= inactivityTimeLimit)
+        public void OnDisable()
         {
-            Debug.LogWarning("Inactivity time limit reached!.");
-            TimesUp?.Invoke();
-            StopDetector(); 
+            _signalBus.Unsubscribe<GameStateChangedSignal>(StartDetector);
         }
-    }
-    IEnumerator UpdateTimerDisplay()
-    {
-        while (_isTimerRunning)
+
+        private void StartDetector()
         {
-            var timeRemaining = Mathf.RoundToInt(inactivityTimeLimit - _currentTime);
+            _currentTime = 0f;
+            _isTimerRunning = true;
             
-            if (timeRemaining < 0) timeRemaining = 0;
-
-            OnTimerUpdate?.Invoke(timeRemaining);
+            if (_timerCoroutine != null)
+            {
+                StopCoroutine(_timerCoroutine);
+            }
+            _timerCoroutine = StartCoroutine(UpdateTimerDisplay());
             
-            yield return new WaitForSeconds(1f);
+            Debug.LogWarning("Inactivity Detector Started.");
+        }
+
+        private void StopDetector()
+        {
+            _isTimerRunning = false;
+            if (_timerCoroutine != null)
+            {
+                StopCoroutine(_timerCoroutine);
+                _timerCoroutine = null;
+            }
+
+            Debug.LogWarning("Inactivity Detector Stopped.");
+        }
+
+        void Update()
+        {
+            if (!_isTimerRunning)
+            {
+                return;
+            }
+
+            _currentTime += Time.deltaTime;
+
+            if (_currentTime >= inactivityTimeLimit)
+            {
+                Debug.LogWarning("Inactivity time limit reached!.");
+                _signalBus.Fire(new InactivityTimeOut());
+                StopDetector(); 
+            }
+        }
+        IEnumerator UpdateTimerDisplay()
+        {
+            while (_isTimerRunning)
+            {
+                var timeRemaining = Mathf.RoundToInt(inactivityTimeLimit - _currentTime);
+                
+                if (timeRemaining < 0) timeRemaining = 0;
+
+                _signalBus.Fire(new InactivityTimerSignal { SecondsLeft = timeRemaining });
+                
+                yield return new WaitForSeconds(1f);
+            }
         }
     }
 }
+
