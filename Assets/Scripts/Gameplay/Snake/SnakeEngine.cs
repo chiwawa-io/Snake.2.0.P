@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -62,6 +61,9 @@ public class SnakeEngine
     public void RemoveTail()
     {
         if (_model.Body.Count > 0)
+        {
+            _model.LastTailPosition = _model.Body.Last(); 
             _model.Body.RemoveAt(_model.Body.Count - 1);
+        }
     }
 }

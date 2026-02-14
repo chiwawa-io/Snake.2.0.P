@@ -1,4 +1,5 @@
 using System;
+using Core.Enums;
 using Core.Events;
 using Luxodd.Game.Scripts.Network;
 using Services.PlayerData;
@@ -7,11 +8,11 @@ using Zenject;
 
 namespace Services.Backend
 {
-    public class LuxoddBackendService : IBackendService
+    public class LuxoddBackendService : IBackendService, IDisposable
     {
         private readonly NetworkManager _networkManager;
         private readonly PlayerDataManager _playerDataManager;
-        private SignalBus _signalBus;
+        private readonly SignalBus _signalBus;
         
         public LuxoddBackendService(NetworkManager networkManager, PlayerDataManager playerDataManager, SignalBus signalBus)
         {
@@ -24,6 +25,13 @@ namespace Services.Backend
         {
             _networkManager.WebSocketService.ConnectToServer(onReady, onError);
             _signalBus.Subscribe<ErrorSignal>(HandleError);
+            _signalBus.Subscribe<GameOverSignal>(OnGameOver);
+        }
+
+        public void Dispose()
+        {
+            _signalBus.Unsubscribe<ErrorSignal>(HandleError);
+            _signalBus.Unsubscribe<GameOverSignal>(OnGameOver);
         }
 
         public void StartLevel(Action onSuccess, Action<string> onError)
@@ -40,7 +48,18 @@ namespace Services.Backend
             _networkManager.WebSocketService.BackToSystemWithError(signal.Code.ToString(), signal.Message);
         }
 
-        public void TriggerGameOverFlow(int score, Action onRevive, Action onFinalize)
+        private void OnGameOver(GameOverSignal signal)
+        {
+            TriggerGameOverFlow(
+                signal.FinalScore,
+                onRevive: () => 
+                {
+                    _signalBus.Fire(new RevivePlayerSignal());
+                }
+            );
+        }
+        
+        public void TriggerGameOverFlow(int score, Action onRevive)
         {
             _networkManager.WebSocketService.SendSessionOptionContinue((action) => 
             {
@@ -50,12 +69,12 @@ namespace Services.Backend
                 }
                 else
                 {
-                    FinalizeSession(score, onFinalize);
+                    FinalizeSession(score);
                 }
             });
         }
 
-        private void FinalizeSession(int score, Action onFinalize)
+        private void FinalizeSession(int score)
         {
             _networkManager.WebSocketCommandHandler.SendLevelEndRequestCommand(
                 0,
@@ -63,7 +82,7 @@ namespace Services.Backend
                 () => 
                 {
                     _playerDataManager.SaveGameSession(score);
-                    _networkManager.WebSocketService.BackToSystem();
+                    Exit();
                     
                     // Restart option will be needed in the future
                     // _networkManager.WebSocketService.SendSessionOptionRestart((action) => 
@@ -80,6 +99,11 @@ namespace Services.Backend
                 },
                 (code, msg) => Debug.LogError($"Save Failed: {msg}")
             );
+        }
+
+        public void Exit()
+        {
+            _networkManager.WebSocketService.BackToSystem();
         }
     }
 }

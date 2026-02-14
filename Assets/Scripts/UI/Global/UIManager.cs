@@ -3,6 +3,7 @@ using Core.Enums;
 using Core.Events;
 using Game.UI;
 using UI.Achievements.Views;
+using UI.MainMenu.Views;
 using Zenject;
 
 namespace UI.Global
@@ -38,8 +39,8 @@ namespace UI.Global
 
         public void Initialize()
         {
-            _signalBus.Subscribe<GameStateChangedSignal>(OnStateChanged);
             HideAll();
+            _signalBus.Subscribe<GameStateChangedSignal>(OnStateChanged);
         }
 
         public void Dispose()
@@ -56,6 +57,8 @@ namespace UI.Global
                 case GameState.MainMenu: _mainMenu.Show(); break;
                 case GameState.InGame: _hud.Show(); break;
                 case GameState.Leaderboard: _leaderboard.Show(); break;
+                case GameState.Achievements: _achievements.Show(); break;
+                case GameState.Error: _errorView.Show(); break;
             }
         }
 

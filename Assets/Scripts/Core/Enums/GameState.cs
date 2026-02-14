@@ -9,6 +9,6 @@ namespace Core.Enums
         InGame,
         GameOver,
         DifficultySelect,
-        Exit
+        Error
     }
 }

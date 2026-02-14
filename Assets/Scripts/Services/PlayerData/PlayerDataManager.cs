@@ -32,11 +32,9 @@ namespace Services.PlayerData
         {
             _networkManager = networkManager;
             _signalBus = signalBus;
-            
-            LoadData();
         }
-
-        private void LoadData()
+        
+        public void LoadData()
         {
             _networkManager.WebSocketCommandHandler.SendGetUserDataRequestCommand(OnDataLoadSuccess, OnDataLoadError);
         }
@@ -102,6 +100,7 @@ namespace Services.PlayerData
                     _currentLevel = loaded.Level;
                     _currentXp = loaded.Xp;
                     _completedAchievementIds = loaded.CompletedAchievementIds ?? new HashSet<string>();
+                    Debug.LogWarning("Successfull loading player data!");
                 }
                 else
                 {

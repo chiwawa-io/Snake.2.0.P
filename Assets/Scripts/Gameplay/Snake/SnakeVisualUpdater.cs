@@ -4,13 +4,14 @@ using Zenject;
 namespace Gameplay.Snake{
     public class SnakeVisualUpdater : MonoBehaviour
     {
-        [Inject] private SnakeModel _model;
         [Inject] private SnakeView _view;
+        [Inject] private SnakeGameController _controller;
 
         private void Update()
         {
-            if (_model != null)
-                _view.UpdateVisuals(Time.time);
+            float interpolationFactor = _controller.InterpolationFactor;
+
+            _view.UpdateVisuals(interpolationFactor);
         }
     }
 }

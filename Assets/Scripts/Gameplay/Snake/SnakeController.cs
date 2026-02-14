@@ -12,41 +12,49 @@ namespace Gameplay.Snake
         private readonly SignalBus _signalBus;
         private readonly SnakeEngine _engine;
         private readonly SnakeModel _model;
-        private readonly ItemSpawner _itemSpawner; 
+        private readonly ItemSpawner _itemSpawner;
+        private readonly SnakeView _view;
         
         private const float BaseFrequency = 0.1f;
-        private const float SpeedUpFrequency = 0.05f;
+        private const float SpeedUpFrequency = 0.08f;
+        private const float RespawnDelay = 0.4f;
+        private const int StartingLives = 3;
         
         private float _moveTimer;
         private float _powerUpTimer;
         private float _respawnTimer;
         private bool _gameIsRunning;
-        
-        private int _lives = 3;
+        private int _lives;
         private int _score;
+        
+        public float InterpolationFactor => _gameIsRunning ? (_moveTimer / _model.MoveFrequency) : 0f;
 
         public SnakeGameController(
             SignalBus signalBus, 
             SnakeEngine engine, 
             SnakeModel model,
-            ItemSpawner spawner)
+            ItemSpawner spawner,
+            SnakeView view)
         {
             _signalBus = signalBus;
             _engine = engine;
             _model = model;
             _itemSpawner = spawner;
+            _view = view;
         }
 
         public void Initialize()
         {
             _signalBus.Subscribe<InputDirectionSignal>(OnInput);
             _signalBus.Subscribe<GameStateChangedSignal>(OnStateChange);
+            _signalBus.Subscribe<RevivePlayerSignal>(OnRevive); 
         }
 
         public void Dispose()
         {
-            _signalBus.Unsubscribe<InputDirectionSignal>(OnInput);
-            _signalBus.Unsubscribe<GameStateChangedSignal>(OnStateChange);
+            _signalBus.TryUnsubscribe<InputDirectionSignal>(OnInput);
+            _signalBus.TryUnsubscribe<GameStateChangedSignal>(OnStateChange);
+            _signalBus.TryUnsubscribe<RevivePlayerSignal>(OnRevive);
         }
 
         private void OnStateChange(GameStateChangedSignal signal)
@@ -55,43 +63,45 @@ namespace Gameplay.Snake
             
             if (signal.NewState == GameState.MainMenu)
             {
-                ResetGame();
+                ResetForNewSession();
             }
         }
 
-        private void ResetGame()
+        private void ResetForNewSession()
         {
+            _score = 0;
+            _lives = StartingLives;
+            _signalBus.Fire(new LifeUpdatedSignal { LifeRemaining = _lives });
+            _signalBus.Fire(new ScoreUpdatedSignal { TotalScore = 0 });
+
             _model.MoveFrequency = BaseFrequency;
+            _model.IsInvulnerable = false;
+            _model.IsRespawning = false;
             _engine.Reset();
-            // Trigger Spawner Reset if needed
-            // _itemSpawner.Initialize(...); // Do this in a factory or specific init method
         }
 
         public void Tick()
         {
-            if (!_gameIsRunning) return;
-
-            float dt = Time.deltaTime;
-
-            // 1. Handle Respawn Timer
             if (_model.IsRespawning)
             {
-                _respawnTimer -= dt;
+                _respawnTimer -= Time.deltaTime;
                 if (_respawnTimer <= 0)
                 {
                     _model.IsRespawning = false;
+                    _view.ToggleVisuals(true);
+                    _gameIsRunning = true;
                     _signalBus.Fire(new SnakeEffectSignal { EffectName = "Go!", Position = _model.Body[0] });
                 }
-                return; // Don't move while respawning
+                return; 
             }
 
-            // 2. Handle PowerUp Timers
+            if (!_gameIsRunning) return;
+
             if (_model.MoveFrequency < BaseFrequency || _model.IsInvulnerable)
             {
-                _powerUpTimer -= dt;
+                _powerUpTimer -= Time.deltaTime;
                 if (_powerUpTimer <= 0)
                 {
-                    // Reset Effects
                     if (_model.MoveFrequency != BaseFrequency)
                     {
                         _signalBus.Fire(new PlaySoundSignal { Type = SoundType.SpeedDown });
@@ -101,8 +111,7 @@ namespace Gameplay.Snake
                 }
             }
 
-            // 3. Movement Timer
-            _moveTimer += dt;
+            _moveTimer += Time.deltaTime;
             if (_moveTimer >= _model.MoveFrequency)
             {
                 _moveTimer = 0;
@@ -110,12 +119,9 @@ namespace Gameplay.Snake
             }
         }
 
-        // This method replaces "Move()" in Player.cs
         private void PerformMovementStep()
         {
-            Vector2Int newHead;
-            
-            if (!_engine.TickMovement(out newHead))
+            if (!_engine.TickMovement(out var newHead))
             {
                 HandleDeath("Collision");
                 return;
@@ -147,33 +153,38 @@ namespace Gameplay.Snake
             {
                 _model.GemsCollected++;
                 CheckFoodAchievements();
-                
-                var points = data.scoreValue * _model.Body.Count;
+
+                bool isPrecious = data.objName == "PreciousFood";
+                int points = data.scoreValue * _model.Body.Count;
                 _score += points;
-                _signalBus.Fire(new ScoreAddedSignal {Amount = points, Position = pos}); 
+                _signalBus.Fire(new ScoreUpdatedSignal { TotalScore = _score });
+                _signalBus.Fire(new ScoreAddedSignal { Amount = points, Position = pos });
                 
-                SoundType sound = (data.objName == "PreciousFood") ? SoundType.PreciousFoodCollect : SoundType.FoodCollect;
+                if (isPrecious) 
+                    _signalBus.Fire(new PreciousGemEatenSignal());
+                
+                SoundType sound = isPrecious ? SoundType.PreciousFoodCollect : SoundType.FoodCollect;
                 _signalBus.Fire(new PlaySoundSignal { Type = sound });
 
                 _itemSpawner.RemoveItem(pos); 
-                UnityEngine.Object.Destroy(item.Instance); // Visual destroy
-                _itemSpawner.OnFoodCollected(); // Spawn new
+                UnityEngine.Object.Destroy(item.Instance);
+                _itemSpawner.OnFoodCollected();
+                
                 return true; 
             }
-            else if (data.isObstacle)
+            
+            if (data.isObstacle && !_model.IsInvulnerable && !_model.IsRespawning)
             {
-                 if (!_model.IsInvulnerable && !_model.IsRespawning)
-                 {
-                     HandleDeath(data.objName);
-                 }
-                 return false;
+                HandleDeath(data.objName);
+                return false;
             }
-            else if (data.isPowerUp)
+
+            if (data.isPowerUp)
             {
                 ApplyPowerUp(data, pos);
                 _itemSpawner.RemoveItem(pos);
                 UnityEngine.Object.Destroy(item.Instance);
-                return false; // Didn't grow
+                return false;
             }
 
             return false;
@@ -182,7 +193,6 @@ namespace Gameplay.Snake
         private void ApplyPowerUp(GameItem data, Vector2Int pos)
         {
             _signalBus.Fire(new PlaySoundSignal { Type = SoundType.SpeedUp });
-            
             _powerUpTimer = data.effectDuration;
 
             if (data.effectType == PowerUpEffectType.SpeedUp)
@@ -204,14 +214,35 @@ namespace Gameplay.Snake
             _signalBus.Fire(new PlaySoundSignal { Type = SoundType.GameOver });
             _signalBus.Fire(new PlayerDiedSignal { DeathReason = reason });
             
+            _gameIsRunning = false;
+                     
+            _view.PlayBoomEffect();
+            _view.ToggleVisuals(false);
             _lives--;
-            
-            if (_lives > 3)
-                _signalBus.Fire(new LifeUpdatedSignal { LifeRemaining = _lives });
+            _signalBus.Fire(new LifeUpdatedSignal { LifeRemaining = _lives });
+
+            if (_lives > 0)
+            {
+                StartRespawnSequence();
+            }
             else
             {
-                _signalBus.Fire(new GameOverSignal {FinalScore = _score});
+                _signalBus.Fire(new GameOverSignal { FinalScore = _score });
             }
+        }
+
+        private void StartRespawnSequence()
+        {
+            _engine.Reset(); 
+            _model.IsRespawning = true;
+            _respawnTimer = RespawnDelay;
+        }
+        
+        private void OnRevive(RevivePlayerSignal signal)
+        {
+            _lives = 3; 
+            _signalBus.Fire(new LifeUpdatedSignal { LifeRemaining = _lives });
+            StartRespawnSequence(); 
         }
 
         private void OnInput(InputDirectionSignal signal)
@@ -247,4 +278,3 @@ namespace Gameplay.Snake
         private void FireAch(string id) => _signalBus.Fire(new AchievementProgressSignal { AchievementId = id });
     }
 }
-

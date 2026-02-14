@@ -1,5 +1,5 @@
-using System;
 using System.Collections;
+using Core.Enums;
 using Core.Events;
 using UnityEngine;
 using Zenject;
@@ -21,18 +21,21 @@ namespace Utilities
             _signalBus = signalBus;
         }
 
-        public void OnEnable()
+        private void Start()
         {
-            _signalBus.Subscribe<GameStateChangedSignal>(StartDetector);
+            _signalBus?.Subscribe<GameStateChangedSignal>(StartDetector);
         }
 
         public void OnDisable()
         {
-            _signalBus.Unsubscribe<GameStateChangedSignal>(StartDetector);
+            _signalBus?.Unsubscribe<GameStateChangedSignal>(StartDetector);
         }
 
-        private void StartDetector()
+        private void StartDetector(GameStateChangedSignal signal)
         {
+            if(signal.NewState == GameState.InGame)
+                return;
+
             _currentTime = 0f;
             _isTimerRunning = true;
             
@@ -81,6 +84,7 @@ namespace Utilities
                 
                 if (timeRemaining < 0) timeRemaining = 0;
 
+                Debug.LogWarning(timeRemaining);
                 _signalBus.Fire(new InactivityTimerSignal { SecondsLeft = timeRemaining });
                 
                 yield return new WaitForSeconds(1f);

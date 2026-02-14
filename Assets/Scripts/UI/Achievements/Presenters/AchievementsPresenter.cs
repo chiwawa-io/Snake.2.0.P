@@ -25,8 +25,10 @@ namespace UI.Achievements.Presenters
             _view.OnNextClicked += NextPage;
             _view.OnPrevClicked += PrevPage;
             _view.OnCloseClicked += Close;
+            
+            _signalBus.Subscribe<InactivityTimerSignal>(OnTimerUpdate);
         }
-
+        
         public void Show()
         {
             _currentPage = 0;
@@ -60,9 +62,14 @@ namespace UI.Achievements.Presenters
             bool hasNext = _currentPage < _service.GetTotalPages() - 1;
             bool hasPrev = _currentPage > 0;
             
-            _view.UpdateNavigation(hasPrev, hasNext, _currentPage + 1, _service.GetTotalPages());
+            _view.UpdateNavigation(hasPrev, hasNext);
         }
 
+        private void OnTimerUpdate(InactivityTimerSignal signal)
+        {
+            _view.UpdateTimer(signal.SecondsLeft.ToString());
+        }
+        
         private void Close()
         {
             _signalBus.Fire(new GameStateChangedSignal { NewState = GameState.MainMenu });

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using TMPro;
+using Core.Events;
 using UI.Achievements.Logic;
 using UI.Achievements.Presenters;
 using UnityEngine;
@@ -15,13 +15,11 @@ namespace UI.Achievements.Views
         [SerializeField] private Button nextButton;
         [SerializeField] private Button prevButton;
         [SerializeField] private Button closeButton;
-        [SerializeField] private TextMeshProUGUI pageText;
         
         [Header("Grid")]
         [SerializeField] private Transform gridRoot;
         [SerializeField] private GameObject itemPrefab; // The row prefab
 
-        // Events for the Presenter to listen to
         public event Action OnNextClicked;
         public event Action OnPrevClicked;
         public event Action OnCloseClicked;
@@ -33,7 +31,6 @@ namespace UI.Achievements.Views
             nextButton.onClick.AddListener(() => OnNextClicked?.Invoke());
             prevButton.onClick.AddListener(() => OnPrevClicked?.Invoke());
             closeButton.onClick.AddListener(() => OnCloseClicked?.Invoke());
-            _presenter.Initialize(); 
         }
 
         public override void Show()
@@ -42,11 +39,13 @@ namespace UI.Achievements.Views
             _presenter.Show(); 
         }
 
-        public void UpdateNavigation(bool canGoBack, bool canGoForward, int current, int total)
+        public void UpdateNavigation(bool canGoBack, bool canGoForward)
         {
             prevButton.interactable = canGoBack;
             nextButton.interactable = canGoForward;
-            if(pageText) pageText.text = $"{current} / {total}";
+            
+            if (!canGoForward) prevButton.Select();
+            if (!canGoBack) nextButton.Select(); 
         }
 
         public void RenderItems(List<AchievementDisplayData> items)

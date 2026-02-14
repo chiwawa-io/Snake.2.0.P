@@ -83,7 +83,7 @@ public class ItemSpawner : MonoBehaviour
     {
         StopAllCoroutines();
         _isSpawningActive = false;
-        _signalBus.Unsubscribe<ItemDestroyedSignal>(OnItemDestroyedByTimer);
+        _signalBus.TryUnsubscribe<ItemDestroyedSignal>(OnItemDestroyedByTimer);
         
         foreach (ActiveItem item in _activeItems.Values.ToList())
         {
@@ -135,7 +135,7 @@ public class ItemSpawner : MonoBehaviour
             return;
         }
 
-        var instance = Instantiate(itemData.prefab, (Vector2)spawnPos, Quaternion.identity);
+        var instance = Instantiate(itemData.prefab, (Vector2)spawnPos, Quaternion.identity, null);
         _activeItems[spawnPos] = new ActiveItem(itemData, instance);
     }
     

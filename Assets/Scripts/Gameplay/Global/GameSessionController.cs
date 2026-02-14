@@ -1,5 +1,3 @@
-// Scripts/Core/Controllers/GameSessionController.cs
-
 using System;
 using Core.Enums;
 using Core.Events;
@@ -14,6 +12,7 @@ public class GameSessionController : IInitializable, IDisposable
     private readonly SnakeModel _snakeModel;
     private readonly SnakeEngine _snakeEngine;
     private readonly SnakeGameController _gameController; // To start/stop tick
+    private readonly GameObject _gameElements;
 
     private string _currentDifficulty = "Medium"; // Default
 
@@ -22,13 +21,15 @@ public class GameSessionController : IInitializable, IDisposable
         ItemSpawner itemSpawner, 
         SnakeModel snakeModel,
         SnakeEngine snakeEngine,
-        SnakeGameController gameController)
+        SnakeGameController gameController,
+        [Inject(Id = "GameElements")] GameObject gameElements)
     {
         _signalBus = signalBus;
         _itemSpawner = itemSpawner;
         _snakeModel = snakeModel;
         _snakeEngine = snakeEngine;
         _gameController = gameController;
+        _gameElements = gameElements;
     }
 
     public void Initialize()
@@ -55,19 +56,17 @@ public class GameSessionController : IInitializable, IDisposable
         else if (signal.NewState == GameState.MainMenu)
         {
             _itemSpawner.ResetSpawner();
-            // _snakeEngine.Reset(); // Done in GameController usually, but can be here
+            _gameElements.SetActive(false);
+            // _snakeEngine.Reset(); 
         }
     }
 
     private void StartNewSession()
     {
-        // 1. Reset Logic
         _snakeEngine.Reset();
+        _gameElements.SetActive(true);
         
-        // 2. Initialize Spawner
-        // We pass the Model's Body list directly so Spawner can check for collisions
-        // Note: You need to update ItemSpawner.Initialize signature slightly to accept this cleanly
-        Vector2Int bounds = new Vector2Int(10, 10); // Or inject Grid Size
+        Vector2Int bounds = new Vector2Int(22, 22);
         _itemSpawner.Initialize(bounds, _snakeModel.Body, _currentDifficulty);
     }
 }

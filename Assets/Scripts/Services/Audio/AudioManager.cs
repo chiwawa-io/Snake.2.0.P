@@ -1,5 +1,8 @@
+using System;
 using UnityEngine;
 using System.Collections.Generic;
+using Core.Events;
+using Zenject;
 
 namespace Core.Services
 {
@@ -35,6 +38,14 @@ namespace Core.Services
 
         private Dictionary<SoundType, AudioClip> _clipMap;
 
+        private SignalBus _signalBus;
+        
+        [Inject]
+        public void Construct(SignalBus signalBus)
+        {
+            _signalBus = signalBus;
+        }
+        
         private void Awake()
         {
             _clipMap = new Dictionary<SoundType, AudioClip>();
@@ -45,6 +56,22 @@ namespace Core.Services
             }
         }
 
+        private void Start()
+        {
+            if (_signalBus == null) return;
+            _signalBus.Subscribe<PlaySoundSignal>(OnPlaySound);
+            _signalBus.Subscribe<GameStartedSignal>(PlayMusic);
+            _signalBus.Subscribe<GameOverSignal>(PlayGameOverSound);
+        }
+
+        private void OnDisable()
+        {
+            if (_signalBus == null) return;
+            _signalBus.Unsubscribe<PlaySoundSignal>(OnPlaySound);
+            _signalBus.Unsubscribe<GameStartedSignal>(PlayMusic);
+            _signalBus.Unsubscribe<GameOverSignal>(PlayGameOverSound);
+        }
+
         private void PlayMusic()
         {
             if (musicSource.clip != gameMusic)
@@ -53,6 +80,11 @@ namespace Core.Services
                 musicSource.loop = true;
                 musicSource.Play();
             }
+        }
+
+        private void OnPlaySound(PlaySoundSignal signal)
+        {
+            PlayOneShot(signal.Type);
         }
 
         private void PlayGameOverSound()

@@ -1,4 +1,3 @@
-// Scripts/UI/Base/BaseView.cs
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

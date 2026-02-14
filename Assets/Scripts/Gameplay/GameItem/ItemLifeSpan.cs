@@ -10,10 +10,17 @@ public class ItemLifeSpan : MonoBehaviour
     [SerializeField] private bool isOnBomb;
 
     private Animator _animator;
+    private SignalBus _signalBus;
+    private DiContainer _container;
 
-    [Inject] private SignalBus _signalBus;
-    
-    private void OnEnable()
+    [Inject]
+    public void Construct(SignalBus signalBus, DiContainer container)
+    {
+        _signalBus = signalBus;
+        _container = container;
+    }
+
+    private void Start()
     {
         _signalBus.Subscribe<PreciousGemEatenSignal>(Destroy);
 
