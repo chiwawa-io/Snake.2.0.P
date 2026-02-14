@@ -11,13 +11,11 @@ public class ItemLifeSpan : MonoBehaviour
 
     private Animator _animator;
     private SignalBus _signalBus;
-    private DiContainer _container;
 
     [Inject]
-    public void Construct(SignalBus signalBus, DiContainer container)
+    public void Construct(SignalBus signalBus)
     {
         _signalBus = signalBus;
-        _container = container;
     }
 
     private void Start()

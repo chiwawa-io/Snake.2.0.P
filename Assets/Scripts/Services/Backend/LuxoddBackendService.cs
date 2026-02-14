@@ -26,6 +26,7 @@ namespace Services.Backend
             _networkManager.WebSocketService.ConnectToServer(onReady, onError);
             _signalBus.Subscribe<ErrorSignal>(HandleError);
             _signalBus.Subscribe<GameOverSignal>(OnGameOver);
+            _signalBus.Subscribe<InactivityTimeOut>(Exit);
         }
 
         public void Dispose()

@@ -33,6 +33,7 @@ public class SnakeView : MonoBehaviour
         if (boomEffect)
         {
             boomEffect.transform.position = snakeHeadVisual.transform.position;
+            boomEffect.SetActive(false);
             boomEffect.SetActive(true);
         }
     }

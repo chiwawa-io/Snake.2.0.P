@@ -33,10 +33,14 @@ namespace Utilities
 
         private void StartDetector(GameStateChangedSignal signal)
         {
-            if(signal.NewState == GameState.InGame)
-                return;
-
             _currentTime = 0f;
+            
+            if (signal.NewState == GameState.InGame)
+            {
+                StopDetector();   
+                return;
+            }
+
             _isTimerRunning = true;
             
             if (_timerCoroutine != null)

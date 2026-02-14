@@ -50,11 +50,13 @@ public class ItemSpawner : MonoBehaviour
     private SpawnPattern _currentChallengePattern;
 
     private SignalBus _signalBus;
+    private DiContainer _container;
     
     [Inject]
-    public void Construct(SignalBus signalBus)
+    public void Construct(SignalBus signalBus, DiContainer container)
     {
         _signalBus = signalBus;
+        _container = container;
     }
 
     #region Initialization & Resetting
@@ -135,7 +137,7 @@ public class ItemSpawner : MonoBehaviour
             return;
         }
 
-        var instance = Instantiate(itemData.prefab, (Vector2)spawnPos, Quaternion.identity, null);
+        var instance = _container.InstantiatePrefab(itemData.prefab, (Vector2)spawnPos, Quaternion.identity, null);
         _activeItems[spawnPos] = new ActiveItem(itemData, instance);
     }
     
