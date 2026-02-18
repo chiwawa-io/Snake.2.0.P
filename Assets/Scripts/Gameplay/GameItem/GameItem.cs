@@ -22,8 +22,8 @@ public class GameItem : ScriptableObject
     public PowerUpEffectType effectType; 
     public float effectDuration;
 
-    [Header("Additional effects")] public bool isPortal;
-
+    [Header("Additional effects")] 
+    public bool isPortal;
 }
 
 public enum PowerUpEffectType

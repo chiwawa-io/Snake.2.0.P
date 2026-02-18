@@ -8,7 +8,7 @@ namespace Utilities
 {
     public class InactivityDetector : MonoBehaviour
     {
-        [SerializeField] private int inactivityTimeLimit = 30;
+        [SerializeField] private int _inactivityTimeLimit = 30;
 
         private float _currentTime;
         private bool _isTimerRunning; 
@@ -26,7 +26,21 @@ namespace Utilities
             _signalBus?.Subscribe<GameStateChangedSignal>(StartDetector);
         }
 
-        public void OnDisable()
+        private void Update()
+        {
+            if (!_isTimerRunning) return;
+
+            _currentTime += Time.deltaTime;
+
+            if (_currentTime >= _inactivityTimeLimit)
+            {
+                Debug.LogWarning("Inactivity time limit reached!.");
+                _signalBus.Fire(new InactivityTimeOut());
+                StopDetector(); 
+            }
+        }
+
+        private void OnDisable()
         {
             _signalBus?.Unsubscribe<GameStateChangedSignal>(StartDetector);
         }
@@ -64,36 +78,18 @@ namespace Utilities
             Debug.LogWarning("Inactivity Detector Stopped.");
         }
 
-        void Update()
-        {
-            if (!_isTimerRunning)
-            {
-                return;
-            }
-
-            _currentTime += Time.deltaTime;
-
-            if (_currentTime >= inactivityTimeLimit)
-            {
-                Debug.LogWarning("Inactivity time limit reached!.");
-                _signalBus.Fire(new InactivityTimeOut());
-                StopDetector(); 
-            }
-        }
-        IEnumerator UpdateTimerDisplay()
+        private IEnumerator UpdateTimerDisplay()
         {
             while (_isTimerRunning)
             {
-                var timeRemaining = Mathf.RoundToInt(inactivityTimeLimit - _currentTime);
-                
+                var timeRemaining = Mathf.RoundToInt(_inactivityTimeLimit - _currentTime);
                 if (timeRemaining < 0) timeRemaining = 0;
 
                 Debug.LogWarning(timeRemaining);
-                _signalBus.Fire(new InactivityTimerSignal { SecondsLeft = timeRemaining });
+                _signalBus.Fire(new InactivityTimerSignal (timeRemaining));
                 
                 yield return new WaitForSeconds(1f);
             }
         }
     }
 }
-

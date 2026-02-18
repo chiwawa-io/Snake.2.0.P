@@ -27,26 +27,6 @@ namespace UI.MainMenu.Views
 
         [Inject] private MainMenuPresenter _presenter;
 
-        private void Start()
-        {
-            startButton.onClick.AddListener(() => _presenter.OnPlayClicked());
-            
-            if(leaderboardButton) 
-                leaderboardButton.onClick.AddListener(() => _presenter.OnLeaderboardClicked());
-            
-            if(achievementsButton)
-                achievementsButton.onClick.AddListener(() => _presenter.OnAchievementsClicked());
-
-            if(quitButton) 
-                quitButton.onClick.AddListener(() => _presenter.OnQuitClicked());
-
-            diffEasyButton.onClick.AddListener(() => _presenter.OnDifficultySelected("Easy"));
-            diffMediumButton.onClick.AddListener(() => _presenter.OnDifficultySelected("Medium"));
-            diffHardButton.onClick.AddListener(() => _presenter.OnDifficultySelected("Hard"));
-
-            diffCloseButton.onClick.AddListener(() => _presenter.OnDifficultyClosed());
-        }
-
         public override void Show()
         {
             base.Show();
@@ -66,14 +46,32 @@ namespace UI.MainMenu.Views
 
             if (isActive)
             {
-                // Auto-select "Easy" or the first button for controller support
                 if(diffEasyButton) diffEasyButton.Select();
             }
             else
             {
-                // Return focus to Start button when popup closes
                 if(startButton) startButton.Select();
             }
+        }
+
+        private void Start()
+        {
+            startButton.onClick.AddListener(() => _presenter.OnPlayClicked());
+            
+            if(leaderboardButton) 
+                leaderboardButton.onClick.AddListener(() => _presenter.OnLeaderboardClicked());
+            
+            if(achievementsButton)
+                achievementsButton.onClick.AddListener(() => _presenter.OnAchievementsClicked());
+
+            if(quitButton) 
+                quitButton.onClick.AddListener(() => _presenter.OnQuitClicked());
+
+            diffEasyButton.onClick.AddListener(() => _presenter.OnDifficultySelected("Easy"));
+            diffMediumButton.onClick.AddListener(() => _presenter.OnDifficultySelected("Medium"));
+            diffHardButton.onClick.AddListener(() => _presenter.OnDifficultySelected("Hard"));
+
+            diffCloseButton.onClick.AddListener(() => _presenter.OnDifficultyClosed());
         }
     }
 }

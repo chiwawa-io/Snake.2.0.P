@@ -3,6 +3,11 @@ using UnityEngine;
 
 public class SnakeEngine
 {
+    private readonly Vector2Int InitHeadPos = new(0, -5);
+    private readonly Vector2Int InitNeckPos = new(0, -6);
+    private readonly Vector2Int InitBodyPos = new(0, -7);
+    private readonly Vector2Int InitTailPos = new(0, -8);
+    
     private readonly SnakeModel _model;
     private readonly Vector2Int _gridSize;
     private readonly int _xBound;
@@ -20,13 +25,15 @@ public class SnakeEngine
     {
         _model.Body.Clear();
 
-        _model.Body.Add(new Vector2Int(0, -5));
-        _model.Body.Add(new Vector2Int(0, -6));
-        _model.Body.Add(new Vector2Int(0, -7));
-        _model.Body.Add(new Vector2Int(0, -8));
+        _model.Body.Add(InitHeadPos);
+        _model.Body.Add(InitNeckPos);
+        _model.Body.Add(InitBodyPos);
+        _model.Body.Add(InitTailPos);
 
         _model.Direction = Vector2Int.up;
         _model.PendingDirection = Vector2Int.up;
+        
+        _model.LastTailPosition = _model.Body.Last();
     }
 
     public void SetInput(Vector2Int dir)
@@ -43,11 +50,11 @@ public class SnakeEngine
         Vector2Int currentHead = _model.Body[0];
         newHeadPos = currentHead + _model.Direction;
 
-        if (!_model.IsInvulnerable && !_model.IsRespawning)
+        if (Mathf.Abs(newHeadPos.x) > _xBound || Mathf.Abs(newHeadPos.y) > _yBound)
+            return false;
+        
+        if (!_model.IsRespawning)
         {
-            if (Mathf.Abs(newHeadPos.x) > _xBound || Mathf.Abs(newHeadPos.y) > _yBound)
-                return false;
-
             for (int i = 0; i < _model.Body.Count - 1; i++)
             {
                 if (newHeadPos == _model.Body[i]) return false;

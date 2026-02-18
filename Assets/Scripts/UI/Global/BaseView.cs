@@ -5,28 +5,28 @@ using UnityEngine.UI;
 public abstract class BaseView : MonoBehaviour
 {
     [Header("Base Settings")]
-    [SerializeField] protected GameObject screenRoot;
-    [SerializeField] protected Button defaultFocusButton;
-    [SerializeField] protected TextMeshProUGUI timerText; 
+    [SerializeField] protected GameObject _screenRoot;
+    [SerializeField] protected Button _defaultFocusButton;
+    [SerializeField] protected TextMeshProUGUI _timerText; 
 
     public virtual void Show()
     {
-        if (screenRoot) screenRoot.SetActive(true);
+        if (_screenRoot) _screenRoot.SetActive(true);
         
-        if (defaultFocusButton != null)
+        if (_defaultFocusButton != null)
         {
-            defaultFocusButton.Select();
-            defaultFocusButton.OnSelect(null);
+            _defaultFocusButton.Select();
+            _defaultFocusButton.OnSelect(null);
         }
     }
 
     public virtual void Hide()
     {
-        if (screenRoot) screenRoot.SetActive(false);
+        if (_screenRoot) _screenRoot.SetActive(false);
     }
 
     public virtual void UpdateTimer(string text)
     {
-        if (timerText) timerText.text = text;
+        if (_timerText) _timerText.text = text;
     }
 }

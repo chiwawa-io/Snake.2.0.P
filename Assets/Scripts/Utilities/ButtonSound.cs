@@ -14,12 +14,10 @@ namespace Utilities {
             _audioManager = audioManager;
         }
 
-        void Start()
+        private void Start()
         {
             Button button = GetComponent<Button>();
-            
             button.onClick.AddListener(() => _audioManager.PlayOneShot(SoundType.ButtonSound));
         }
     }
 }
-

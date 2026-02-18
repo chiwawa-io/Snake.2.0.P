@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using Core.Events;
 using UnityEngine;
@@ -40,7 +39,8 @@ public class ItemLifeSpan : MonoBehaviour
     {
         if (isOnBomb) _animator.enabled = true;
         yield return new WaitForSeconds(lifeSpan);
-        _signalBus.Fire(new ItemDestroyedSignal {ItemPosition = Vector2Int.RoundToInt(this.transform.position)});
+        _signalBus.Fire(new ItemDestroyedSignal (Vector2Int.RoundToInt(this.transform.position)));
         Destroy(gameObject);
     }
 }
+

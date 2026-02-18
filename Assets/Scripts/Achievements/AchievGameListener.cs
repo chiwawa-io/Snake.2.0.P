@@ -5,18 +5,15 @@ using Services.PlayerData;
 using UnityEngine;
 using Zenject;
 
-
-
 public class AchievGameListener : MonoBehaviour
 {
-    [SerializeField] private List<AchievementSO> achievementsList = new();
+    public static Action<string> OnAchievementCompleted;
+
+    [SerializeField] private List<AchievementSO> _achievementsList = new();
     
     private PlayerDataManager _playerDataManager;
     private SignalBus _signalBus;
-    
     private readonly List<string> _completedAchievements = new();
-    
-    public static Action<string> OnAchievementCompleted;
 
     [Inject]
     public void Construct(PlayerDataManager playerDataManager, SignalBus signalBus)
@@ -38,7 +35,7 @@ public class AchievGameListener : MonoBehaviour
 
     private void LoadCompletedAchievements()
     {
-        foreach (var achievement in achievementsList)
+        foreach (var achievement in _achievementsList)
         {
             if (_playerDataManager.IsAchievementCompleted(achievement.id))
                 _completedAchievements.Add(achievement.id);
@@ -51,18 +48,20 @@ public class AchievGameListener : MonoBehaviour
 
         var achievementData = GetAchievementById(achievement.AchievementId);
         
-        if (achievementData != null && !_completedAchievements.Contains(achievement.AchievementId)) OnAchievementCompleted?.Invoke(achievementData.displayName);
+        if (achievementData != null && !_completedAchievements.Contains(achievement.AchievementId)) 
+            OnAchievementCompleted?.Invoke(achievementData.displayName);
         
-        if (!_completedAchievements.Contains(achievement.AchievementId)) _completedAchievements.Add(achievement.AchievementId);
+        if (!_completedAchievements.Contains(achievement.AchievementId)) 
+            _completedAchievements.Add(achievement.AchievementId);
     }
 
     private AchievementSO GetAchievementById(string id)
     {
-        foreach (var achievementData in achievementsList)
+        foreach (var achievementData in _achievementsList)
         {
-            if (achievementData.id == id) return achievementData;
+            if (achievementData.displayName == id) return achievementData;
             
-            Debug.LogWarning("Not found the Achievement");
+            Debug.Log("Not found the Achievement");
         }
         return null;
     }

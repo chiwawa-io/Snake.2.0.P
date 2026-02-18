@@ -52,4 +52,3 @@ namespace UI.Achievements.Logic
         public bool IsUnlocked;
     }
 }
-

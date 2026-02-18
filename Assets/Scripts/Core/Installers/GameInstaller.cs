@@ -18,24 +18,25 @@ using Zenject;
 public class GameInstaller : MonoInstaller
 {
     [Header("--- Scene Systems ---")]
-    [SerializeField] private SnakeView snakeView;
-    [SerializeField] private GameObject gameElements;
-    [SerializeField] private ItemSpawner itemSpawner;
-    [SerializeField] private NetworkManager networkManager; 
-    [SerializeField] private PlayerDataManager playerDataManager;
-    [SerializeField] private AudioManager audioManager;
-
+    [SerializeField] private SnakeView _snakeView;
+    [SerializeField] private GameObject _gameElements;
+    [SerializeField] private ItemSpawner _itemSpawner;
+    [SerializeField] private NetworkManager _networkManager; 
+    [SerializeField] private PlayerDataManager _playerDataManager;
+    [SerializeField] private AudioManager _audioManager;
+    
     [Header("--- UI Views ---")]
-    [SerializeField] private MainMenuView mainMenuView;
-    [SerializeField] private GameView hudView;
-    [SerializeField] private AchievementsView achievementsView;
-    [SerializeField] private LeaderboardView leaderboardView;
-    [SerializeField] private BaseView loadingView;
-    [SerializeField] private ErrorView errorView;
+    [SerializeField] private MainMenuView _mainMenuView;
+    [SerializeField] private GameView _hudView;
+    [SerializeField] private AchievementsView _achievementsView;
+    [SerializeField] private LeaderboardView _leaderboardView;
+    [SerializeField] private BaseView _loadingView;
+    [SerializeField] private ErrorView _errorView;
 
     [Header("--- Data & Config ---")]
-    [SerializeField] private List<AchievementSO> achievementList;
-    [SerializeField] private Vector2Int gridSize = new(22, 22);
+    [SerializeField] private List<AchievementSO> _achievementList;
+    [SerializeField] private AchievementCompletion _achievementConfig;
+    [SerializeField] private Vector2Int _gridSize = new(22, 22);
 
     public override void InstallBindings()
     {
@@ -52,18 +53,15 @@ public class GameInstaller : MonoInstaller
     {
         SignalBusInstaller.Install(Container);
 
-        // Game State
         Container.DeclareSignal<GameStateChangedSignal>();
         Container.DeclareSignal<GameOverSignal>();
         Container.DeclareSignal<GameStartedSignal>();
         Container.DeclareSignal<RevivePlayerSignal>();
 
-        // UI
         Container.DeclareSignal<ScoreUpdatedSignal>();
         Container.DeclareSignal<ScoreAddedSignal>();
         Container.DeclareSignal<LifeUpdatedSignal>();
         
-        // Snake
         Container.DeclareSignal<InputDirectionSignal>();
         Container.DeclareSignal<PlayerDiedSignal>();
         Container.DeclareSignal<PlaySoundSignal>();
@@ -72,62 +70,58 @@ public class GameInstaller : MonoInstaller
         Container.DeclareSignal<SnakeEffectSignal>(); 
         Container.DeclareSignal<ErrorSignal>();
         
-        // Timer
         Container.DeclareSignal<InactivityTimerSignal>();
         Container.DeclareSignal<InactivityTimeOut>();
         
-        // Achievements
         Container.DeclareSignal<AchievementProgressSignal>();
     }
 
     private void InstallGameSystems()
     {
         Container.BindInterfacesAndSelfTo<Startup>().AsSingle();
-        Container.Bind<PlayerDataManager>().FromInstance(playerDataManager).AsSingle();
-        Container.Bind<NetworkManager>().FromInstance(networkManager).AsSingle();
+        Container.Bind<PlayerDataManager>().FromInstance(_playerDataManager).AsSingle();
+        Container.Bind<NetworkManager>().FromInstance(_networkManager).AsSingle();
 
         Container.BindInterfacesTo<InputService>().AsSingle();
         
         Container.BindInterfacesAndSelfTo<LuxoddBackendService>().AsSingle();
 
-        Container.Bind<GameObject>().WithId("GameElements").FromInstance(gameElements);
+        Container.Bind<GameObject>().WithId("GameElements").FromInstance(_gameElements);
         Container.Bind<SnakeModel>().AsSingle();
-        Container.Bind<SnakeEngine>().AsSingle().WithArguments(new Vector2(gridSize.x, gridSize.y));
+        Container.Bind<SnakeEngine>().AsSingle().WithArguments(new Vector2(_gridSize.x, _gridSize.y));
+        Container.Bind<AchievementCompletion>().FromInstance(_achievementConfig).AsSingle();
         
-        Container.Bind<SnakeView>().FromInstance(snakeView).AsSingle();
-        Container.Bind<ItemSpawner>().FromInstance(itemSpawner).AsSingle();
+        Container.Bind<SnakeView>().FromInstance(_snakeView).AsSingle();
+        Container.Bind<ItemSpawner>().FromInstance(_itemSpawner).AsSingle();
 
-        Container.BindInterfacesAndSelfTo<SnakeGameController>().AsSingle();
+        Container.BindInterfacesAndSelfTo<SnakeController>().AsSingle();
         Container.BindInterfacesAndSelfTo<GameSessionController>().AsSingle();
     }
 
     private void InstallUISystems()
     {
-        // Views
-        Container.Bind<MainMenuView>().FromInstance(mainMenuView).AsSingle();
-        Container.Bind<GameView>().FromInstance(hudView).AsSingle();
-        Container.Bind<AchievementsView>().FromInstance(achievementsView).AsSingle();
-        Container.Bind<LeaderboardView>().FromInstance(leaderboardView).AsSingle();
-        Container.Bind<ErrorView>().FromInstance(errorView).AsSingle();
-        Container.Bind<BaseView>().WithId("Loading").FromInstance(loadingView);
+        Container.Bind<MainMenuView>().FromInstance(_mainMenuView).AsSingle();
+        Container.Bind<GameView>().FromInstance(_hudView).AsSingle();
+        Container.Bind<AchievementsView>().FromInstance(_achievementsView).AsSingle();
+        Container.Bind<LeaderboardView>().FromInstance(_leaderboardView).AsSingle();
+        Container.Bind<ErrorView>().FromInstance(_errorView).AsSingle();
+        Container.Bind<BaseView>().WithId("Loading").FromInstance(_loadingView);
 
-        // Logic
-        Container.Bind<AchievementService>().AsSingle().WithArguments(achievementList);
+        Container.Bind<AchievementService>().AsSingle().WithArguments(_achievementList);
         
         Container.BindInterfacesAndSelfTo<MainMenuPresenter>().AsSingle();
         Container.BindInterfacesAndSelfTo<AchievementsPresenter>().AsSingle();
         Container.BindInterfacesAndSelfTo<GamePresenter>().AsSingle();
         
-        // Manager
         Container.BindInterfacesAndSelfTo<UIManager>().AsSingle().NonLazy();
     }
 
     private void InstallAudio()
     {
-        if (audioManager != null)
+        if (_audioManager != null)
         {
             Container.Bind<AudioManager>()
-                .FromInstance(audioManager)
+                .FromInstance(_audioManager)
                 .AsSingle();
 
             Container.Bind<IAudioService>()

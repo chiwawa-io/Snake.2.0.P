@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using Core.Enums;
 using Core.Events;
 using UnityEngine;
 using Luxodd.Game.Scripts.Network;
@@ -12,20 +12,16 @@ namespace Services.PlayerData
 {
     public class PlayerDataManager : MonoBehaviour
     {
+        private const int ScoreMultiplicator = 10;
+        private const int LevelGainThreshold = 1000;
+        private const int InitLevel = 1;
+        
         private NetworkManager _networkManager;
         private SignalBus _signalBus;
-
         private int _bestScore;
         private int _currentXp;
         private int _currentLevel;
         private HashSet<string> _completedAchievementIds = new();
-
-        public event Action OnDataLoaded;
-        public event Action OnDataSaved;
-
-        public int GetBestScore() => _bestScore;
-        public int GetLevel() => _currentLevel;
-        public float GetExpNormalized() => (_currentXp / 1000f);
 
         [Inject]
         public void Construct(NetworkManager networkManager, IBackendService backendService, SignalBus signalBus)
@@ -34,6 +30,10 @@ namespace Services.PlayerData
             _signalBus = signalBus;
         }
         
+        public int GetLevel() => _currentLevel;
+
+        public float GetExpNormalized() => _currentXp;
+
         public void LoadData()
         {
             _networkManager.WebSocketCommandHandler.SendGetUserDataRequestCommand(OnDataLoadSuccess, OnDataLoadError);
@@ -43,20 +43,10 @@ namespace Services.PlayerData
         {
             if (score > _bestScore) _bestScore = score;
 
-            int xpGained = score / 10; 
+            int xpGained = score * ScoreMultiplicator; 
             AddExperience(xpGained);
 
             SaveDataInternal();
-        }
-
-        private void AddExperience(int amount)
-        {
-            _currentXp += amount;
-            while (_currentXp >= 1000)
-            {
-                _currentXp -= 1000;
-                _currentLevel++;
-            }
         }
 
         public void UnlockAchievement(string achievementId)
@@ -69,9 +59,17 @@ namespace Services.PlayerData
 
         public bool IsAchievementCompleted(string achievementId)
         {
-            if (_completedAchievementIds.Contains(achievementId))
-                return true;
-            return false;
+            return _completedAchievementIds.Contains(achievementId);
+        }
+
+        private void AddExperience(int amount)
+        {
+            _currentXp += amount;
+            while (_currentXp >= LevelGainThreshold)
+            {
+                _currentXp -= LevelGainThreshold;
+                _currentLevel++;
+            }
         }
 
         private void SaveDataInternal()
@@ -79,10 +77,9 @@ namespace Services.PlayerData
             var data = new PlayerData(_bestScore, _currentLevel, _currentXp, _completedAchievementIds);
             _networkManager.WebSocketCommandHandler.SendSetUserDataRequestCommand(data, 
                 () => {
-                    OnDataSaved?.Invoke(); 
                     Debug.Log("Data Sync Success");
                 }, 
-                (code, msg) => _signalBus.Fire(new ErrorSignal{Code = code, Message = msg})
+                (code, msg) => _signalBus.Fire(new ErrorSignal(code, msg))
             );
         }
 
@@ -112,20 +109,20 @@ namespace Services.PlayerData
                 InitEmpty();
             }
 
-            OnDataLoaded?.Invoke();
+            _signalBus.Fire(new GameStateChangedSignal(GameState.MainMenu));
         }
 
         private void OnDataLoadError(int code, string msg)
         {
             InitEmpty();
-            _signalBus.Fire(new ErrorSignal { Code = code, Message = msg });
+            _signalBus.Fire(new ErrorSignal(code, msg));
         }
 
         private void InitEmpty()
         {
             _bestScore = 0;
-            _currentLevel = 1;
             _currentXp = 0;
+            _currentLevel = InitLevel;
             _completedAchievementIds = new HashSet<string>();
         }
     }

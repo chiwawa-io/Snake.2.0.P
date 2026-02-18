@@ -11,7 +11,6 @@ namespace UI.Global
     public class UIManager : IInitializable, IDisposable
     {
         private readonly SignalBus _signalBus;
-        
         private readonly MainMenuView _mainMenu;
         private readonly GameView _hud;
         private readonly LeaderboardView _leaderboard;
@@ -73,4 +72,3 @@ namespace UI.Global
         }
     }
 }
-

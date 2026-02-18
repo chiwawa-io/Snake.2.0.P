@@ -11,8 +11,6 @@ namespace Core.Services
         None,
         FoodCollect,
         PreciousFoodCollect,
-        RockHit,
-        Explode,
         SpeedUp,
         SpeedDown,
         GameOver,
@@ -22,14 +20,14 @@ namespace Core.Services
     public class AudioManager : MonoBehaviour, IAudioService
     {
         [Header("Audio Source")]
-        [SerializeField] private AudioSource sfxSource;
-        [SerializeField] private AudioSource musicSource;
+        [SerializeField] private AudioSource _sfxSource;
+        [SerializeField] private AudioSource _musicSource;
 
         [Header("Clips")]
-        [SerializeField] private AudioClip gameMusic;
-        [SerializeField] private List<SoundClip> clips;
+        [SerializeField] private AudioClip _gameMusic;
+        [SerializeField] private List<SoundClip> _clips;
 
-        [System.Serializable]
+        [Serializable]
         public struct SoundClip
         {
             public SoundType Type;
@@ -37,7 +35,6 @@ namespace Core.Services
         }
 
         private Dictionary<SoundType, AudioClip> _clipMap;
-
         private SignalBus _signalBus;
         
         [Inject]
@@ -49,7 +46,7 @@ namespace Core.Services
         private void Awake()
         {
             _clipMap = new Dictionary<SoundType, AudioClip>();
-            foreach (var item in clips)
+            foreach (var item in _clips)
             {
                 if (!_clipMap.ContainsKey(item.Type))
                     _clipMap.Add(item.Type, item.Clip);
@@ -72,13 +69,21 @@ namespace Core.Services
             _signalBus.Unsubscribe<GameOverSignal>(PlayGameOverSound);
         }
 
+        public void PlayOneShot(SoundType type)
+        {
+            if (_clipMap.TryGetValue(type, out var clip))
+            {
+                _sfxSource.PlayOneShot(clip);
+            }
+        }
+
         private void PlayMusic()
         {
-            if (musicSource.clip != gameMusic)
+            if (_musicSource.clip != _gameMusic)
             {
-                musicSource.clip = gameMusic;
-                musicSource.loop = true;
-                musicSource.Play();
+                _musicSource.clip = _gameMusic;
+                _musicSource.loop = true;
+                _musicSource.Play();
             }
         }
 
@@ -89,16 +94,8 @@ namespace Core.Services
 
         private void PlayGameOverSound()
         {
-            musicSource.Stop();
+            _musicSource.Stop();
             PlayOneShot(SoundType.GameOver);
-        }
-
-        public void PlayOneShot(SoundType type)
-        {
-            if (_clipMap.TryGetValue(type, out var clip))
-            {
-                sfxSource.PlayOneShot(clip);
-            }
         }
     }
 }

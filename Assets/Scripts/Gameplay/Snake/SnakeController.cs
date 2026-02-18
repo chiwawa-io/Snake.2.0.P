@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Core.Enums;
 using Core.Events;
 using Core.Services;
@@ -7,18 +8,20 @@ using Zenject;
 
 namespace Gameplay.Snake
 {
-    public class SnakeGameController : IInitializable, ITickable, IDisposable
+    public class SnakeController : IInitializable, ITickable, IDisposable
     {
+        private const float BaseFrequency = 0.1f;
+        private const float SpeedUpFrequency = 0.08f;
+        private const float RespawnDelay = 0.4f;
+        private const int StartingLives = 3;
+        private const float FloatTolerance = 0.001f;
+
         private readonly SignalBus _signalBus;
         private readonly SnakeEngine _engine;
         private readonly SnakeModel _model;
         private readonly ItemSpawner _itemSpawner;
         private readonly SnakeView _view;
-        
-        private const float BaseFrequency = 0.1f;
-        private const float SpeedUpFrequency = 0.08f;
-        private const float RespawnDelay = 0.4f;
-        private const int StartingLives = 3;
+        private readonly AchievementCompletion _completionConfig;
         
         private float _moveTimer;
         private float _powerUpTimer;
@@ -29,18 +32,20 @@ namespace Gameplay.Snake
         
         public float InterpolationFactor => _gameIsRunning ? (_moveTimer / _model.MoveFrequency) : 0f;
 
-        public SnakeGameController(
+        public SnakeController(
             SignalBus signalBus, 
             SnakeEngine engine, 
             SnakeModel model,
             ItemSpawner spawner,
-            SnakeView view)
+            SnakeView view,
+            AchievementCompletion completionConfig)
         {
             _signalBus = signalBus;
             _engine = engine;
             _model = model;
             _itemSpawner = spawner;
             _view = view;
+            _completionConfig = completionConfig;
         }
 
         public void Initialize()
@@ -48,6 +53,45 @@ namespace Gameplay.Snake
             _signalBus.Subscribe<InputDirectionSignal>(OnInput);
             _signalBus.Subscribe<GameStateChangedSignal>(OnStateChange);
             _signalBus.Subscribe<RevivePlayerSignal>(OnRevive); 
+        }
+
+        public void Tick()
+        {
+            if (_model.IsRespawning)
+            {
+                _respawnTimer -= Time.deltaTime;
+                if (_respawnTimer <= 0)
+                {
+                    _model.IsRespawning = false;
+                    _view.ToggleVisuals(true);
+                    _gameIsRunning = true;
+                    _signalBus.Fire(new SnakeEffectSignal("Go!", _model.Body[0]));
+                }
+                return; 
+            }
+
+            if (!_gameIsRunning) return;
+
+            if (_model.MoveFrequency < BaseFrequency || _model.IsInvulnerable)
+            {
+                _powerUpTimer -= Time.deltaTime;
+                if (_powerUpTimer <= 0)
+                {
+                    if (Mathf.Abs(_model.MoveFrequency - BaseFrequency) > FloatTolerance)
+                    {
+                        _signalBus.Fire(new PlaySoundSignal(SoundType.SpeedDown));
+                        _model.MoveFrequency = BaseFrequency;
+                    }
+                    _model.IsInvulnerable = false;
+                }
+            }
+
+            _moveTimer += Time.deltaTime;
+            if (_moveTimer >= _model.MoveFrequency)
+            {
+                _moveTimer = 0;
+                PerformMovementStep();
+            }
         }
 
         public void Dispose()
@@ -71,52 +115,13 @@ namespace Gameplay.Snake
         {
             _score = 0;
             _lives = StartingLives;
-            _signalBus.Fire(new LifeUpdatedSignal { LifeRemaining = _lives });
-            _signalBus.Fire(new ScoreUpdatedSignal { TotalScore = 0 });
+            _signalBus.Fire(new LifeUpdatedSignal(_lives));
+            _signalBus.Fire(new ScoreUpdatedSignal(0));
 
             _model.MoveFrequency = BaseFrequency;
             _model.IsInvulnerable = false;
             _model.IsRespawning = false;
             _engine.Reset();
-        }
-
-        public void Tick()
-        {
-            if (_model.IsRespawning)
-            {
-                _respawnTimer -= Time.deltaTime;
-                if (_respawnTimer <= 0)
-                {
-                    _model.IsRespawning = false;
-                    _view.ToggleVisuals(true);
-                    _gameIsRunning = true;
-                    _signalBus.Fire(new SnakeEffectSignal { EffectName = "Go!", Position = _model.Body[0] });
-                }
-                return; 
-            }
-
-            if (!_gameIsRunning) return;
-
-            if (_model.MoveFrequency < BaseFrequency || _model.IsInvulnerable)
-            {
-                _powerUpTimer -= Time.deltaTime;
-                if (_powerUpTimer <= 0)
-                {
-                    if (_model.MoveFrequency != BaseFrequency)
-                    {
-                        _signalBus.Fire(new PlaySoundSignal { Type = SoundType.SpeedDown });
-                        _model.MoveFrequency = BaseFrequency;
-                    }
-                    _model.IsInvulnerable = false;
-                }
-            }
-
-            _moveTimer += Time.deltaTime;
-            if (_moveTimer >= _model.MoveFrequency)
-            {
-                _moveTimer = 0;
-                PerformMovementStep();
-            }
         }
 
         private void PerformMovementStep()
@@ -155,16 +160,16 @@ namespace Gameplay.Snake
                 CheckFoodAchievements();
 
                 bool isPrecious = data.objName == "PreciousFood";
-                int points = data.scoreValue * _model.Body.Count;
+                int points = data.scoreValue * _model.Body.Count * 100;
                 _score += points;
-                _signalBus.Fire(new ScoreUpdatedSignal { TotalScore = _score });
-                _signalBus.Fire(new ScoreAddedSignal { Amount = points, Position = pos });
+                _signalBus.Fire(new ScoreUpdatedSignal(_score));
+                _signalBus.Fire(new ScoreAddedSignal(points, pos));
                 
                 if (isPrecious) 
                     _signalBus.Fire(new PreciousGemEatenSignal());
                 
                 SoundType sound = isPrecious ? SoundType.PreciousFoodCollect : SoundType.FoodCollect;
-                _signalBus.Fire(new PlaySoundSignal { Type = sound });
+                _signalBus.Fire(new PlaySoundSignal(sound));
 
                 _itemSpawner.RemoveItem(pos); 
                 UnityEngine.Object.Destroy(item.Instance);
@@ -176,23 +181,21 @@ namespace Gameplay.Snake
             if (data.isObstacle && !_model.IsInvulnerable && !_model.IsRespawning)
             {
                 HandleDeath(data.objName);
-                return false;
             }
 
             if (data.isPowerUp)
             {
                 ApplyPowerUp(data, pos);
-                _itemSpawner.RemoveItem(pos);
-                UnityEngine.Object.Destroy(item.Instance);
-                return false;
             }
 
+            _itemSpawner.RemoveItem(pos);
+            UnityEngine.Object.Destroy(item.Instance);
             return false;
         }
 
         private void ApplyPowerUp(GameItem data, Vector2Int pos)
         {
-            _signalBus.Fire(new PlaySoundSignal { Type = SoundType.SpeedUp });
+            _signalBus.Fire(new PlaySoundSignal (SoundType.SpeedUp) );
             _powerUpTimer = data.effectDuration;
 
             if (data.effectType == PowerUpEffectType.SpeedUp)
@@ -200,26 +203,26 @@ namespace Gameplay.Snake
                 _model.MoveFrequency = SpeedUpFrequency;
                 _model.SpeedUpsCollected++;
                 CheckSpeedAchievements();
-                _signalBus.Fire(new SnakeEffectSignal { EffectName = "Speed Up!", Position = pos });
+                _signalBus.Fire(new SnakeEffectSignal("Speed Up!", pos));
             }
             else if (data.effectType == PowerUpEffectType.Invulnerable)
             {
                 _model.IsInvulnerable = true;
-                _signalBus.Fire(new SnakeEffectSignal { EffectName = "Invulnerable!", Position = pos });
+                _signalBus.Fire(new SnakeEffectSignal("Invulnerable!", pos));
             }
         }
 
         private void HandleDeath(string reason)
         {
-            _signalBus.Fire(new PlaySoundSignal { Type = SoundType.GameOver });
-            _signalBus.Fire(new PlayerDiedSignal { DeathReason = reason });
+            _signalBus.Fire(new PlaySoundSignal (SoundType.GameOver));
+            _signalBus.Fire(new PlayerDiedSignal(reason));
             
             _gameIsRunning = false;
                      
             _view.PlayBoomEffect();
             _view.ToggleVisuals(false);
             _lives--;
-            _signalBus.Fire(new LifeUpdatedSignal { LifeRemaining = _lives });
+            _signalBus.Fire(new LifeUpdatedSignal(_lives));
 
             if (_lives > 0)
             {
@@ -227,7 +230,7 @@ namespace Gameplay.Snake
             }
             else
             {
-                _signalBus.Fire(new GameOverSignal { FinalScore = _score });
+                _signalBus.Fire(new GameOverSignal (_score));
             }
         }
 
@@ -241,7 +244,7 @@ namespace Gameplay.Snake
         private void OnRevive(RevivePlayerSignal signal)
         {
             _lives = 3; 
-            _signalBus.Fire(new LifeUpdatedSignal { LifeRemaining = _lives });
+            _signalBus.Fire(new LifeUpdatedSignal(_lives));
             StartRespawnSequence(); 
         }
 
@@ -252,29 +255,31 @@ namespace Gameplay.Snake
 
         private void CheckFoodAchievements()
         {
-            int c = _model.GemsCollected;
-            if (c == 40) FireAch("FoodC_xx");
-            else if (c == 25) FireAch("FoodC_x");
-            else if (c == 15) FireAch("FoodC_m");
+            CheckAchievements(_completionConfig.FoodRules, _model.GemsCollected);
         }
 
         private void CheckGrowthAchievements()
         {
-            int count = _model.Body.Count;
-            if (count == 60) FireAch("Size_xxl");
-            else if (count == 40) FireAch("Size_xx");
-            else if (count == 25) FireAch("Size_x");
+            CheckAchievements(_completionConfig.SnakeSizeRules, _model.Body.Count);
         }
-        
+    
         private void CheckSpeedAchievements()
         {
-            int c = _model.SpeedUpsCollected;
-            if (c == 40) FireAch("SpeedC_xxl");
-            else if (c == 25) FireAch("SpeedC_xx");
-            else if (c == 10) FireAch("SpeedC_x");
-            else if (c == 3) FireAch("SpeedC_m");
+            CheckAchievements(_completionConfig.SpeedPowerUpRules, _model.SpeedUpsCollected);
+        }
+        
+        private void CheckAchievements(List<AchievementCompletion.AchievementRule> rules, int currentValue)
+        {
+            foreach (var rule in rules)
+            {
+                if (currentValue == rule.Threshold)
+                {
+                    FireAch(rule.AchievementId);
+                    break; 
+                }
+            }
         }
 
-        private void FireAch(string id) => _signalBus.Fire(new AchievementProgressSignal { AchievementId = id });
+        private void FireAch(string id) => _signalBus.Fire(new AchievementProgressSignal(id));
     }
 }

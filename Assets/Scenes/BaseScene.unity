@@ -650,6 +650,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 92b2ac5495b93614abde9b3a964d2370, type: 2}
   - {fileID: 11400000, guid: d0f3f3d72155bc946a6751ca0ac27684, type: 2}
   - {fileID: 11400000, guid: bfdf3a386d2e2d84585d4ecc52dc013e, type: 2}
+  achievementConfig: {fileID: 11400000, guid: b5125b34be9d87e4fa6eebc6cd6cf31c, type: 2}
   gridSize: {x: 22, y: 22}
 --- !u!1 &1966624416
 GameObject:
@@ -1062,28 +1063,6 @@ MonoBehaviour:
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
---- !u!95 &119647417074940427
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2527229636086813499}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: bcf932e745c100c47bbfe8698747e968, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &123658228862255053
 GameObject:
   m_ObjectHideFlags: 0
@@ -1287,7 +1266,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &355492687794324945
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1622,34 +1601,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f32447f021e1e8408b9595d596c8b7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemTypes:
+  _itemTypes:
   - {fileID: 11400000, guid: 8b2125e2c323fd84b868542e09251576, type: 2}
   - {fileID: 11400000, guid: 84e52612963a4f7488b4c8f7c7e57bf3, type: 2}
   - {fileID: 11400000, guid: cb3b0d92b04f45a4cbb29055034bd86e, type: 2}
   - {fileID: 11400000, guid: a0caba2de662b8b4c8a28f564898c9f3, type: 2}
   - {fileID: 11400000, guid: 88cc60a91ed18fa478a6bffb0c000f27, type: 2}
   - {fileID: 11400000, guid: 965a6d6a6b04c044b9dec1c32e2e4b51, type: 2}
-  spawnPointMaps:
+  _speedUpSpawnDelay: 7
+  _speedupSpawnInterval: 14
+  _invulnerabilitySpawnDelay: 5
+  _invulnerabilitySpawnInterval: 25
+  _spawnPointMaps:
   - {fileID: 11400000, guid: fd0672008538e7c44aa35507755fc974, type: 2}
   - {fileID: 11400000, guid: 7b9bddbf03173a141be9312d6b1384dc, type: 2}
   - {fileID: 11400000, guid: e35f3ae15bc5e334cbdfc860405156b0, type: 2}
   - {fileID: 11400000, guid: 7cac0f7f6ebf9824a8948704f8bceac1, type: 2}
-  startingFoodPattern: {fileID: 11400000, guid: 70e44f1af10814c4595360e8cb79acd8, type: 2}
-  speedUpPattern: {fileID: 11400000, guid: 8a7065181388c534f870d4e50776e5a3, type: 2}
-  invulnerabilityPattern: {fileID: 11400000, guid: 2c1791c5fccabd1deb6e23349f6d5a21, type: 2}
-  regularFoodPattern: {fileID: 11400000, guid: 70e44f1af10814c4595360e8cb79acd8, type: 2}
-  portalsPattern: {fileID: 0}
-  easyChallengePatterns:
+  _startingFoodPattern: {fileID: 11400000, guid: 70e44f1af10814c4595360e8cb79acd8, type: 2}
+  _speedUpPattern: {fileID: 11400000, guid: 8a7065181388c534f870d4e50776e5a3, type: 2}
+  _invulnerabilityPattern: {fileID: 11400000, guid: 2c1791c5fccabd1deb6e23349f6d5a21, type: 2}
+  _regularFoodPattern: {fileID: 11400000, guid: 70e44f1af10814c4595360e8cb79acd8, type: 2}
+  _portalsPattern: {fileID: 0}
+  _easyChallengePatterns:
   - {fileID: 11400000, guid: eeef5d34bc444974ea5cdccb52aae9b8, type: 2}
   - {fileID: 11400000, guid: 23d53d96db6f7ee459ed914c2d17cc87, type: 2}
-  mediumChallengePatterns:
+  _mediumChallengePatterns:
   - {fileID: 11400000, guid: d9beeeba11353234f8ccfd0811fffdb0, type: 2}
   - {fileID: 11400000, guid: 3e8ce3b3533b4ea44a65082366c030e5, type: 2}
   - {fileID: 11400000, guid: 4d004a3b63876b54db84f87dd204c585, type: 2}
-  hardChallengePatterns:
+  _hardChallengePatterns:
   - {fileID: 11400000, guid: d57308dc7596c4a468e6311a47aaea0a, type: 2}
   - {fileID: 11400000, guid: c9af64059c7fd444d890d4ad552785f0, type: 2}
-  challengeChance: 0.318
+  _challengeChance: 0.2
 --- !u!222 &502544260947345457
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8149,7 +8132,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06cd68fc598ffd54995f3acee3be2834, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inactivityTimeLimit: 30
+  _inactivityTimeLimit: 30
 --- !u!222 &1617134846669976783
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8915,7 +8898,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1000
   m_WholeNumbers: 0
-  m_Value: 688
+  m_Value: 469
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -9579,7 +9562,7 @@ RectTransform:
   m_Father: {fileID: 5526397857964385094}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.688, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: -3.5994263, y: 0}
   m_SizeDelta: {x: -0.3986, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -10509,7 +10492,6 @@ GameObject:
   - component: {fileID: 7898020808607321481}
   - component: {fileID: 3667981956693593305}
   - component: {fileID: 2696814730321090566}
-  - component: {fileID: 119647417074940427}
   m_Layer: 0
   m_Name: UiEventMessages
   m_TagString: Untagged
@@ -32545,7 +32527,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f9100a297715244db5e746d1064e2a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  achievementsList:
+  _achievementsList:
   - {fileID: 11400000, guid: 3eede8b72b7109b4b83afffc3de44632, type: 2}
   - {fileID: 11400000, guid: 88015905e8c369643b8566f38c5458ea, type: 2}
   - {fileID: 11400000, guid: 9eb8b2e7138951148a3d29b59e29c50b, type: 2}
@@ -37727,22 +37709,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd8f7c2c6f1fff74a89ac51463d6b982, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sfxSource: {fileID: 6485057848437057332}
-  musicSource: {fileID: 6485057848437057332}
-  gameMusic: {fileID: 8300000, guid: 0cf75ff2e3c5aca66a5c14e569fb920d, type: 3}
-  clips:
-  - Type: 8
-    Clip: {fileID: 8300000, guid: f2692625205e4cecda52fc91e7456ec6, type: 3}
-  - Type: 1
-    Clip: {fileID: 8300000, guid: 553b18186d8a4cddb8277ebd5ea31adb, type: 3}
-  - Type: 7
-    Clip: {fileID: 8300000, guid: ad803cd1c91cca1bf9a8e27618617c61, type: 3}
-  - Type: 2
-    Clip: {fileID: 8300000, guid: 1b565a69ed384532e80d06420df3aed4, type: 3}
-  - Type: 5
-    Clip: {fileID: 8300000, guid: 1335fd0f78472177b8c36d55edd9ed94, type: 3}
-  - Type: 6
-    Clip: {fileID: 8300000, guid: d5c569d221f0b2d83a0560b5bdbefda5, type: 3}
+  _sfxSource: {fileID: 0}
+  _musicSource: {fileID: 0}
+  _gameMusic: {fileID: 0}
+  _clips: []
 --- !u!114 &8680894752102706679
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38987,7 +38957,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &9218007009564247022
 MonoBehaviour:
   m_ObjectHideFlags: 0

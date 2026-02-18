@@ -2,7 +2,7 @@ using System;
 using Core.Events;
 using Zenject;
 
-namespace  UI.Game.Presenters
+namespace UI.Game.Presenters
 {
     public class GamePresenter : IInitializable, IDisposable
     {
@@ -24,22 +24,19 @@ namespace  UI.Game.Presenters
             _signalBus.Subscribe<SnakeEffectSignal>(OnEffectMessage);
             _signalBus.Subscribe<GameOverSignal>(OnGameOver);
             
-            // Init default state
             _view.SetLives(3); 
             _view.SetScoreDisplay(0);
         }
 
         public void Dispose()
         {
-            _signalBus.Unsubscribe<ScoreUpdatedSignal>(OnScoreUpdated);
-            _signalBus.Unsubscribe<ScoreAddedSignal>(OnScoreAdded);
-            _signalBus.Unsubscribe<LifeUpdatedSignal>(OnLivesUpdated);
-            _signalBus.Unsubscribe<AchievementProgressSignal>(OnAchievementUnlocked);
-            _signalBus.Unsubscribe<SnakeEffectSignal>(OnEffectMessage);
-            _signalBus.Unsubscribe<GameOverSignal>(OnGameOver);
+            _signalBus.TryUnsubscribe<ScoreUpdatedSignal>(OnScoreUpdated);
+            _signalBus.TryUnsubscribe<ScoreAddedSignal>(OnScoreAdded);
+            _signalBus.TryUnsubscribe<LifeUpdatedSignal>(OnLivesUpdated);
+            _signalBus.TryUnsubscribe<AchievementProgressSignal>(OnAchievementUnlocked);
+            _signalBus.TryUnsubscribe<SnakeEffectSignal>(OnEffectMessage);
+            _signalBus.TryUnsubscribe<GameOverSignal>(OnGameOver);
         }
-
-        // --- Signal Handlers ---
 
         private void OnScoreUpdated(ScoreUpdatedSignal signal)
         {
@@ -48,7 +45,6 @@ namespace  UI.Game.Presenters
 
         private void OnScoreAdded(ScoreAddedSignal signal)
         {
-            // Logic: Format the string here, View just shows it.
             string msg = $"+{signal.Amount}";
             _view.ShowFloatingText(msg, signal.Position);
         }
@@ -74,4 +70,3 @@ namespace  UI.Game.Presenters
         }
     }
 }
-

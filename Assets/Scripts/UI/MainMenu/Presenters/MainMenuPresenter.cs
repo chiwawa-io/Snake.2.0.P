@@ -56,17 +56,17 @@ namespace UI.MainMenu.Presenters
         {
             _sessionController.SetDifficulty(difficulty);
 
-            _signalBus.Fire(new GameStateChangedSignal { NewState = GameState.InGame });
+            _signalBus.Fire(new GameStateChangedSignal (GameState.InGame));
         }
 
         public void OnLeaderboardClicked()
         {
-            _signalBus.Fire(new GameStateChangedSignal { NewState = GameState.Leaderboard });
+            _signalBus.Fire(new GameStateChangedSignal (GameState.Leaderboard));
         }
         
         public void OnAchievementsClicked()
         {
-            _signalBus.Fire(new GameStateChangedSignal { NewState = GameState.Achievements });
+            _signalBus.Fire(new GameStateChangedSignal (GameState.Achievements));
         }
 
         public void OnQuitClicked()

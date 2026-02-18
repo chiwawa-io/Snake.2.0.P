@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using Core.Enums;
 using Core.Events;
@@ -21,7 +20,20 @@ public class Leaderboard : MonoBehaviour
         _signalBus = signalBus;
     }
 
-    public void OnEnable()
+    public void FetchLeaderboard()
+    {
+        _networkManager.WebSocketCommandHandler.SendLeaderboardRequestCommand(
+            OnSuccess, 
+            (code, msg) => Debug.LogError($"Leaderboard Error: {msg}")
+        );
+    }
+
+    public void OnReturnClicked()
+    {
+        _signalBus.Fire(new GameStateChangedSignal (GameState.MainMenu));
+    }
+
+    private void OnEnable()
     {
         FetchLeaderboard();
     }
@@ -31,30 +43,16 @@ public class Leaderboard : MonoBehaviour
         _signalBus.Subscribe<InactivityTimerSignal>(OnTimerUpdate);
     }
 
-    public void FetchLeaderboard()
-    {
-        _networkManager.WebSocketCommandHandler.SendLeaderboardRequestCommand(
-            OnSuccess, 
-            (code, msg) => Debug.LogError($"Leaderboard Error: {msg}")
-        );
-    }
-
     private void OnSuccess(LeaderboardDataResponse response)
     {
         if (response.Leaderboard == null) return;
 
         var list = response.Leaderboard.ToList();
-        
         leaderboardView.Populate(list);
     }
     
     private void OnTimerUpdate(InactivityTimerSignal signal)
     {
         leaderboardView.UpdateTimer(signal.SecondsLeft.ToString());
-    }
-
-    public void OnReturnClicked()
-    {
-        _signalBus.Fire(new GameStateChangedSignal {NewState = GameState.MainMenu});
     }
 }

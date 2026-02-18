@@ -72,8 +72,7 @@ namespace UI.Achievements.Presenters
         
         private void Close()
         {
-            _signalBus.Fire(new GameStateChangedSignal { NewState = GameState.MainMenu });
+            _signalBus.Fire(new GameStateChangedSignal (GameState.MainMenu));
         }
     }
 }
-

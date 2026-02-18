@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Core.Events;
 using UI.Achievements.Logic;
 using UI.Achievements.Presenters;
 using UnityEngine;
@@ -18,7 +17,7 @@ namespace UI.Achievements.Views
         
         [Header("Grid")]
         [SerializeField] private Transform gridRoot;
-        [SerializeField] private GameObject itemPrefab; // The row prefab
+        [SerializeField] private GameObject itemPrefab;
 
         public event Action OnNextClicked;
         public event Action OnPrevClicked;
@@ -26,17 +25,17 @@ namespace UI.Achievements.Views
 
         [Inject] private AchievementsPresenter _presenter;
 
+        public override void Show()
+        {
+            base.Show();
+            _presenter.Show(); 
+        }
+
         private void Start()
         {
             nextButton.onClick.AddListener(() => OnNextClicked?.Invoke());
             prevButton.onClick.AddListener(() => OnPrevClicked?.Invoke());
             closeButton.onClick.AddListener(() => OnCloseClicked?.Invoke());
-        }
-
-        public override void Show()
-        {
-            base.Show();
-            _presenter.Show(); 
         }
 
         public void UpdateNavigation(bool canGoBack, bool canGoForward)
@@ -61,4 +60,3 @@ namespace UI.Achievements.Views
         }
     }
 }
-

@@ -23,25 +23,20 @@ public class Startup : IInitializable
 
     public void Initialize()
     {
-        _signalBus.Fire(new GameStateChangedSignal { NewState = GameState.Loading });
+        _signalBus.Fire(new GameStateChangedSignal(GameState.Loading));
 
         _backendService.Initialize(OnConnectionSuccess, OnConnectionError);
     }
 
     private void OnConnectionSuccess()
     {
-        Debug.Log("Luxodd Connected!");
-
         _playerDataManager.LoadData(); 
-
-        Debug.Log("Transitioning to Menu...");
-        _signalBus.Fire(new GameStateChangedSignal { NewState = GameState.MainMenu });
     }
 
     private void OnConnectionError()
     {
         var error = "ConnectionFailed";
         Debug.LogWarning(error);
-        _signalBus.Fire(new ErrorSignal { Code = 500, Message = error });
+        _signalBus.Fire(new ErrorSignal(500, error));
     }
 }

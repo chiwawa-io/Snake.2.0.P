@@ -11,24 +11,20 @@ public class GameSessionController : IInitializable, IDisposable
     private readonly ItemSpawner _itemSpawner;
     private readonly SnakeModel _snakeModel;
     private readonly SnakeEngine _snakeEngine;
-    private readonly SnakeGameController _gameController; // To start/stop tick
     private readonly GameObject _gameElements;
-
-    private string _currentDifficulty = "Medium"; // Default
+    private string _currentDifficulty = "Medium";
 
     public GameSessionController(
         SignalBus signalBus, 
         ItemSpawner itemSpawner, 
         SnakeModel snakeModel,
         SnakeEngine snakeEngine,
-        SnakeGameController gameController,
         [Inject(Id = "GameElements")] GameObject gameElements)
     {
         _signalBus = signalBus;
         _itemSpawner = itemSpawner;
         _snakeModel = snakeModel;
         _snakeEngine = snakeEngine;
-        _gameController = gameController;
         _gameElements = gameElements;
     }
 
@@ -52,12 +48,12 @@ public class GameSessionController : IInitializable, IDisposable
         if (signal.NewState == GameState.InGame)
         {
             StartNewSession();
+            _signalBus.Fire(new GameStartedSignal());
         }
         else if (signal.NewState == GameState.MainMenu)
         {
             _itemSpawner.ResetSpawner();
             _gameElements.SetActive(false);
-            // _snakeEngine.Reset(); 
         }
     }
 

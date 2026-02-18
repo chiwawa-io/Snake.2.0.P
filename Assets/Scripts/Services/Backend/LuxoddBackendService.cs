@@ -48,18 +48,6 @@ namespace Services.Backend
         {
             _networkManager.WebSocketService.BackToSystemWithError(signal.Code.ToString(), signal.Message);
         }
-
-        private void OnGameOver(GameOverSignal signal)
-        {
-            TriggerGameOverFlow(
-                signal.FinalScore,
-                onRevive: () => 
-                {
-                    _signalBus.Fire(new RevivePlayerSignal());
-                }
-            );
-        }
-        
         public void TriggerGameOverFlow(int score, Action onRevive)
         {
             _networkManager.WebSocketService.SendSessionOptionContinue((action) => 
@@ -74,6 +62,22 @@ namespace Services.Backend
                 }
             });
         }
+        public void Exit()
+        {
+            _networkManager.WebSocketService.BackToSystem();
+        }
+
+        private void OnGameOver(GameOverSignal signal)
+        {
+            TriggerGameOverFlow(
+                signal.FinalScore,
+                onRevive: () => 
+                {
+                    _signalBus.Fire(new RevivePlayerSignal());
+                }
+            );
+        }
+        
 
         private void FinalizeSession(int score)
         {
@@ -102,10 +106,6 @@ namespace Services.Backend
             );
         }
 
-        public void Exit()
-        {
-            _networkManager.WebSocketService.BackToSystem();
-        }
     }
 }
 

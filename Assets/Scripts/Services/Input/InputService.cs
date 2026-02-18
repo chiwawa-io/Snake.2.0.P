@@ -1,5 +1,3 @@
-// Services/Input/InputService.cs
-
 using Core.Enums;
 using Core.Events;
 using UnityEngine;
@@ -9,7 +7,6 @@ public class InputService : IInitializable, ITickable
 {
     private readonly SignalBus _signalBus;
     private bool _isActive = true;
-    private Vector2Int _lastInput = Vector2Int.up;
 
     public InputService(SignalBus signalBus)
     {
@@ -41,7 +38,7 @@ public class InputService : IInitializable, ITickable
 
         if (dir != Vector2Int.zero)
         {
-            _signalBus.Fire(new InputDirectionSignal { Direction = dir });
+            _signalBus.Fire(new InputDirectionSignal(dir));
         }
     }
 
