@@ -133,6 +133,8 @@ namespace Gameplay.Snake
                 HandleDeath("Collision");
                 return;
             }
+            
+            _signalBus.Fire(new DistanceTravelled());
 
             var item = _itemSpawner.GetItemAt(newHead);
             bool snakeGrew = false;
@@ -160,15 +162,20 @@ namespace Gameplay.Snake
             {
                 _model.GemsCollected++;
                 CheckFoodAchievements();
-
+                
                 bool isPrecious = data.objName == "PreciousFood";
+
+                _signalBus.Fire(isPrecious ? new PreciousGemCollected() : new GemCollected());
+
+                if (isPrecious && _itemSpawner.HasActiveObstacles())
+                {
+                    _signalBus.Fire(new TrapAvoided());
+                }
+
                 int points = data.scoreValue * _model.Body.Count * 100;
                 _score += points;
                 _signalBus.Fire(new ScoreUpdatedSignal(_score));
                 _signalBus.Fire(new ScoreAddedSignal(points, pos));
-                
-                if (isPrecious) 
-                    _signalBus.Fire(new PreciousGemEatenSignal());
                 
                 SoundType sound = isPrecious ? SoundType.PreciousFoodCollect : SoundType.FoodCollect;
                 _signalBus.Fire(new PlaySoundSignal(sound));
@@ -188,6 +195,7 @@ namespace Gameplay.Snake
             if (data.isPowerUp)
             {
                 ApplyPowerUp(data, pos);
+                _signalBus.Fire(new PowerUpCollected());
             }
 
             _itemSpawner.RemoveItem(pos);

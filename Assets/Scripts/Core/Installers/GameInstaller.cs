@@ -7,8 +7,8 @@ using Gameplay.Snake;
 using Services.Audio;
 using Services.Backend;
 using Services.Gameloop;
-using Services.Input;
 using Services.PlayerData;
+using Services.PlayerInput;
 using UI.Achievements.Logic;
 using UI.Achievements.Presenters;
 using UI.Achievements.Views;
@@ -78,14 +78,13 @@ namespace Core.Installers
             Container.DeclareSignal<GemCollected>();
             Container.DeclareSignal<PowerUpCollected>();
             Container.DeclareSignal<PreciousGemCollected>();
-            Container.DeclareSignal<TrapsAvoided>();
+            Container.DeclareSignal<TrapAvoided>();
             Container.DeclareSignal<DistanceTravelled>();
 
             Container.DeclareSignal<InputDirectionSignal>();
             Container.DeclareSignal<PlayerDiedSignal>();
             Container.DeclareSignal<PlaySoundSignal>();
             Container.DeclareSignal<ItemDestroyedSignal>();
-            Container.DeclareSignal<PreciousGemEatenSignal>();
             Container.DeclareSignal<SnakeEffectSignal>();
             Container.DeclareSignal<ErrorSignal>();
 

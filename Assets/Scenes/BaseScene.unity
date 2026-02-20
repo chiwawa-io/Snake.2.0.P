@@ -1266,7 +1266,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &355492687794324945
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9562,7 +9562,7 @@ RectTransform:
   m_Father: {fileID: 5526397857964385094}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0.469, y: 1}
   m_AnchoredPosition: {x: -3.5994263, y: 0}
   m_SizeDelta: {x: -0.3986, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -10734,7 +10734,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92b1b583025053144bf04433bfd1ba9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.UI.GameView
-  _screenRoot: {fileID: 0}
+  _screenRoot: {fileID: 1810369099614542981}
   _defaultFocusButton: {fileID: 0}
   _timerText: {fileID: 0}
   scoreText: {fileID: 4774738608221267682}
@@ -12503,9 +12503,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fec2091dd119e54f8960088bd10ead6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI.Achievements.Views.AchievementsView
-  _screenRoot: {fileID: 0}
-  _defaultFocusButton: {fileID: 0}
-  _timerText: {fileID: 0}
+  _screenRoot: {fileID: 2072868895315514956}
+  _defaultFocusButton: {fileID: 4565459659895233253}
+  _timerText: {fileID: 5394941725116577664}
   nextButton: {fileID: 4565459659895233253}
   prevButton: {fileID: 1505951555903047207}
   closeButton: {fileID: 2722603521497847226}
@@ -15130,7 +15130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7a20d34f4cde6e42abb9930c1a3a481, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LoadingView
-  _screenRoot: {fileID: 0}
+  _screenRoot: {fileID: 345819599868761136}
   _defaultFocusButton: {fileID: 0}
   _timerText: {fileID: 0}
 --- !u!1 &4712532267084940170
@@ -25608,9 +25608,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12822a7d390e8b14eae85ce1290a2dee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.UI.ErrorView
-  _screenRoot: {fileID: 0}
-  _defaultFocusButton: {fileID: 0}
-  _timerText: {fileID: 0}
+  _screenRoot: {fileID: 5065873350677763028}
+  _defaultFocusButton: {fileID: 2273942230999614320}
+  _timerText: {fileID: 2113123461}
   codeText: {fileID: 3813973233511877185}
   messageText: {fileID: 2485126596689550112}
 --- !u!222 &5069926358091875938
@@ -34321,9 +34321,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb4d6a17ccf024e4794e860e55b0625f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _screenRoot: {fileID: 0}
-  _defaultFocusButton: {fileID: 0}
-  _timerText: {fileID: 0}
+  _screenRoot: {fileID: 4409870161362038660}
+  _defaultFocusButton: {fileID: 5081895592712268186}
+  _timerText: {fileID: 5756959013281517506}
   entrySlots:
   - {fileID: 7866357851372016028}
   - {fileID: 8763137858732758730}
@@ -38969,7 +38969,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &9218007009564247022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38982,9 +38982,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 833d8f5560c7b8242b9c4297cc635430, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.UI.MainMenuView
-  _screenRoot: {fileID: 0}
-  _defaultFocusButton: {fileID: 0}
-  _timerText: {fileID: 0}
+  _screenRoot: {fileID: 9218007009564247021}
+  _defaultFocusButton: {fileID: 4637767845561020164}
+  _timerText: {fileID: 8353746348261205014}
   expBar: {fileID: 1843803244052154279}
   levelText: {fileID: 7539617226699608664}
   startButton: {fileID: 4637767845561020164}

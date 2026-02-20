@@ -37,7 +37,7 @@ namespace UI.Achievements.Logic
                 
                 result.Add(new AchievementDisplayData 
                 { 
-                    Name = data.name, 
+                    Name = data.displayName, 
                     Description = data.description, 
                     IsUnlocked = isUnlocked
                 });

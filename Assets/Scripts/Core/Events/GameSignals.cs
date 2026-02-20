@@ -52,7 +52,6 @@ namespace Core.Events
     }
     
     //Snake
-    public readonly struct PreciousGemEatenSignal { }
 
     public readonly struct LifeUpdatedSignal
     {
@@ -93,23 +92,12 @@ namespace Core.Events
     public readonly struct GemCollected{}
     public readonly struct PowerUpCollected{}
     public readonly struct PreciousGemCollected{}
-
-    public readonly struct TrapsAvoided
-    {
-        public readonly int TrapsAvoidedCount;
-        public TrapsAvoided(int amount) => TrapsAvoidedCount = amount;
-    }
-
-    public readonly struct DistanceTravelled
-    {
-        public readonly int Distance;
-        public DistanceTravelled(int distance) => Distance = distance;
-    }
+    public readonly struct TrapAvoided {}
+    public readonly struct DistanceTravelled {}
 
     
     //Timer
     public struct InactivityTimeOut {}
-
     public readonly struct InactivityTimerSignal
     {
         public readonly int SecondsLeft; 

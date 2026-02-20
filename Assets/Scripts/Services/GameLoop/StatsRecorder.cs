@@ -15,8 +15,6 @@ namespace Services.Gameloop
 
     public class StatsRecorder : IInitializable, IDisposable
     {
-
-
         private readonly SignalBus _signalBus;
 
         private int _distanceTravelled;
@@ -37,7 +35,7 @@ namespace Services.Gameloop
             _signalBus.Subscribe<PowerUpCollected>(PowerUpCollected);
             _signalBus.Subscribe<GemCollected>(GemsCollected);
             _signalBus.Subscribe<PreciousGemCollected>(PreciousGemCollected);
-            _signalBus.Subscribe<TrapsAvoided>(TrapsAvoided);
+            _signalBus.Subscribe<TrapAvoided>(TrapsAvoided);
             _signalBus.Subscribe<DistanceTravelled>(DistanceTravelled);
         }
 
@@ -48,7 +46,7 @@ namespace Services.Gameloop
             _signalBus.Unsubscribe<PowerUpCollected>(PowerUpCollected);
             _signalBus.Unsubscribe<GemCollected>(GemsCollected);
             _signalBus.Unsubscribe<PreciousGemCollected>(PreciousGemCollected);
-            _signalBus.Unsubscribe<TrapsAvoided>(TrapsAvoided);
+            _signalBus.Unsubscribe<TrapAvoided>(TrapsAvoided);
             _signalBus.Unsubscribe<DistanceTravelled>(DistanceTravelled);
         }
 
@@ -76,7 +74,7 @@ namespace Services.Gameloop
         private void PowerUpCollected() => _powerUpsCollected++;
         private void GemsCollected() => _gemsCollected++;
         private void PreciousGemCollected() => _preciousGemsCollected++;
-        private void TrapsAvoided(TrapsAvoided signal) => _trapsAvoided = signal.TrapsAvoidedCount;
-        private void DistanceTravelled(DistanceTravelled signal) => _distanceTravelled = signal.Distance;
+        private void TrapsAvoided() => _trapsAvoided++;
+        private void DistanceTravelled() => _distanceTravelled++;
     }
 }

@@ -27,11 +27,11 @@ namespace Gameplay.GameItem
         private readonly Dictionary<Vector2Int, ActiveItem> _activeItems = new();
         private readonly Dictionary<string, int> _lastSpawnPointIndex = new();
 
-        [Header("Item Database")] [SerializeField]
-        private List<GameItem> _itemTypes;
+        [Header("Item Database")] 
+        [SerializeField] private List<GameItem> _itemTypes;
 
-        [Header("Spawning Intervals")] [SerializeField]
-        private int _speedUpSpawnDelay = 7;
+        [Header("Spawning Intervals")] 
+        [SerializeField] private int _speedUpSpawnDelay = 7;
 
         [SerializeField] private int _speedupSpawnInterval = 14;
         [SerializeField] private int _invulnerabilitySpawnDelay = 5;
@@ -123,6 +123,18 @@ namespace Gameplay.GameItem
             _activeItems.Remove(position);
         }
 
+        public bool HasActiveObstacles()
+        {
+            foreach (var activeItem in _activeItems.Values)
+            {
+                if (activeItem.Data.isObstacle)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
         private void SpawnItem(string itemName, Vector2Int spawnPos)
         {
             GameItem itemData = _itemTypes.FirstOrDefault(i => i.objName == itemName);

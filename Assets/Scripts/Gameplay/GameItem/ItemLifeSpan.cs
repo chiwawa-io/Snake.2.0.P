@@ -21,7 +21,7 @@ namespace Gameplay.GameItem
 
         private void Start()
         {
-            _signalBus.Subscribe<PreciousGemEatenSignal>(Destroy);
+            _signalBus.Subscribe<PreciousGemCollected>(Destroy);
 
             if (isOnBomb)
                 _animator = GetComponent<Animator>();
@@ -29,7 +29,7 @@ namespace Gameplay.GameItem
 
         private void OnDisable()
         {
-            _signalBus.Unsubscribe<PreciousGemEatenSignal>(Destroy);
+            _signalBus.Unsubscribe<PreciousGemCollected>(Destroy);
         }
 
         private void Destroy()

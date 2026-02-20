@@ -167,9 +167,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac16c7eb513422044af54585ec1df416, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  achievementName: {fileID: 7825212955201640996}
-  achievementDescription: {fileID: 5175424210321754407}
-  achievementIsCompleted: {fileID: 4175937194877358082}
+  _achievementName: {fileID: 7825212955201640996}
+  _achievementDescription: {fileID: 5175424210321754407}
+  _achievementIsCompleted: {fileID: 4175937194877358082}
 --- !u!1 &3545843574523200736
 GameObject:
   m_ObjectHideFlags: 0
@@ -273,6 +273,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -409,6 +410,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 17.68
   m_lineSpacingMax: 0
@@ -545,6 +547,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0

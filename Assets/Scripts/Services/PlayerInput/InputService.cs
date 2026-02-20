@@ -3,7 +3,7 @@ using Core.Events;
 using UnityEngine;
 using Zenject;
 
-namespace Services.Input
+namespace Services.PlayerInput
 {
     public class InputService : IInitializable, ITickable
     {
