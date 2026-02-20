@@ -7,8 +7,7 @@ namespace Core.Enums
         Leaderboard,
         Achievements,
         InGame,
-        GameOver,
-        DifficultySelect,
-        Error
+        Error,
+        PostGameStats 
     }
 }

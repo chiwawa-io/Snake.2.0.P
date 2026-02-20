@@ -1,15 +1,19 @@
 using TMPro;
 using UnityEngine;
 
-public class AchievementsRowUI : MonoBehaviour
+namespace Achievements
 {
-    [SerializeField] private TextMeshProUGUI _achievementName;
-    [SerializeField] private TextMeshProUGUI _achievementDescription;
-    [SerializeField] private TextMeshProUGUI _achievementIsCompleted;
-    public void Setup(string displayName, bool isCompleted, string description)
+    public class AchievementsRowUI : MonoBehaviour
     {
-        _achievementName.text = displayName;
-        _achievementIsCompleted.text = isCompleted ? "Completed" : "Not Completed";
-        _achievementDescription.text = description;
+        [SerializeField] private TextMeshProUGUI _achievementName;
+        [SerializeField] private TextMeshProUGUI _achievementDescription;
+        [SerializeField] private TextMeshProUGUI _achievementIsCompleted;
+
+        public void Setup(string displayName, bool isCompleted, string description)
+        {
+            _achievementName.text = displayName;
+            _achievementIsCompleted.text = isCompleted ? "Completed" : "Not Completed";
+            _achievementDescription.text = description;
+        }
     }
 }

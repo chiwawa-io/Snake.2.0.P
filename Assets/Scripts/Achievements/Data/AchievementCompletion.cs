@@ -1,20 +1,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "SnakeAchievementConfig", menuName = "Snake/Achievement Completion")]
-public class AchievementCompletion : ScriptableObject
+namespace Achievements.Data
 {
-    [System.Serializable]
-    public struct AchievementRule
+
+    [CreateAssetMenu(fileName = "SnakeAchievementConfig", menuName = "Snake/Achievement Completion")]
+    public class AchievementCompletion : ScriptableObject
     {
-        public int Threshold;
-        public string AchievementId; 
+        [System.Serializable]
+        public struct AchievementRule
+        {
+            public int Threshold;
+            public string AchievementId;
+        }
+
+        [Header("Collection Achievements")] public List<AchievementRule> FoodRules;
+        public List<AchievementRule> SpeedPowerUpRules;
+
+        [Header("State Achievements")] public List<AchievementRule> SnakeSizeRules;
     }
-
-    [Header("Collection Achievements")]
-    public List<AchievementRule> FoodRules;
-    public List<AchievementRule> SpeedPowerUpRules;
-
-    [Header("State Achievements")]
-    public List<AchievementRule> SnakeSizeRules;
 }

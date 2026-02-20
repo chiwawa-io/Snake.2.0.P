@@ -1,9 +1,11 @@
 using System;
 using Core.Enums;
 using Core.Events;
-using Game.UI;
 using UI.Achievements.Views;
+using UI.Game.Views;
+using UI.Leaderboard.Views;
 using UI.MainMenu.Views;
+using UI.Other;
 using Zenject;
 
 namespace UI.Global
@@ -57,6 +59,7 @@ namespace UI.Global
                 case GameState.InGame: _hud.Show(); break;
                 case GameState.Leaderboard: _leaderboard.Show(); break;
                 case GameState.Achievements: _achievements.Show(); break;
+                case GameState.PostGameStats: break;
                 case GameState.Error: _errorView.Show(); break;
             }
         }

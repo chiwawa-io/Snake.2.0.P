@@ -626,19 +626,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c153c7bc1d5ed5b4a8383533de42b0ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameInstaller
-  snakeView: {fileID: 7021849842307078939}
-  gameElements: {fileID: 5698593762103450127}
-  itemSpawner: {fileID: 461353704822027554}
-  networkManager: {fileID: 313531729252543366}
-  playerDataManager: {fileID: 6786772648718900736}
-  audioManager: {fileID: 8678845961764652222}
-  mainMenuView: {fileID: 9218007009564247022}
-  hudView: {fileID: 2582943021521577831}
-  achievementsView: {fileID: 3544091002059270311}
-  leaderboardView: {fileID: 6951880161164982458}
-  loadingView: {fileID: 4707036107742904747}
-  errorView: {fileID: 5065873350677763029}
-  achievementList:
+  _snakeView: {fileID: 7021849842307078939}
+  _gameElements: {fileID: 5698593762103450127}
+  _itemSpawner: {fileID: 461353704822027554}
+  _networkManager: {fileID: 313531729252543366}
+  _playerDataManager: {fileID: 6786772648718900736}
+  _audioManager: {fileID: 8678845961764652222}
+  _mainMenuView: {fileID: 9218007009564247022}
+  _hudView: {fileID: 2582943021521577831}
+  _achievementsView: {fileID: 3544091002059270311}
+  _leaderboardView: {fileID: 6951880161164982458}
+  _loadingView: {fileID: 4707036107742904747}
+  _errorView: {fileID: 5065873350677763029}
+  _achievementList:
   - {fileID: 11400000, guid: 3eede8b72b7109b4b83afffc3de44632, type: 2}
   - {fileID: 11400000, guid: 88015905e8c369643b8566f38c5458ea, type: 2}
   - {fileID: 11400000, guid: 9eb8b2e7138951148a3d29b59e29c50b, type: 2}
@@ -650,8 +650,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 92b2ac5495b93614abde9b3a964d2370, type: 2}
   - {fileID: 11400000, guid: d0f3f3d72155bc946a6751ca0ac27684, type: 2}
   - {fileID: 11400000, guid: bfdf3a386d2e2d84585d4ecc52dc013e, type: 2}
-  achievementConfig: {fileID: 11400000, guid: b5125b34be9d87e4fa6eebc6cd6cf31c, type: 2}
-  gridSize: {x: 22, y: 22}
+  _achievementConfig: {fileID: 11400000, guid: b5125b34be9d87e4fa6eebc6cd6cf31c, type: 2}
+  _gridSize: {x: 22, y: 22}
 --- !u!1 &1966624416
 GameObject:
   m_ObjectHideFlags: 0
@@ -10734,9 +10734,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92b1b583025053144bf04433bfd1ba9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.UI.GameView
-  screenRoot: {fileID: 1810369099614542981}
-  defaultFocusButton: {fileID: 0}
-  timerText: {fileID: 0}
+  _screenRoot: {fileID: 0}
+  _defaultFocusButton: {fileID: 0}
+  _timerText: {fileID: 0}
   scoreText: {fileID: 4774738608221267682}
   lifeIcons:
   - {fileID: 5923356050238503771}
@@ -12503,9 +12503,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fec2091dd119e54f8960088bd10ead6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI.Achievements.Views.AchievementsView
-  screenRoot: {fileID: 2072868895315514956}
-  defaultFocusButton: {fileID: 4565459659895233253}
-  timerText: {fileID: 5394941725116577664}
+  _screenRoot: {fileID: 0}
+  _defaultFocusButton: {fileID: 0}
+  _timerText: {fileID: 0}
   nextButton: {fileID: 4565459659895233253}
   prevButton: {fileID: 1505951555903047207}
   closeButton: {fileID: 2722603521497847226}
@@ -15130,9 +15130,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7a20d34f4cde6e42abb9930c1a3a481, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LoadingView
-  screenRoot: {fileID: 345819599868761136}
-  defaultFocusButton: {fileID: 0}
-  timerText: {fileID: 0}
+  _screenRoot: {fileID: 0}
+  _defaultFocusButton: {fileID: 0}
+  _timerText: {fileID: 0}
 --- !u!1 &4712532267084940170
 GameObject:
   m_ObjectHideFlags: 0
@@ -25608,9 +25608,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12822a7d390e8b14eae85ce1290a2dee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.UI.ErrorView
-  screenRoot: {fileID: 5065873350677763028}
-  defaultFocusButton: {fileID: 2273942230999614320}
-  timerText: {fileID: 2113123461}
+  _screenRoot: {fileID: 0}
+  _defaultFocusButton: {fileID: 0}
+  _timerText: {fileID: 0}
   codeText: {fileID: 3813973233511877185}
   messageText: {fileID: 2485126596689550112}
 --- !u!222 &5069926358091875938
@@ -34321,9 +34321,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb4d6a17ccf024e4794e860e55b0625f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  screenRoot: {fileID: 4409870161362038660}
-  defaultFocusButton: {fileID: 5081895592712268186}
-  timerText: {fileID: 5756959013281517506}
+  _screenRoot: {fileID: 0}
+  _defaultFocusButton: {fileID: 0}
+  _timerText: {fileID: 0}
   entrySlots:
   - {fileID: 7866357851372016028}
   - {fileID: 8763137858732758730}
@@ -34559,11 +34559,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b15ae8136e0cc2d42a246375376edbf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SnakeView
-  snakeHeadVisual: {fileID: 1655253626952606331}
-  snakeTailVisual: {fileID: 6757291061319314215}
-  lineRenderer: {fileID: 6296608753795447977}
-  boomEffect: {fileID: 7706985712097524449}
-  visualLerpSpeed: 10
+  _snakeHeadVisual: {fileID: 1655253626952606331}
+  _snakeTailVisual: {fileID: 6757291061319314215}
+  _lineRenderer: {fileID: 6296608753795447977}
+  _boomEffect: {fileID: 7706985712097524449}
+  _visualLerpSpeed: 10
 --- !u!222 &7025840084529582275
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -37709,10 +37709,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd8f7c2c6f1fff74a89ac51463d6b982, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sfxSource: {fileID: 0}
-  _musicSource: {fileID: 0}
-  _gameMusic: {fileID: 0}
-  _clips: []
+  _sfxSource: {fileID: 6485057848437057332}
+  _musicSource: {fileID: 6485057848437057332}
+  _gameMusic: {fileID: 8300000, guid: 0cf75ff2e3c5aca66a5c14e569fb920d, type: 3}
+  _clips:
+  - Type: 6
+    Clip: {fileID: 8300000, guid: f2692625205e4cecda52fc91e7456ec6, type: 3}
+  - Type: 5
+    Clip: {fileID: 8300000, guid: ad803cd1c91cca1bf9a8e27618617c61, type: 3}
+  - Type: 1
+    Clip: {fileID: 8300000, guid: 553b18186d8a4cddb8277ebd5ea31adb, type: 3}
+  - Type: 3
+    Clip: {fileID: 8300000, guid: 1335fd0f78472177b8c36d55edd9ed94, type: 3}
+  - Type: 4
+    Clip: {fileID: 8300000, guid: d5c569d221f0b2d83a0560b5bdbefda5, type: 3}
+  - Type: 2
+    Clip: {fileID: 8300000, guid: 1b565a69ed384532e80d06420df3aed4, type: 3}
 --- !u!114 &8680894752102706679
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38970,9 +38982,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 833d8f5560c7b8242b9c4297cc635430, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.UI.MainMenuView
-  screenRoot: {fileID: 9218007009564247021}
-  defaultFocusButton: {fileID: 4637767845561020164}
-  timerText: {fileID: 8353746348261205014}
+  _screenRoot: {fileID: 0}
+  _defaultFocusButton: {fileID: 0}
+  _timerText: {fileID: 0}
   expBar: {fileID: 1843803244052154279}
   levelText: {fileID: 7539617226699608664}
   startButton: {fileID: 4637767845561020164}

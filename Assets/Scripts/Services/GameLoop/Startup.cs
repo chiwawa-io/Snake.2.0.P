@@ -5,38 +5,41 @@ using Services.PlayerData;
 using UnityEngine;
 using Zenject;
 
-public class Startup : IInitializable
+namespace Services.Gameloop
 {
-    private readonly SignalBus _signalBus;
-    private readonly IBackendService _backendService;
-    private readonly PlayerDataManager _playerDataManager; 
-
-    public Startup(
-        SignalBus signalBus, 
-        IBackendService backendService,
-        PlayerDataManager playerDataManager)
+    public class Startup : IInitializable
     {
-        _signalBus = signalBus;
-        _backendService = backendService;
-        _playerDataManager = playerDataManager;
-    }
+        private readonly SignalBus _signalBus;
+        private readonly IBackendService _backendService;
+        private readonly PlayerDataManager _playerDataManager;
 
-    public void Initialize()
-    {
-        _signalBus.Fire(new GameStateChangedSignal(GameState.Loading));
+        public Startup(
+            SignalBus signalBus,
+            IBackendService backendService,
+            PlayerDataManager playerDataManager)
+        {
+            _signalBus = signalBus;
+            _backendService = backendService;
+            _playerDataManager = playerDataManager;
+        }
 
-        _backendService.Initialize(OnConnectionSuccess, OnConnectionError);
-    }
+        public void Initialize()
+        {
+            _signalBus.Fire(new GameStateChangedSignal(GameState.Loading));
 
-    private void OnConnectionSuccess()
-    {
-        _playerDataManager.LoadData(); 
-    }
+            _backendService.Initialize(OnConnectionSuccess, OnConnectionError);
+        }
 
-    private void OnConnectionError()
-    {
-        var error = "ConnectionFailed";
-        Debug.LogWarning(error);
-        _signalBus.Fire(new ErrorSignal(500, error));
+        private void OnConnectionSuccess()
+        {
+            _playerDataManager.LoadData();
+        }
+
+        private void OnConnectionError()
+        {
+            var error = "ConnectionFailed";
+            Debug.LogWarning(error);
+            _signalBus.Fire(new ErrorSignal(500, error));
+        }
     }
 }

@@ -1,9 +1,10 @@
-using Core.Services;
+using Services.Audio;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace Utilities {
+namespace Utilities 
+{
     public class ButtonSoundLinker : MonoBehaviour
     {
         private AudioManager _audioManager;

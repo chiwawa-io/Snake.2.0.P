@@ -1,27 +1,31 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-[System.Serializable]
-public class SpawnPointList
+namespace Gameplay.SpawnConfig
 {
-    public string itemName;
-    public List<Vector2Int> positions;
-}
-
-[CreateAssetMenu(fileName = "New Spawn Point Map", menuName = "Snake/Spawn Point Map")]
-public class SpawnPointMap : ScriptableObject
-{
-    public List<SpawnPointList> spawnPoints;
-
-    public List<Vector2Int> GetPointsFor(string itemName)
+    [System.Serializable]
+    public class SpawnPointList
     {
-        foreach (var list in spawnPoints)
+        public string itemName;
+        public List<Vector2Int> positions;
+    }
+
+    [CreateAssetMenu(fileName = "New Spawn Point Map", menuName = "Snake/Spawn Point Map")]
+    public class SpawnPointMap : ScriptableObject
+    {
+        public List<SpawnPointList> spawnPoints;
+
+        public List<Vector2Int> GetPointsFor(string itemName)
         {
-            if (list.itemName == itemName)
+            foreach (var list in spawnPoints)
             {
-                return list.positions;
+                if (list.itemName == itemName)
+                {
+                    return list.positions;
+                }
             }
+
+            return null;
         }
-        return null;
     }
 }

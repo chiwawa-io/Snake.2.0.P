@@ -1,16 +1,18 @@
 using System;
 using System.Collections.Generic;
 using Luxodd.Game.Scripts.Game.Leaderboard;
+using UI.Global;
+using UI.Leaderboard.View;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace Game.UI
+namespace UI.Leaderboard.Views
 {
     public class LeaderboardView : BaseView
     {
         [SerializeField] private List<LeaderboardRow> entrySlots;
-        [SerializeField] private Leaderboard presenter;
+        [SerializeField] private Presenters.Leaderboard presenter;
         
         public void Populate(List<LeaderboardData> data)
         {

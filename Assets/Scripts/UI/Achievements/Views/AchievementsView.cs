@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using Achievements;
 using UI.Achievements.Logic;
 using UI.Achievements.Presenters;
+using UI.Global;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;

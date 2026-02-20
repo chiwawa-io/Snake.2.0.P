@@ -1,6 +1,7 @@
-using Core.Services;
-
-public interface IAudioService
+namespace Services.Audio
 {
-    void PlayOneShot(SoundType type);
+    public interface IAudioService
+    {
+        void PlayOneShot(SoundType type);
+    }
 }

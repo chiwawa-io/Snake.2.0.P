@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Core.Events;
 using Zenject;
 
-namespace Core.Services
+namespace Services.Audio
 {
     public enum SoundType
     {

@@ -1,12 +1,12 @@
 using Core.Enums;
-using Core.Services;
+using Services.Audio;
 using UnityEngine;
 
 namespace Core.Events
 {
     //GameFlow
-    public struct GameStartedSignal { } 
-    public struct RevivePlayerSignal { }
+    public readonly struct GameStartedSignal { } 
+    public readonly struct RevivePlayerSignal { }
 
     public readonly struct GameStateChangedSignal
     {
@@ -52,7 +52,7 @@ namespace Core.Events
     }
     
     //Snake
-    public struct PreciousGemEatenSignal { }
+    public readonly struct PreciousGemEatenSignal { }
 
     public readonly struct LifeUpdatedSignal
     {
@@ -88,6 +88,24 @@ namespace Core.Events
             Position = position;
         }
     }
+    
+    //Stats
+    public readonly struct GemCollected{}
+    public readonly struct PowerUpCollected{}
+    public readonly struct PreciousGemCollected{}
+
+    public readonly struct TrapsAvoided
+    {
+        public readonly int TrapsAvoidedCount;
+        public TrapsAvoided(int amount) => TrapsAvoidedCount = amount;
+    }
+
+    public readonly struct DistanceTravelled
+    {
+        public readonly int Distance;
+        public DistanceTravelled(int distance) => Distance = distance;
+    }
+
     
     //Timer
     public struct InactivityTimeOut {}

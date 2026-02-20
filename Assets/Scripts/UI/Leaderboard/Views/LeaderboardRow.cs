@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-namespace Game.UI
+namespace UI.Leaderboard.View
 {
     public class LeaderboardRow : MonoBehaviour
     {

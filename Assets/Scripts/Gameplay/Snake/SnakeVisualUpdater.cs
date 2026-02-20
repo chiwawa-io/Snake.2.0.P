@@ -1,7 +1,8 @@
 using UnityEngine;
 using Zenject;
 
-namespace Gameplay.Snake{
+namespace Gameplay.Snake
+{
     public class SnakeVisualUpdater : MonoBehaviour
     {
         [Inject] private SnakeView _view;

@@ -1,7 +1,8 @@
 using TMPro;
+using UI.Global;
 using UnityEngine;
 
-namespace Game.UI
+namespace UI.Other
 {
     public class ErrorView : BaseView
     {

@@ -1,4 +1,7 @@
-public interface IInputService
+namespace Services.Input
 {
-    void EnableInput(bool enable);
+    public interface IInputService
+    {
+        void EnableInput(bool enable);
+    }
 }

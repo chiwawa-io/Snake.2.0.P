@@ -1,6 +1,7 @@
 using System;
 using Core.Enums;
-using Core.Events;   
+using Core.Events;
+using Gameplay.Global;
 using Services.Backend;
 using Services.PlayerData;
 using UI.MainMenu.Views;

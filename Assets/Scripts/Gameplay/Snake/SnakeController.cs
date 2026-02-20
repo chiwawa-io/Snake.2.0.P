@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using Achievements.Data;
 using Core.Enums;
 using Core.Events;
-using Core.Services;
+using Gameplay.GameItem;
+using Services.Audio;
 using UnityEngine;
 using Zenject;
 
@@ -193,7 +195,7 @@ namespace Gameplay.Snake
             return false;
         }
 
-        private void ApplyPowerUp(GameItem data, Vector2Int pos)
+        private void ApplyPowerUp(GameItem.GameItem data, Vector2Int pos)
         {
             _signalBus.Fire(new PlaySoundSignal (SoundType.SpeedUp) );
             _powerUpTimer = data.effectDuration;
