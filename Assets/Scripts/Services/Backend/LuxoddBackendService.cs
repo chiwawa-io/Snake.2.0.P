@@ -1,5 +1,7 @@
 using System;
+using Core.Enums;
 using Core.Events;
+using Cysharp.Threading.Tasks;
 using Luxodd.Game.Scripts.Network;
 using Services.PlayerData;
 using UnityEngine;
@@ -9,6 +11,8 @@ namespace Services.Backend
 {
     public class LuxoddBackendService : IBackendService, IDisposable
     {
+        private const int PostGameFlowWaitTime = 5;
+        
         private readonly NetworkManager _networkManager;
         private readonly PlayerDataManager _playerDataManager;
         private readonly SignalBus _signalBus;
@@ -85,9 +89,7 @@ namespace Services.Backend
                 score,
                 () => 
                 {
-                    _playerDataManager.SaveGameSession(score);
-                    Exit();
-                    
+                    PostGameFlow(score).Forget();
                     // Restart option will be needed in the future
                     // _networkManager.WebSocketService.SendSessionOptionRestart((action) => 
                     // {
@@ -105,6 +107,18 @@ namespace Services.Backend
             );
         }
 
+        private async UniTask PostGameFlow(int score)
+        { 
+            _playerDataManager.SaveGameSession(score);
+            
+            _signalBus.Fire(new GameStateChangedSignal(GameState.PostGameStats)); 
+            await UniTask.WaitForSeconds(PostGameFlowWaitTime);
+            
+            _signalBus.Fire(new GameStateChangedSignal(GameState.Leaderboard));
+            await UniTask.WaitForSeconds(PostGameFlowWaitTime);
+            
+            Exit();
+        }
     }
 }
 

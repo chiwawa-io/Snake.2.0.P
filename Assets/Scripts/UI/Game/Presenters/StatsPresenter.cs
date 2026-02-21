@@ -57,12 +57,6 @@ namespace UI.Game.Presenters
             );
 
             _view.Show();
-
-            DOVirtual.DelayedCall(DisplayDuration, () => 
-            {
-                _view.Hide();
-                _signalBus.Fire(new GameStateChangedSignal(GameState.Leaderboard));
-            });
         }
         
     }

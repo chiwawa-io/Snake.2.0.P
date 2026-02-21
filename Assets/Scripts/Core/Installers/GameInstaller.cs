@@ -36,12 +36,12 @@ namespace Core.Installers
         [SerializeField] private PlayerDataManager _playerDataManager;
         [SerializeField] private AudioManager _audioManager;
 
-        [Header("--- UI Views ---")] [SerializeField]
-        private MainMenuView _mainMenuView;
-
-        [SerializeField] private GameView _hudView;
+        [Header("--- UI Views ---")] 
+        [SerializeField] private MainMenuView _mainMenuView;
         [SerializeField] private AchievementsView _achievementsView;
         [SerializeField] private LeaderboardView _leaderboardView;
+        [SerializeField] private GameView _hudView;
+        [SerializeField] private StatsView _statsView;
         [SerializeField] private BaseView _loadingView;
         [SerializeField] private ErrorView _errorView;
 
@@ -103,14 +103,14 @@ namespace Core.Installers
             Container.BindInterfacesTo<InputService>().AsSingle();
 
             Container.BindInterfacesAndSelfTo<LuxoddBackendService>().AsSingle();
+            Container.BindInterfacesAndSelfTo<StatsRecorder>().AsSingle();
 
             Container.Bind<GameObject>().WithId("GameElements").FromInstance(_gameElements);
             Container.Bind<SnakeModel>().AsSingle();
             Container.Bind<SnakeEngine>().AsSingle().WithArguments(new Vector2(_gridSize.x, _gridSize.y));
-            Container.Bind<AchievementCompletion>().FromInstance(_achievementConfig).AsSingle();
-
             Container.Bind<SnakeView>().FromInstance(_snakeView).AsSingle();
             Container.Bind<ItemSpawner>().FromInstance(_itemSpawner).AsSingle();
+            Container.Bind<AchievementCompletion>().FromInstance(_achievementConfig).AsSingle();
 
             Container.BindInterfacesAndSelfTo<SnakeController>().AsSingle();
             Container.BindInterfacesAndSelfTo<GameSessionController>().AsSingle();
@@ -119,9 +119,10 @@ namespace Core.Installers
         private void InstallUISystems()
         {
             Container.Bind<MainMenuView>().FromInstance(_mainMenuView).AsSingle();
-            Container.Bind<GameView>().FromInstance(_hudView).AsSingle();
             Container.Bind<AchievementsView>().FromInstance(_achievementsView).AsSingle();
             Container.Bind<LeaderboardView>().FromInstance(_leaderboardView).AsSingle();
+            Container.Bind<GameView>().FromInstance(_hudView).AsSingle();
+            Container.Bind<StatsView>().FromInstance(_statsView).AsSingle();
             Container.Bind<ErrorView>().FromInstance(_errorView).AsSingle();
             Container.Bind<BaseView>().WithId("Loading").FromInstance(_loadingView);
 
@@ -130,6 +131,7 @@ namespace Core.Installers
             Container.BindInterfacesAndSelfTo<MainMenuPresenter>().AsSingle();
             Container.BindInterfacesAndSelfTo<AchievementsPresenter>().AsSingle();
             Container.BindInterfacesAndSelfTo<GamePresenter>().AsSingle();
+            Container.BindInterfacesAndSelfTo<StatsPresenter>().AsSingle();
 
             Container.BindInterfacesAndSelfTo<UIManager>().AsSingle().NonLazy();
         }

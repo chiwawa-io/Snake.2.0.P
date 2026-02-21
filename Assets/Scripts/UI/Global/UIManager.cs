@@ -15,6 +15,7 @@ namespace UI.Global
         private readonly SignalBus _signalBus;
         private readonly MainMenuView _mainMenu;
         private readonly GameView _hud;
+        private readonly StatsView _statsView;
         private readonly LeaderboardView _leaderboard;
         private readonly AchievementsView _achievements;
         private readonly BaseView _loadingView;
@@ -24,6 +25,7 @@ namespace UI.Global
             SignalBus signalBus, 
             MainMenuView mainMenu,
             GameView hud,
+            StatsView statsView,
             LeaderboardView leaderboard,
             AchievementsView achievements,
             [Inject(Id = "Loading")] BaseView loading,
@@ -32,6 +34,7 @@ namespace UI.Global
             _signalBus = signalBus;
             _mainMenu = mainMenu;
             _hud = hud;
+            _statsView = statsView;
             _leaderboard = leaderboard;
             _achievements = achievements;
             _loadingView = loading;
@@ -52,6 +55,7 @@ namespace UI.Global
         private void OnStateChanged(GameStateChangedSignal signal)
         {
             HideAll();
+            
             switch (signal.NewState)
             {
                 case GameState.Loading: _loadingView.Show(); break;
@@ -59,7 +63,7 @@ namespace UI.Global
                 case GameState.InGame: _hud.Show(); break;
                 case GameState.Leaderboard: _leaderboard.Show(); break;
                 case GameState.Achievements: _achievements.Show(); break;
-                case GameState.PostGameStats: break;
+                case GameState.PostGameStats: _statsView.Show(); break;
                 case GameState.Error: _errorView.Show(); break;
             }
         }
@@ -68,6 +72,7 @@ namespace UI.Global
         {
             _mainMenu.Hide();
             _hud.Hide();
+            _statsView.Hide();
             _leaderboard.Hide();
             _achievements.Hide();
             _loadingView.Hide();

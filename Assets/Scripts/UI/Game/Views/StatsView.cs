@@ -1,15 +1,17 @@
 using TMPro;
 using UI.Global;
+using UnityEngine;
 
 namespace UI.Game.Views
 {
     public class StatsView : BaseView
     { 
-        private TextMeshProUGUI _gemsText; 
-        private TextMeshProUGUI _preciousGemsText; 
-        private TextMeshProUGUI _powerUpsText; 
-        private TextMeshProUGUI _distanceText; 
-        private TextMeshProUGUI _trapsText;
+        [Header("Stat Texts")]
+        [SerializeField] private TextMeshProUGUI _gemsText; 
+        [SerializeField] private TextMeshProUGUI _preciousGemsText; 
+        [SerializeField] private TextMeshProUGUI _powerUpsText; 
+        [SerializeField] private TextMeshProUGUI _distanceText; 
+        [SerializeField] private TextMeshProUGUI _trapsText;
 
         public void DisplayStats(int gems, int precious, int powerups, int distance, int traps)
         {

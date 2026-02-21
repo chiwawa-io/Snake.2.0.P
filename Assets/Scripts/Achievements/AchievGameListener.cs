@@ -8,7 +8,6 @@ using Zenject;
 
 namespace Achievements
 {
-
     public class AchievGameListener : MonoBehaviour
     {
         public static Action<string> OnAchievementCompleted;
