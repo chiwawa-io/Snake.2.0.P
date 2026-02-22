@@ -12,6 +12,7 @@ namespace Achievements.Data
         {
             public int Threshold;
             public string AchievementId;
+            public string AchievementName;
         }
 
         [Header("Collection Achievements")] public List<AchievementRule> FoodRules;

@@ -62,7 +62,7 @@ namespace UI.Game.Presenters
 
         private void OnAchievementUnlocked(AchievementProgressSignal signal)
         {
-            _view.ShowAchievementToast(signal.AchievementId);
+            _view.ShowAchievementToast(signal.AchievementName);
         }
 
         private void OnGameOver(GameOverSignal signal)

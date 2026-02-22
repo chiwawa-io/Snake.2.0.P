@@ -15,7 +15,6 @@ namespace UI.MainMenu.Views
 
         [Header("Main Buttons")]
         [SerializeField] private Button startButton;
-        [SerializeField] private Button leaderboardButton;
         [SerializeField] private Button achievementsButton; 
         [SerializeField] private Button quitButton;
 
@@ -58,9 +57,6 @@ namespace UI.MainMenu.Views
         private void Start()
         {
             startButton.onClick.AddListener(() => _presenter.OnPlayClicked());
-            
-            if(leaderboardButton) 
-                leaderboardButton.onClick.AddListener(() => _presenter.OnLeaderboardClicked());
             
             if(achievementsButton)
                 achievementsButton.onClick.AddListener(() => _presenter.OnAchievementsClicked());

@@ -12,7 +12,7 @@ namespace Services.PlayerData
 {
     public class PlayerDataManager : MonoBehaviour
     {
-        private const int ScoreMultiplicator = 10;
+        private const float ScoreMultiplicator = 0.01f;
         private const int LevelGainThreshold = 1000;
         private const int InitLevel = 1;
         
@@ -43,8 +43,8 @@ namespace Services.PlayerData
         {
             if (score > _bestScore) _bestScore = score;
 
-            int xpGained = score * ScoreMultiplicator; 
-            AddExperience(xpGained);
+            var xpGained = score * ScoreMultiplicator; 
+            AddExperience((int)xpGained);
 
             SaveDataInternal();
         }
