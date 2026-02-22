@@ -36,8 +36,10 @@ namespace Utilities
             if (_currentTime >= _inactivityTimeLimit)
             {
                 Debug.LogWarning("Inactivity time limit reached!.");
+
                 if (!_isOnMenu) _signalBus.Fire(new InactivityTimeOut());
                 else _signalBus.Fire(new GameStateChangedSignal(GameState.InGame));
+                
                 StopDetector(); 
             }
         }
@@ -50,14 +52,13 @@ namespace Utilities
         private void StartDetector(GameStateChangedSignal signal)
         {
             _currentTime = 0f;
-            _isOnMenu = false;
             
             if (signal.NewState == GameState.InGame)
             {
                 StopDetector();   
                 return;
             }
-            else if (signal.NewState == GameState.MainMenu)
+            else if (signal.NewState == GameState.MainMenu && !_isOnMenu)
             {
                 _isOnMenu = true;
             }

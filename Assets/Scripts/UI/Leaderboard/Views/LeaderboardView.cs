@@ -29,15 +29,5 @@ namespace UI.Leaderboard.Views
                 }
             }
         }
-
-        private void OnEnable()
-        {
-            _defaultFocusButton.onClick.AddListener(presenter.OnReturnClicked);
-        }
-
-        private void OnDisable()
-        {
-            _defaultFocusButton.onClick.RemoveAllListeners();
-        }
     }
 }
