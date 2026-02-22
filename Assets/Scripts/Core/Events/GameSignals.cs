@@ -97,7 +97,7 @@ namespace Core.Events
 
     
     //Timer
-    public struct InactivityTimeOut {}
+    public readonly struct InactivityTimeOut {}
     public readonly struct InactivityTimerSignal
     {
         public readonly int SecondsLeft; 

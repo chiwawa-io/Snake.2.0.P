@@ -14,6 +14,7 @@ namespace Utilities
         private bool _isTimerRunning; 
         private Coroutine _timerCoroutine;
         private SignalBus _signalBus;
+        private bool _isOnMenu;
 
         [Inject]
         public void Construct(SignalBus signalBus)
@@ -35,7 +36,8 @@ namespace Utilities
             if (_currentTime >= _inactivityTimeLimit)
             {
                 Debug.LogWarning("Inactivity time limit reached!.");
-                _signalBus.Fire(new InactivityTimeOut());
+                if (!_isOnMenu) _signalBus.Fire(new InactivityTimeOut());
+                else _signalBus.Fire(new GameStateChangedSignal(GameState.InGame));
                 StopDetector(); 
             }
         }
@@ -48,11 +50,16 @@ namespace Utilities
         private void StartDetector(GameStateChangedSignal signal)
         {
             _currentTime = 0f;
+            _isOnMenu = false;
             
             if (signal.NewState == GameState.InGame)
             {
                 StopDetector();   
                 return;
+            }
+            else if (signal.NewState == GameState.MainMenu)
+            {
+                _isOnMenu = true;
             }
 
             _isTimerRunning = true;
