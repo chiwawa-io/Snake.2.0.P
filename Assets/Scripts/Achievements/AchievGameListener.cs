@@ -10,13 +10,10 @@ namespace Achievements
 {
     public class AchievGameListener : MonoBehaviour
     {
-        public static Action<string> OnAchievementCompleted;
-
         [SerializeField] private List<AchievementSO> _achievementsList = new();
 
         private PlayerDataManager _playerDataManager;
         private SignalBus _signalBus;
-        private readonly List<string> _completedAchievements = new();
 
         [Inject]
         public void Construct(PlayerDataManager playerDataManager, SignalBus signalBus)
@@ -27,47 +24,20 @@ namespace Achievements
 
         private void OnEnable()
         {
-            _signalBus.Subscribe<AchievementProgressSignal>(AchievementComplete);
-            LoadCompletedAchievements();
+            _signalBus.Subscribe<AchievementProgressSignal>(OnAchievementProgress);
         }
 
         private void OnDisable()
         {
-            _signalBus.Unsubscribe<AchievementProgressSignal>(AchievementComplete);
+            _signalBus.Unsubscribe<AchievementProgressSignal>(OnAchievementProgress);
         }
 
-        private void LoadCompletedAchievements()
+        private void OnAchievementProgress(AchievementProgressSignal signal)
         {
-            foreach (var achievement in _achievementsList)
-            {
-                if (_playerDataManager.IsAchievementCompleted(achievement.id))
-                    _completedAchievements.Add(achievement.id);
-            }
-        }
+            if (_playerDataManager.IsAchievementCompleted(signal.AchievementId)) 
+                return;
 
-        private void AchievementComplete(AchievementProgressSignal achievement)
-        {
-            _playerDataManager.UnlockAchievement(achievement.AchievementId);
-
-            var achievementData = GetAchievementById(achievement.AchievementId);
-
-            if (achievementData != null && !_completedAchievements.Contains(achievement.AchievementId))
-                OnAchievementCompleted?.Invoke(achievementData.displayName);
-
-            if (!_completedAchievements.Contains(achievement.AchievementId))
-                _completedAchievements.Add(achievement.AchievementId);
-        }
-
-        private AchievementSO GetAchievementById(string id)
-        {
-            foreach (var achievementData in _achievementsList)
-            {
-                if (achievementData.displayName == id) return achievementData;
-
-                Debug.Log("Not found the Achievement");
-            }
-
-            return null;
+            _playerDataManager.UnlockAchievement(signal.AchievementId);
         }
     }
 }

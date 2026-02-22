@@ -14,24 +14,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AchievementCompletion
   FoodRules:
   - Threshold: 15
-    AchievementId: Gem Hunter
+    AchievementId: FoodC_m
+    AchievementName: Gem Hunter
   - Threshold: 25
-    AchievementId: Furious Gem Hunter
+    AchievementId: FoodC_x
+    AchievementName: Furious Gem Hunter
   - Threshold: 40
-    AchievementId: Superior Gem Hunter
+    AchievementId: FoodC_xx
+    AchievementName: Superior Gem Hunter
   SpeedPowerUpRules:
   - Threshold: 3
-    AchievementId: Runner
+    AchievementId: SpeedC_m
+    AchievementName: Runner
   - Threshold: 10
-    AchievementId: I am speed
+    AchievementId: SpeedCollect_x
+    AchievementName: I am speed
   - Threshold: 25
-    AchievementId: With no brakes
+    AchievementId: SpeedCollect_xx
+    AchievementName: With no brakes
   - Threshold: 40
-    AchievementId: 3,2,1... To the moon!
+    AchievementId: SpeedCollect_xxl
+    AchievementName: 3,2,1... To the moon!
   SnakeSizeRules:
   - Threshold: 25
-    AchievementId: Rising snake
+    AchievementId: Size_x
+    AchievementName: Rising snake
   - Threshold: 40
-    AchievementId: Gigantic snake
+    AchievementId: Size_xx
+    AchievementName: Gigantic snake
   - Threshold: 60
-    AchievementId: Uncontrollable
+    AchievementId: Size_xxl
+    AchievementName: Uncontrollable

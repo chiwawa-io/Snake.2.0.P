@@ -284,12 +284,16 @@ namespace Gameplay.Snake
             {
                 if (currentValue == rule.Threshold)
                 {
-                    FireAch(rule.AchievementId);
+                    FireAch(rule.AchievementId, rule.AchievementName);
                     break; 
                 }
             }
         }
 
-        private void FireAch(string id) => _signalBus.Fire(new AchievementProgressSignal(id));
+        private void FireAch(string id, string achName)
+        {
+            _signalBus.Fire(new AchievementProgressSignal(id, achName));
+        }
+
     }
 }

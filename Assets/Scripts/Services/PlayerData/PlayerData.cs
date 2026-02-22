@@ -1,6 +1,9 @@
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
-namespace Services.PlayerData{
+namespace Services.PlayerData
+{
+    [System.Serializable]
     public class PlayerData
     {
         public int BestScore;
@@ -11,6 +14,7 @@ namespace Services.PlayerData{
         /*public string CurrentSkin;
         public int SkinShards;
         public HashSet<string> OwnedSkins { get; set; } = new();*/
+        [JsonProperty("completed_achievements")]
         public HashSet<string> CompletedAchievementIds { get; set; } = new();
 
         public PlayerData(int score, int level, int xp,

@@ -107,7 +107,13 @@ namespace Core.Events
     public readonly struct AchievementProgressSignal
     {
         public readonly string AchievementId; 
-        public AchievementProgressSignal(string achievementId) => AchievementId = achievementId;
+        public readonly string AchievementName;
+
+        public AchievementProgressSignal(string achievementId, string achievementName)
+        {
+            AchievementId = achievementId;
+            AchievementName = achievementName;
+        }
     }
 
     public readonly struct ErrorSignal
