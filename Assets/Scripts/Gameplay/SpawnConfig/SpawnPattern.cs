@@ -1,3 +1,4 @@
+using Core.Enums;
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -6,7 +7,7 @@ namespace Gameplay.SpawnConfig
     [System.Serializable]
     public struct PatternItem
     {
-        public string itemName;
+        public ItemType type; 
         public Vector2Int relativePosition;
     }
 

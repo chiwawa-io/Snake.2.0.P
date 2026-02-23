@@ -12,13 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e13bf7b2132cc224eba458acfb2f5e1e, type: 3}
   m_Name: Bomb
   m_EditorClassIdentifier: 
-  objName: Bomb
+  type: 4
   prefab: {fileID: 2270807337829933764, guid: f46d6fc3d33e110429d2a1666af0acaf, type: 3}
   isCollectible: 0
   scoreValue: 0
   isObstacle: 1
-  isInstaKill: 1
   isPowerUp: 0
   effectType: 0
   effectDuration: 0
-  isPortal: 0

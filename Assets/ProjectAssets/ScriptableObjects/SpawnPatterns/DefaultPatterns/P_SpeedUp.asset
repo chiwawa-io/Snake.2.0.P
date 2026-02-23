@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: P_SpeedUp
   m_EditorClassIdentifier: 
   items:
-  - itemName: SpeedUp
+  - type: 6
     relativePosition: {x: 0, y: 0}

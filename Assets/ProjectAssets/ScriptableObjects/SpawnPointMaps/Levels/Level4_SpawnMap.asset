@@ -13,29 +13,24 @@ MonoBehaviour:
   m_Name: Level4_SpawnMap
   m_EditorClassIdentifier: 
   spawnPoints:
-  - itemName: Food
+  - type: 1
     positions:
-    - {x: 10, y: -11}
-    - {x: -11, y: -11}
-    - {x: 10, y: 10}
-    - {x: -11, y: 10}
-    - {x: -11, y: 0}
-    - {x: 10, y: 0}
-  - itemName: PreciousFood
+    - {x: -3, y: -3}
+    - {x: 3, y: 3}
+    - {x: -6, y: 6}
+    - {x: 6, y: -6}
+  - type: 2
     positions:
-    - {x: -3, y: 6}
-    - {x: 3, y: 6}
-    - {x: -3, y: -6}
-    - {x: 3, y: -6}
-  - itemName: SpeedUp
-    positions:
-    - {x: 10, y: 5}
-    - {x: -11, y: 5}
-    - {x: 10, y: -5}
-    - {x: -11, y: -5}
-  - itemName: Portal
+    - {x: 7, y: 7}
+    - {x: -8, y: -7}
+    - {x: 4, y: -3}
+    - {x: -3, y: 3}
+  - type: 6
     positions:
     - {x: 0, y: 0}
-  - itemName: Invulnerability
+    - {x: -3, y: 9}
+    - {x: 3, y: -8}
+  - type: 7
     positions:
-    - {x: -7, y: -8}
+    - {x: 9, y: -2}
+    - {x: -9, y: 3}

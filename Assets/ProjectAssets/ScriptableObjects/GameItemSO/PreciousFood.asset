@@ -12,12 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e13bf7b2132cc224eba458acfb2f5e1e, type: 3}
   m_Name: PreciousFood
   m_EditorClassIdentifier: 
-  objName: PreciousFood
+  type: 2
   prefab: {fileID: 2270807337829933764, guid: a4447285bc2272248a6b2e080a4eb266, type: 3}
   isCollectible: 1
   scoreValue: 2
   isObstacle: 0
-  isInstaKill: 0
   isPowerUp: 0
   effectType: 0
   effectDuration: 0

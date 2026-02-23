@@ -163,7 +163,7 @@ namespace Gameplay.Snake
                 _model.GemsCollected++;
                 CheckFoodAchievements();
                 
-                bool isPrecious = data.objName == "PreciousFood";
+                bool isPrecious = data.type == ItemType.PreciousFood;
 
                 _signalBus.Fire(isPrecious ? new PreciousGemCollected() : new GemCollected());
 
@@ -174,6 +174,7 @@ namespace Gameplay.Snake
 
                 int points = data.scoreValue * _model.Body.Count * 100;
                 _score += points;
+                
                 _signalBus.Fire(new ScoreUpdatedSignal(_score));
                 _signalBus.Fire(new ScoreAddedSignal(points, pos));
                 
@@ -189,7 +190,7 @@ namespace Gameplay.Snake
             
             if (data.isObstacle && !_model.IsInvulnerable && !_model.IsRespawning)
             {
-                HandleDeath(data.objName);
+                HandleDeath(data.type.ToString());
             }
 
             if (data.isPowerUp)

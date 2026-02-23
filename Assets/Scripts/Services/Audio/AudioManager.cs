@@ -58,6 +58,7 @@ namespace Services.Audio
             if (_signalBus == null) return;
             _signalBus.Subscribe<PlaySoundSignal>(OnPlaySound);
             _signalBus.Subscribe<RevivePlayerSignal>(PlayMusic);
+            _signalBus.Subscribe<GameStartedSignal>(PlayMusic);
             _signalBus.Subscribe<GameOverSignal>(PlayGameOverSound);
         }
 
@@ -66,6 +67,7 @@ namespace Services.Audio
             if (_signalBus == null) return;
             _signalBus.Unsubscribe<PlaySoundSignal>(OnPlaySound);
             _signalBus.Unsubscribe<RevivePlayerSignal>(PlayMusic);
+            _signalBus.Unsubscribe<GameStartedSignal>(PlayMusic);
             _signalBus.Unsubscribe<GameOverSignal>(PlayGameOverSound);
         }
 

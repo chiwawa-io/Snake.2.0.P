@@ -12,12 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e13bf7b2132cc224eba458acfb2f5e1e, type: 3}
   m_Name: Food
   m_EditorClassIdentifier: 
-  objName: Food
+  type: 1
   prefab: {fileID: 2270807337829933764, guid: 9e80a2b921f66c74592ac26f9314c7e7, type: 3}
   isCollectible: 1
   scoreValue: 1
   isObstacle: 0
-  isInstaKill: 0
   isPowerUp: 0
   effectType: 0
   effectDuration: 0

@@ -3802,18 +3802,35 @@ MonoBehaviour:
   _speedUpPattern: {fileID: 11400000, guid: 8a7065181388c534f870d4e50776e5a3, type: 2}
   _invulnerabilityPattern: {fileID: 11400000, guid: 2c1791c5fccabd1deb6e23349f6d5a21, type: 2}
   _regularFoodPattern: {fileID: 11400000, guid: 70e44f1af10814c4595360e8cb79acd8, type: 2}
-  _portalsPattern: {fileID: 0}
   _easyChallengePatterns:
   - {fileID: 11400000, guid: eeef5d34bc444974ea5cdccb52aae9b8, type: 2}
   - {fileID: 11400000, guid: 23d53d96db6f7ee459ed914c2d17cc87, type: 2}
+  - {fileID: 11400000, guid: b06e1940b6df92849b06a288302d2c52, type: 2}
+  - {fileID: 11400000, guid: 3e5f319e1e4964e479e4c579c20ee384, type: 2}
+  - {fileID: 11400000, guid: 4ef016ecaf022ed42afb6e928e8c9c05, type: 2}
+  - {fileID: 11400000, guid: 4f92e549045fb564e8d6dcdde4fd80ca, type: 2}
   _mediumChallengePatterns:
   - {fileID: 11400000, guid: d9beeeba11353234f8ccfd0811fffdb0, type: 2}
   - {fileID: 11400000, guid: 3e8ce3b3533b4ea44a65082366c030e5, type: 2}
   - {fileID: 11400000, guid: 4d004a3b63876b54db84f87dd204c585, type: 2}
+  - {fileID: 11400000, guid: c66c42a72366ec84cb2bf938880b5116, type: 2}
+  - {fileID: 11400000, guid: 6604530c5b41fea4183458b1b2d46d38, type: 2}
+  - {fileID: 11400000, guid: cec48a56ca2134c4280096b0cde97135, type: 2}
   _hardChallengePatterns:
   - {fileID: 11400000, guid: d57308dc7596c4a468e6311a47aaea0a, type: 2}
   - {fileID: 11400000, guid: c9af64059c7fd444d890d4ad552785f0, type: 2}
-  _challengeChance: 0.2
+  - {fileID: 11400000, guid: e76e632122aa80f4aba540eddb8dc537, type: 2}
+  - {fileID: 11400000, guid: 13f121889e0f76841ac2872b59016abf, type: 2}
+  - {fileID: 11400000, guid: 5752a4fc2bfeb65468e7525e94087caf, type: 2}
+  - {fileID: 11400000, guid: 79b7108a05e9d9f4f99c5e5ea21c3943, type: 2}
+  - {fileID: 11400000, guid: fb00a51fa123f6d4dab853a99d847a10, type: 2}
+  - {fileID: 11400000, guid: 901a8ac00a7f13c4397305121a8a4727, type: 2}
+  - {fileID: 11400000, guid: 14165ee7e4724f44e91528c5e968ddec, type: 2}
+  - {fileID: 11400000, guid: 62a92c346a19c744c922677a6801ee92, type: 2}
+  - {fileID: 11400000, guid: 830cfbd790c46f54fa69d29f4bc82ec3, type: 2}
+  - {fileID: 11400000, guid: 449ecf81b79a2894e9b94d682490b484, type: 2}
+  - {fileID: 11400000, guid: 61795e4e95bb06e48b5b1aa4b32fecbe, type: 2}
+  _challengeChance: 0.284
 --- !u!222 &502544260947345457
 CanvasRenderer:
   m_ObjectHideFlags: 0

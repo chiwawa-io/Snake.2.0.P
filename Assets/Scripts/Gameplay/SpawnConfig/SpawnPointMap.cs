@@ -1,3 +1,4 @@
+using Core.Enums;
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -6,7 +7,7 @@ namespace Gameplay.SpawnConfig
     [System.Serializable]
     public class SpawnPointList
     {
-        public string itemName;
+        public ItemType type; 
         public List<Vector2Int> positions;
     }
 
@@ -15,16 +16,15 @@ namespace Gameplay.SpawnConfig
     {
         public List<SpawnPointList> spawnPoints;
 
-        public List<Vector2Int> GetPointsFor(string itemName)
+        public List<Vector2Int> GetPointsFor(ItemType type)
         {
             foreach (var list in spawnPoints)
             {
-                if (list.itemName == itemName)
+                if (list.type == type)
                 {
                     return list.positions;
                 }
             }
-
             return null;
         }
     }

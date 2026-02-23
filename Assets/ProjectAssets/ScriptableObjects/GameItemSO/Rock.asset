@@ -12,13 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e13bf7b2132cc224eba458acfb2f5e1e, type: 3}
   m_Name: Rock
   m_EditorClassIdentifier: 
-  objName: Rock
+  type: 5
   prefab: {fileID: 2270807337829933764, guid: c55dc1933dcb44a4e93149ae49a1e632, type: 3}
   isCollectible: 0
   scoreValue: 0
   isObstacle: 1
-  isInstaKill: 0
   isPowerUp: 0
   effectType: 0
   effectDuration: 0
-  isPortal: 0

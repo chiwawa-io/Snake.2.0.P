@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Enums;
 using Core.Events;
 using Gameplay.SpawnConfig;
 using UnityEngine;
@@ -9,7 +10,6 @@ using Random = UnityEngine.Random;
 
 namespace Gameplay.GameItem
 {
-
     public class ActiveItem
     {
         public GameItem Data { get; }
@@ -24,39 +24,36 @@ namespace Gameplay.GameItem
 
     public class ItemSpawner : MonoBehaviour
     {
+        private readonly Dictionary<ItemType, int> _lastSpawnPointIndex = new();
         private readonly Dictionary<Vector2Int, ActiveItem> _activeItems = new();
-        private readonly Dictionary<string, int> _lastSpawnPointIndex = new();
 
         [Header("Item Database")] 
         [SerializeField] private List<GameItem> _itemTypes;
 
         [Header("Spawning Intervals")] 
         [SerializeField] private int _speedUpSpawnDelay = 7;
-
         [SerializeField] private int _speedupSpawnInterval = 14;
         [SerializeField] private int _invulnerabilitySpawnDelay = 5;
         [SerializeField] private int _invulnerabilitySpawnInterval = 25;
 
-        [Header("Pattern & Spawning Logic")] [SerializeField]
-        private List<SpawnPointMap> _spawnPointMaps = new();
+        [Header("Pattern & Spawning Logic")] 
+        [SerializeField] private List<SpawnPointMap> _spawnPointMaps = new();
 
         [SerializeField] private SpawnPattern _startingFoodPattern;
         [SerializeField] private SpawnPattern _speedUpPattern;
         [SerializeField] private SpawnPattern _invulnerabilityPattern;
         [SerializeField] private SpawnPattern _regularFoodPattern;
-        [SerializeField] private SpawnPattern _portalsPattern;
         [SerializeField] private List<SpawnPattern> _easyChallengePatterns = new();
         [SerializeField] private List<SpawnPattern> _mediumChallengePatterns = new();
         [SerializeField] private List<SpawnPattern> _hardChallengePatterns = new();
-        [SerializeField, Range(0, 1)] private float _challengeChance = 0.2f;
+        [SerializeField, Range(0, 1)] private float _challengeChance = 0.4f;
 
         private List<Vector2Int> _playerBodyPositions;
         private Vector2Int _gridBounds;
-
+        private string _currentDifficulty; 
         private bool _isSpawningActive;
 
         private SpawnPointMap _currentSpawnPointMap;
-        private SpawnPattern _currentChallengePattern;
 
         private SignalBus _signalBus;
         private DiContainer _container;
@@ -72,11 +69,15 @@ namespace Gameplay.GameItem
         {
             _gridBounds = gridBounds;
             _playerBodyPositions = playerBody;
+            _currentDifficulty = difficulty;
             _isSpawningActive = true;
 
             _signalBus.Subscribe<ItemDestroyedSignal>(OnItemDestroyedByTimer);
 
-            ChoosePatternsForDifficulty(difficulty);
+            // Only pick the Map once per level
+            _currentSpawnPointMap = _spawnPointMaps != null && _spawnPointMaps.Count > 0 
+                ? _spawnPointMaps[Random.Range(0, _spawnPointMaps.Count)] 
+                : null;
 
             if (_startingFoodPattern != null)
             {
@@ -106,13 +107,28 @@ namespace Gameplay.GameItem
         {
             if (!_isSpawningActive) return;
 
-            if (Random.value < _challengeChance && _currentChallengePattern != null)
+            bool spawnedSuccessfully = false;
+
+            // 1. Try to spawn a challenge pattern
+            if (Random.value < _challengeChance)
             {
-                SpawnPattern(_currentChallengePattern);
+                SpawnPattern challenge = GetRandomChallenge(_currentDifficulty);
+                if (challenge != null)
+                {
+                    spawnedSuccessfully = SpawnPattern(challenge);
+                }
             }
-            else
+
+            // 2. FALLBACK: If challenge failed (or RNG said no), spawn regular food
+            if (!spawnedSuccessfully)
             {
-                SpawnPattern(_regularFoodPattern);
+                spawnedSuccessfully = SpawnPattern(_regularFoodPattern);
+                
+                // 3. EXTREME EDGE CASE: Board is completely full
+                if (!spawnedSuccessfully)
+                {
+                    Debug.LogWarning("Spawner failed to find any valid location! Board might be full.");
+                }
             }
         }
 
@@ -127,20 +143,18 @@ namespace Gameplay.GameItem
         {
             foreach (var activeItem in _activeItems.Values)
             {
-                if (activeItem.Data.isObstacle)
-                {
-                    return true;
-                }
+                if (activeItem.Data.isObstacle) return true;
             }
             return false;
         }
         
-        private void SpawnItem(string itemName, Vector2Int spawnPos)
+        private void SpawnItem(ItemType type, Vector2Int spawnPos)
         {
-            GameItem itemData = _itemTypes.FirstOrDefault(i => i.objName == itemName);
+            GameItem itemData = _itemTypes.FirstOrDefault(i => i.type == type);
+            
             if (itemData == null)
             {
-                Debug.LogError($"Item '{itemName}' not found in Item Types list.");
+                Debug.LogError($"Item '{type}' not found in Item Types list.");
                 return;
             }
 
@@ -148,58 +162,83 @@ namespace Gameplay.GameItem
             _activeItems[spawnPos] = new ActiveItem(itemData, instance);
         }
 
-        private void SpawnPattern(SpawnPattern pattern)
+        private bool SpawnPattern(SpawnPattern pattern)
         {
-            if (pattern == null || _currentSpawnPointMap == null || pattern.items.Count == 0) return;
+            if (pattern == null || _currentSpawnPointMap == null || pattern.items.Count == 0) return false;
 
-            string primaryItemName = pattern.items[0].itemName;
-            List<Vector2Int> validPoints = _currentSpawnPointMap.GetPointsFor(primaryItemName);
-            if (validPoints == null || validPoints.Count == 0) return;
-            if (!_lastSpawnPointIndex.ContainsKey(primaryItemName)) _lastSpawnPointIndex[primaryItemName] = -1;
+            ItemType primaryType = GetSmartAnchorType(pattern);
+            
+            List<Vector2Int> validPoints = _currentSpawnPointMap.GetPointsFor(primaryType);
+            if (validPoints == null || validPoints.Count == 0)
+            {
+                Debug.LogWarning("Failed to get valid points for:" + primaryType.ToString() + _currentDifficulty + pattern.name + _currentSpawnPointMap);
+                validPoints = _currentSpawnPointMap.GetPointsFor(ItemType.Food);
+            }
+
+            if (validPoints == null || validPoints.Count == 0) return false;
+
+            if (!_lastSpawnPointIndex.ContainsKey(primaryType)) 
+                _lastSpawnPointIndex[primaryType] = -1;
 
             for (int i = 0; i < validPoints.Count; i++)
             {
-                int currentIndex = (_lastSpawnPointIndex[primaryItemName] + 1 + i) % validPoints.Count;
+                int currentIndex = (_lastSpawnPointIndex[primaryType] + 1 + i) % validPoints.Count;
                 Vector2Int anchorPos = validPoints[currentIndex];
 
                 if (IsPatternLocationValid(pattern, anchorPos))
                 {
                     foreach (var item in pattern.items)
                     {
-                        SpawnItem(item.itemName, anchorPos + item.relativePosition);
+                        SpawnItem(item.type, anchorPos + item.relativePosition);
                     }
-
-                    _lastSpawnPointIndex[primaryItemName] = currentIndex;
-                    return;
+                    _lastSpawnPointIndex[primaryType] = currentIndex;
+                    return true; // Success!
                 }
             }
+            
+            Debug.Log("Failed to spawn, reason: Not Enough Space");
+            return false; 
         }
 
         private bool IsPatternLocationValid(SpawnPattern pattern, Vector2Int anchorPos)
         {
+            int xBound = _gridBounds.x / 2;
+            int yBound = _gridBounds.y / 2;
+
             foreach (var item in pattern.items)
             {
                 Vector2Int pos = anchorPos + item.relativePosition;
-                if (Mathf.Abs(pos.x) >= _gridBounds.x || Mathf.Abs(pos.y) >= _gridBounds.y) return false;
+                
+                if (Mathf.Abs(pos.x) > xBound || Mathf.Abs(pos.y) > yBound) return false;
                 if (_playerBodyPositions.Contains(pos) || _activeItems.ContainsKey(pos)) return false;
             }
 
             return true;
         }
 
-        private void ChoosePatternsForDifficulty(string difficulty)
+        private ItemType GetSmartAnchorType(SpawnPattern pattern)
         {
-            T PickRandom<T>(List<T> pool) => (pool?.Count > 0) ? pool[Random.Range(0, pool.Count)] : default;
+            if (pattern.items.Any(i => i.type == ItemType.PreciousFood)) 
+                return ItemType.PreciousFood;
 
-            _currentSpawnPointMap = PickRandom(_spawnPointMaps);
+            return pattern.items[0].type;
+        }
 
-            _currentChallengePattern = difficulty switch
+        private SpawnPattern GetRandomChallenge(string difficulty)
+        {
+            List<SpawnPattern> pool = difficulty switch
             {
-                "Easy" => PickRandom(_easyChallengePatterns),
-                "Medium" => PickRandom(_mediumChallengePatterns),
-                "Hard" => PickRandom(_hardChallengePatterns),
-                _ => PickRandom(_easyChallengePatterns)
+                "Easy" => _easyChallengePatterns,
+                "Medium" => _mediumChallengePatterns,
+                "Hard" => _hardChallengePatterns,
+                _ => _easyChallengePatterns
             };
+
+            if (pool != null && pool.Count > 0)
+            {
+                return pool[Random.Range(0, pool.Count)];
+            }
+            return null;
         }
 
         private void OnItemDestroyedByTimer(ItemDestroyedSignal signal)
