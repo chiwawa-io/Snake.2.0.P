@@ -1,8 +1,12 @@
 using System;
+using System.Collections.Generic;
 using Core.Enums;
 using Core.Events;
 using Cysharp.Threading.Tasks;
+using Luxodd.Game.Scripts.Missions;
 using Luxodd.Game.Scripts.Network;
+using Luxodd.Game.Scripts.Network.CommandHandler;
+using Luxodd.Game.Scripts.Network.Payloads;
 using Services.PlayerData;
 using UnityEngine;
 using Zenject;
@@ -12,7 +16,6 @@ namespace Services.Backend
     public class LuxoddBackendService : IBackendService, IDisposable
     {
         private const int PostGameFlowWaitTime = 5;
-        
         private readonly NetworkManager _networkManager;
         private readonly PlayerDataManager _playerDataManager;
         private readonly SignalBus _signalBus;
@@ -50,6 +53,7 @@ namespace Services.Backend
         public void HandleError(ErrorSignal signal)
         {
             _networkManager.WebSocketService.BackToSystemWithError(signal.Code.ToString(), signal.Message);
+            
         }
         public void TriggerGameOverFlow(int score, Action onRevive)
         {
@@ -65,6 +69,15 @@ namespace Services.Backend
                 }
             });
         }
+        // public void GetGameSessionInfo(Action<BettingSessionMissionsPayload> onSuccess, Action<int, string> onError)
+        // {
+        //     _networkManager.WebSocketCommandHandler.SendGetBettingSessionMissionsRequestCommand(onSuccess, onError);
+        // }
+
+        // public void SendStrategicBettingResult(List<MissionResultDto> results, Action onSuccess, Action<string> onError)
+        // {
+        //     throw new NotImplementedException();
+        // }
         public void Exit()
         {
             _networkManager.WebSocketService.BackToSystem();
@@ -119,6 +132,7 @@ namespace Services.Backend
             
             Exit();
         }
+
     }
 }
 

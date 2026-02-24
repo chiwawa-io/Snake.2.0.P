@@ -10,6 +10,7 @@ namespace Gameplay.Global
 {
     public class GameSessionController : IInitializable, IDisposable
     {
+        private readonly Vector2Int Bounds = new(22, 22);
         private readonly SignalBus _signalBus;
         private readonly ItemSpawner _itemSpawner;
         private readonly SnakeModel _snakeModel;
@@ -65,8 +66,8 @@ namespace Gameplay.Global
             _snakeEngine.Reset();
             _gameElements.SetActive(true);
 
-            Vector2Int bounds = new Vector2Int(22, 22);
-            _itemSpawner.Initialize(bounds, _snakeModel.Body, _currentDifficulty);
+            //TODO: Get mission data here
+            _itemSpawner.Initialize(Bounds, _snakeModel.Body, _currentDifficulty);
         }
     }
 }
