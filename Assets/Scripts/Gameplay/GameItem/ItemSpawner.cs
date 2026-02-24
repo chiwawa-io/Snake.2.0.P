@@ -50,7 +50,7 @@ namespace Gameplay.GameItem
 
         private List<Vector2Int> _playerBodyPositions;
         private Vector2Int _gridBounds;
-        private string _currentDifficulty; 
+        private GameDifficulty _currentDifficulty; 
         private bool _isSpawningActive;
 
         private SpawnPointMap _currentSpawnPointMap;
@@ -65,7 +65,7 @@ namespace Gameplay.GameItem
             _container = container;
         }
 
-        public void Initialize(Vector2Int gridBounds, List<Vector2Int> playerBody, string difficulty)
+        public void Initialize(Vector2Int gridBounds, List<Vector2Int> playerBody, GameDifficulty difficulty)
         {
             _gridBounds = gridBounds;
             _playerBodyPositions = playerBody;
@@ -224,13 +224,13 @@ namespace Gameplay.GameItem
             return pattern.items[0].type;
         }
 
-        private SpawnPattern GetRandomChallenge(string difficulty)
+        private SpawnPattern GetRandomChallenge(GameDifficulty difficulty)
         {
             List<SpawnPattern> pool = difficulty switch
             {
-                "Easy" => _easyChallengePatterns,
-                "Medium" => _mediumChallengePatterns,
-                "Hard" => _hardChallengePatterns,
+                GameDifficulty.Easy => _easyChallengePatterns,
+                GameDifficulty.Medium => _mediumChallengePatterns,
+                GameDifficulty.Hard => _hardChallengePatterns,
                 _ => _easyChallengePatterns
             };
 

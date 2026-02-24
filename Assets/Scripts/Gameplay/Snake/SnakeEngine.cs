@@ -11,13 +11,17 @@ namespace Gameplay.Snake
         private readonly Vector2Int InitTailPos = new(0, -8);
 
         private readonly SnakeModel _model;
-        private readonly Vector2Int _gridSize;
-        private readonly int _xBound;
-        private readonly int _yBound;
+        private Vector2Int _gridSize;
+        private int _xBound;
+        private int _yBound;
 
         public SnakeEngine(SnakeModel model, Vector2 gridSize)
         {
             _model = model;
+        }
+
+        public void Initialize(Vector2 gridSize)
+        {
             _gridSize = Vector2Int.RoundToInt(gridSize);
             _xBound = _gridSize.x / 2;
             _yBound = _gridSize.y / 2;

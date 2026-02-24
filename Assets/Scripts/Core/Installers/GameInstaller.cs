@@ -45,11 +45,10 @@ namespace Core.Installers
         [SerializeField] private BaseView _loadingView;
         [SerializeField] private ErrorView _errorView;
 
-        [Header("--- Data & Config ---")] [SerializeField]
-        private List<AchievementSO> _achievementList;
-
+        [Header("--- Data & Config ---")] 
+        [SerializeField] private List<AchievementSO> _achievementList;
+        [SerializeField] private LevelBoardsConfig _levelBoardsConfig;
         [SerializeField] private AchievementCompletion _achievementConfig;
-        [SerializeField] private Vector2Int _gridSize = new(22, 22);
 
         public override void InstallBindings()
         {
@@ -107,7 +106,7 @@ namespace Core.Installers
 
             Container.Bind<GameObject>().WithId("GameElements").FromInstance(_gameElements);
             Container.Bind<SnakeModel>().AsSingle();
-            Container.Bind<SnakeEngine>().AsSingle().WithArguments(new Vector2(_gridSize.x, _gridSize.y));
+            Container.Bind<SnakeEngine>().AsSingle();
             Container.Bind<SnakeView>().FromInstance(_snakeView).AsSingle();
             Container.Bind<ItemSpawner>().FromInstance(_itemSpawner).AsSingle();
             Container.Bind<AchievementCompletion>().FromInstance(_achievementConfig).AsSingle();
@@ -127,6 +126,7 @@ namespace Core.Installers
             Container.Bind<BaseView>().WithId("Loading").FromInstance(_loadingView);
 
             Container.Bind<AchievementService>().AsSingle().WithArguments(_achievementList);
+            Container.Bind<LevelBoardsConfig>().FromInstance(_levelBoardsConfig);
 
             Container.BindInterfacesAndSelfTo<MainMenuPresenter>().AsSingle();
             Container.BindInterfacesAndSelfTo<AchievementsPresenter>().AsSingle();
@@ -138,20 +138,13 @@ namespace Core.Installers
 
         private void InstallAudio()
         {
-            if (_audioManager != null)
-            {
-                Container.Bind<AudioManager>()
-                    .FromInstance(_audioManager)
-                    .AsSingle();
+            Container.Bind<AudioManager>()
+                .FromInstance(_audioManager)
+                .AsSingle();
 
-                Container.Bind<IAudioService>()
-                    .To<AudioManager>()
-                    .FromResolve();
-            }
-            else
-            {
-                Debug.LogError("AudioManager is missing from the Installer reference slot!");
-            }
+            Container.Bind<IAudioService>()
+                .To<AudioManager>()
+                .FromResolve();
         }
     }
 }

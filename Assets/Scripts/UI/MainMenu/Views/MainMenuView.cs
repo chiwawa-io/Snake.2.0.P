@@ -64,9 +64,9 @@ namespace UI.MainMenu.Views
             if(quitButton) 
                 quitButton.onClick.AddListener(() => _presenter.OnQuitClicked());
 
-            diffEasyButton.onClick.AddListener(() => _presenter.OnDifficultySelected("Easy"));
-            diffMediumButton.onClick.AddListener(() => _presenter.OnDifficultySelected("Medium"));
-            diffHardButton.onClick.AddListener(() => _presenter.OnDifficultySelected("Hard"));
+            diffEasyButton.onClick.AddListener(() => _presenter.OnDifficultySelected(GameDifficulty.Easy));
+            diffMediumButton.onClick.AddListener(() => _presenter.OnDifficultySelected(GameDifficulty.Medium));
+            diffHardButton.onClick.AddListener(() => _presenter.OnDifficultySelected(GameDifficulty.Hard));
 
             diffCloseButton.onClick.AddListener(() => _presenter.OnDifficultyClosed());
         }

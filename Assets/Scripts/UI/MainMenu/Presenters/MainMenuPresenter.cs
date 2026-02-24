@@ -53,7 +53,7 @@ namespace UI.MainMenu.Presenters
             _view.SetDifficultyPopupActive(true);
         }
 
-        public void OnDifficultySelected(string difficulty)
+        public void OnDifficultySelected(GameDifficulty difficulty)
         {
             _sessionController.SetDifficulty(difficulty);
 

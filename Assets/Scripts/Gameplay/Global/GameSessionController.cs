@@ -10,26 +10,29 @@ namespace Gameplay.Global
 {
     public class GameSessionController : IInitializable, IDisposable
     {
-        private readonly Vector2Int Bounds = new(22, 22);
+        private readonly LevelBoardsConfig _levelBoundsConfig;
         private readonly SignalBus _signalBus;
         private readonly ItemSpawner _itemSpawner;
         private readonly SnakeModel _snakeModel;
         private readonly SnakeEngine _snakeEngine;
         private readonly GameObject _gameElements;
-        private string _currentDifficulty = "Medium";
+        private GameDifficulty _currentDifficulty = GameDifficulty.Medium;
+        private Vector2Int bounds;
 
         public GameSessionController(
             SignalBus signalBus,
             ItemSpawner itemSpawner,
             SnakeModel snakeModel,
             SnakeEngine snakeEngine,
-            [Inject(Id = "GameElements")] GameObject gameElements)
+            [Inject(Id = "GameElements")] GameObject gameElements,
+            LevelBoardsConfig levelBoardsConfig)
         {
             _signalBus = signalBus;
             _itemSpawner = itemSpawner;
             _snakeModel = snakeModel;
             _snakeEngine = snakeEngine;
             _gameElements = gameElements;
+            _levelBoundsConfig = levelBoardsConfig;
         }
 
         public void Initialize()
@@ -42,7 +45,7 @@ namespace Gameplay.Global
             _signalBus.Unsubscribe<GameStateChangedSignal>(OnStateChanged);
         }
 
-        public void SetDifficulty(string difficulty)
+        public void SetDifficulty(GameDifficulty difficulty)
         {
             _currentDifficulty = difficulty;
         }
@@ -66,8 +69,17 @@ namespace Gameplay.Global
             _snakeEngine.Reset();
             _gameElements.SetActive(true);
 
+            
             //TODO: Get mission data here
-            _itemSpawner.Initialize(Bounds, _snakeModel.Body, _currentDifficulty);
+
+            foreach(var boardConfig in _levelBoundsConfig.boardConfigs)
+            {
+                if (boardConfig.gameDifficulty == _currentDifficulty)
+                    bounds = boardConfig.boardSize;
+            }
+
+            _itemSpawner.Initialize(bounds, _snakeModel.Body, _currentDifficulty);
+            _snakeEngine.Initialize(bounds);
         }
     }
 }
