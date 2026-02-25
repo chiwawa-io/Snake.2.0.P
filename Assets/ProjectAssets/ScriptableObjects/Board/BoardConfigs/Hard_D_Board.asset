@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ed0cbb04bf32d543bca606635099a83, type: 3}
   m_Name: Hard_D_Board
   m_EditorClassIdentifier: Assembly-CSharp::Gameplay.Global.Data.BoardConfig
-  gameDifficulty: 0
-  boardSize: {x: 0, y: 0}
+  gameDifficulty: 2
+  boardSize: {x: 15, y: 22}

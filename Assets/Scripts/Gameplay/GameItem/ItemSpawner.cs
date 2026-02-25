@@ -37,7 +37,9 @@ namespace Gameplay.GameItem
         [SerializeField] private int _invulnerabilitySpawnInterval = 25;
 
         [Header("Pattern & Spawning Logic")] 
-        [SerializeField] private List<SpawnPointMap> _spawnPointMaps = new();
+        [SerializeField] private List<SpawnPointMap> _easySpawnPointMaps = new();
+        [SerializeField] private List<SpawnPointMap> _mediumSpawnPointMaps = new();
+        [SerializeField] private List<SpawnPointMap> _hardSpawnPointMaps = new();
 
         [SerializeField] private SpawnPattern _startingFoodPattern;
         [SerializeField] private SpawnPattern _speedUpPattern;
@@ -74,10 +76,25 @@ namespace Gameplay.GameItem
 
             _signalBus.Subscribe<ItemDestroyedSignal>(OnItemDestroyedByTimer);
 
-            // Only pick the Map once per level
-            _currentSpawnPointMap = _spawnPointMaps != null && _spawnPointMaps.Count > 0 
-                ? _spawnPointMaps[Random.Range(0, _spawnPointMaps.Count)] 
-                : null;
+            switch (_currentDifficulty)
+            {
+                case GameDifficulty.Easy:
+                    _currentSpawnPointMap = _easySpawnPointMaps != null && _easySpawnPointMaps.Count > 0 
+                                            ? _easySpawnPointMaps[Random.Range(0, _easySpawnPointMaps.Count)] 
+                                            : null;
+                    break;
+                case GameDifficulty.Medium:
+                    _currentSpawnPointMap = _mediumSpawnPointMaps != null && _mediumSpawnPointMaps.Count > 0 
+                                            ? _mediumSpawnPointMaps[Random.Range(0, _mediumSpawnPointMaps.Count)] 
+                                            : null;
+                    break;
+                case GameDifficulty.Hard:
+                    _currentSpawnPointMap = _hardSpawnPointMaps != null && _hardSpawnPointMaps.Count > 0 
+                                            ? _hardSpawnPointMaps[Random.Range(0, _hardSpawnPointMaps.Count)] 
+                                            : null;
+                    break;
+
+            }
 
             if (_startingFoodPattern != null)
             {

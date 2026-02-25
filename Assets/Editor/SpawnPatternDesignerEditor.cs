@@ -1,9 +1,6 @@
 using UnityEngine;
 using UnityEditor;
-using System.Collections.Generic;
-using Gameplay.SpawnConfig;
 using Utilities;
-using Core.Enums;
 
 namespace SpawnPatternsBuilder
 {
@@ -134,9 +131,20 @@ namespace SpawnPatternsBuilder
                     GUIUtility.hotControl = GUIUtility.GetControlID(FocusType.Passive);
                     e.Use();
 
-                    if (e.shift) _designer.RemoveFromPattern(gridPos);
-                    else if (_designer.currentMode == SpawnPatternDesigner.EditMode.SpawnPattern) _designer.AddToPattern(gridPos);
-                    else _designer.AddToMap(gridPos);
+                    if (e.shift) 
+                    {
+                        if (_designer.currentMode == SpawnPatternDesigner.EditMode.SpawnPattern) 
+                            _designer.RemoveFromPattern(gridPos);
+                        else 
+                            _designer.RemoveFromMap(gridPos);
+                    }
+                    else
+                    {
+                        if (_designer.currentMode == SpawnPatternDesigner.EditMode.SpawnPattern) 
+                            _designer.AddToPattern(gridPos);
+                        else 
+                            _designer.AddToMap(gridPos);
+                    }
                 }
             }
             

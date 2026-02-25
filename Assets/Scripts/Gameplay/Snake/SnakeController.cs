@@ -15,6 +15,7 @@ namespace Gameplay.Snake
         private const float BaseFrequency = 0.1f;
         private const float SpeedUpFrequency = 0.08f;
         private const float RespawnDelay = 0.4f;
+        private const float InvulnerableAfterRespawn = 1.0f;
         private const int StartingLives = 3;
         private const float FloatTolerance = 0.001f;
 
@@ -28,6 +29,7 @@ namespace Gameplay.Snake
         private float _moveTimer;
         private float _powerUpTimer;
         private float _respawnTimer;
+        private float _invulnerableTimer;
         private bool _gameIsRunning;
         private int _lives;
         private int _score;
@@ -62,6 +64,7 @@ namespace Gameplay.Snake
             if (_model.IsRespawning)
             {
                 _respawnTimer -= Time.deltaTime;
+
                 if (_respawnTimer <= 0)
                 {
                     _model.IsRespawning = false;
@@ -69,6 +72,8 @@ namespace Gameplay.Snake
                     _gameIsRunning = true;
                     _signalBus.Fire(new SnakeEffectSignal("Go!", _model.Body[0]));
                 }
+
+                
                 return; 
             }
 
@@ -249,7 +254,9 @@ namespace Gameplay.Snake
         {
             _engine.Reset(); 
             _model.IsRespawning = true;
+            _model.IsInvulnerable = true;
             _respawnTimer = RespawnDelay;
+            _powerUpTimer = InvulnerableAfterRespawn;
         }
         
         private void OnRevive(RevivePlayerSignal signal)

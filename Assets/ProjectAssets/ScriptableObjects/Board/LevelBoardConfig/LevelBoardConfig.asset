@@ -12,4 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11e370d0e1f1b9a4994c9dfb76847850, type: 3}
   m_Name: LevelBoardConfig
   m_EditorClassIdentifier: Assembly-CSharp::Gameplay.Global.Data.LevelBoardsConfig
-  boardConfigs: []
+  boardConfigs:
+  - {fileID: 11400000, guid: 049a7f577b82dbc47982f9ba7291bf31, type: 2}
+  - {fileID: 11400000, guid: 9e64ce8a5029c6846b3ff3b2f752a40d, type: 2}
+  - {fileID: 11400000, guid: b130b56e84733944f99892e7bb7976e3, type: 2}

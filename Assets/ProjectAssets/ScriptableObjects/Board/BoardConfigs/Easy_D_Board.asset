@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Easy_D_Board
   m_EditorClassIdentifier: Assembly-CSharp::Gameplay.Global.Data.BoardConfig
   gameDifficulty: 0
-  boardSize: {x: 0, y: 0}
+  boardSize: {x: 40, y: 22}

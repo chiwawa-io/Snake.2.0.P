@@ -3777,11 +3777,21 @@ MonoBehaviour:
   _speedupSpawnInterval: 14
   _invulnerabilitySpawnDelay: 5
   _invulnerabilitySpawnInterval: 25
-  _spawnPointMaps:
+  _easySpawnPointMaps:
+  - {fileID: 11400000, guid: 60c2c9ef91d12404eadaff76ef4fa61a, type: 2}
+  - {fileID: 11400000, guid: 74d53ad66c851ff41993c15310b42617, type: 2}
+  - {fileID: 11400000, guid: 03ea832de5059eb44a0866b2a4402f4a, type: 2}
+  - {fileID: 11400000, guid: d9637548fb57fc74d8fbaadc11125a9c, type: 2}
+  _mediumSpawnPointMaps:
   - {fileID: 11400000, guid: fd0672008538e7c44aa35507755fc974, type: 2}
   - {fileID: 11400000, guid: 7b9bddbf03173a141be9312d6b1384dc, type: 2}
   - {fileID: 11400000, guid: e35f3ae15bc5e334cbdfc860405156b0, type: 2}
   - {fileID: 11400000, guid: 7cac0f7f6ebf9824a8948704f8bceac1, type: 2}
+  _hardSpawnPointMaps:
+  - {fileID: 11400000, guid: 8cf97b5ae98afcd4fb455aa834f41424, type: 2}
+  - {fileID: 11400000, guid: 6d9d2f9d758728340830f3d075c5c57f, type: 2}
+  - {fileID: 11400000, guid: a0b77bcaaf776a04cb25491650de8fe7, type: 2}
+  - {fileID: 11400000, guid: ce915b561316dce40b7fe1bb272914a5, type: 2}
   _startingFoodPattern: {fileID: 11400000, guid: 70e44f1af10814c4595360e8cb79acd8, type: 2}
   _speedUpPattern: {fileID: 11400000, guid: 8a7065181388c534f870d4e50776e5a3, type: 2}
   _invulnerabilityPattern: {fileID: 11400000, guid: 2c1791c5fccabd1deb6e23349f6d5a21, type: 2}
