@@ -5,17 +5,20 @@ using Gameplay.GameItem;
 using Gameplay.Snake;
 using Zenject;
 using UnityEngine;
+using Gameplay.Global.Data;
+using Gameplay.Board;
 
 namespace Gameplay.Global
 {
     public class GameSessionController : IInitializable, IDisposable
     {
-        private readonly LevelBoardsConfig _levelBoundsConfig;
         private readonly SignalBus _signalBus;
         private readonly ItemSpawner _itemSpawner;
         private readonly SnakeModel _snakeModel;
         private readonly SnakeEngine _snakeEngine;
         private readonly GameObject _gameElements;
+        private readonly BoardVisuals _boardVisuals;
+        private readonly LevelBoardsConfig _levelBoundsConfig;
         private GameDifficulty _currentDifficulty = GameDifficulty.Medium;
         private Vector2Int bounds;
 
@@ -25,13 +28,15 @@ namespace Gameplay.Global
             SnakeModel snakeModel,
             SnakeEngine snakeEngine,
             [Inject(Id = "GameElements")] GameObject gameElements,
-            LevelBoardsConfig levelBoardsConfig)
+            LevelBoardsConfig levelBoardsConfig,
+            BoardVisuals boardVisuals)
         {
             _signalBus = signalBus;
             _itemSpawner = itemSpawner;
             _snakeModel = snakeModel;
             _snakeEngine = snakeEngine;
             _gameElements = gameElements;
+            _boardVisuals = boardVisuals;
             _levelBoundsConfig = levelBoardsConfig;
         }
 
@@ -80,6 +85,7 @@ namespace Gameplay.Global
 
             _itemSpawner.Initialize(bounds, _snakeModel.Body, _currentDifficulty);
             _snakeEngine.Initialize(bounds);
+            _boardVisuals.SetBoard(_currentDifficulty);
         }
     }
 }

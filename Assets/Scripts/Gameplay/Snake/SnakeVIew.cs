@@ -7,14 +7,14 @@ namespace Gameplay.Snake
 {
     public class SnakeView : MonoBehaviour
     {
-        [Header("Visuals")] [SerializeField] private GameObject _snakeHeadVisual;
+        [Header("Visuals")] 
+        [SerializeField] private GameObject _snakeHeadVisual;
         [SerializeField] private GameObject _snakeTailVisual;
         [SerializeField] private LineRenderer _lineRenderer;
         [SerializeField] private GameObject _boomEffect;
         [SerializeField] private float _visualLerpSpeed = 8f;
 
         private SnakeModel _model;
-        private Vector2 _lastTailPosition;
 
         [Inject]
         public void Construct(SnakeModel model)

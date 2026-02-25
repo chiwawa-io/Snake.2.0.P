@@ -15,7 +15,7 @@ namespace Gameplay.Snake
         private int _xBound;
         private int _yBound;
 
-        public SnakeEngine(SnakeModel model, Vector2 gridSize)
+        public SnakeEngine(SnakeModel model)
         {
             _model = model;
         }

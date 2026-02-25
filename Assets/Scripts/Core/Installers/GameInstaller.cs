@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using Achievements.Data;
 using Core.Events;
+using Gameplay.Board;
 using Gameplay.GameItem;
 using Gameplay.Global;
+using Gameplay.Global.Data;
 using Gameplay.Snake;
 using Services.Audio;
 using Services.Backend;
@@ -27,8 +29,9 @@ namespace Core.Installers
 
     public class GameInstaller : MonoInstaller
     {
-        [Header("--- Scene Systems ---")] [SerializeField]
-        private SnakeView _snakeView;
+        [Header("--- Scene Systems ---")] 
+        [SerializeField] private SnakeView _snakeView;
+        [SerializeField] private BoardVisuals _boardVisuals;
 
         [SerializeField] private GameObject _gameElements;
         [SerializeField] private ItemSpawner _itemSpawner;
@@ -108,6 +111,7 @@ namespace Core.Installers
             Container.Bind<SnakeModel>().AsSingle();
             Container.Bind<SnakeEngine>().AsSingle();
             Container.Bind<SnakeView>().FromInstance(_snakeView).AsSingle();
+            Container.Bind<BoardVisuals>().FromInstance(_boardVisuals).AsSingle();
             Container.Bind<ItemSpawner>().FromInstance(_itemSpawner).AsSingle();
             Container.Bind<AchievementCompletion>().FromInstance(_achievementConfig).AsSingle();
 
