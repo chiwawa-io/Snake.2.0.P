@@ -85,7 +85,7 @@ namespace Gameplay.Global
 
             _itemSpawner.Initialize(bounds, _snakeModel.Body, _currentDifficulty);
             _snakeEngine.Initialize(bounds);
-            _boardVisuals.SetBoard(_currentDifficulty);
+            _boardVisuals.GenerateBoard(bounds, _currentDifficulty);
         }
     }
 }

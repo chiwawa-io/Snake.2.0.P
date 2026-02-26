@@ -3777,21 +3777,6 @@ MonoBehaviour:
   _speedupSpawnInterval: 14
   _invulnerabilitySpawnDelay: 5
   _invulnerabilitySpawnInterval: 25
-  _easySpawnPointMaps:
-  - {fileID: 11400000, guid: 60c2c9ef91d12404eadaff76ef4fa61a, type: 2}
-  - {fileID: 11400000, guid: 74d53ad66c851ff41993c15310b42617, type: 2}
-  - {fileID: 11400000, guid: 03ea832de5059eb44a0866b2a4402f4a, type: 2}
-  - {fileID: 11400000, guid: d9637548fb57fc74d8fbaadc11125a9c, type: 2}
-  _mediumSpawnPointMaps:
-  - {fileID: 11400000, guid: fd0672008538e7c44aa35507755fc974, type: 2}
-  - {fileID: 11400000, guid: 7b9bddbf03173a141be9312d6b1384dc, type: 2}
-  - {fileID: 11400000, guid: e35f3ae15bc5e334cbdfc860405156b0, type: 2}
-  - {fileID: 11400000, guid: 7cac0f7f6ebf9824a8948704f8bceac1, type: 2}
-  _hardSpawnPointMaps:
-  - {fileID: 11400000, guid: 8cf97b5ae98afcd4fb455aa834f41424, type: 2}
-  - {fileID: 11400000, guid: 6d9d2f9d758728340830f3d075c5c57f, type: 2}
-  - {fileID: 11400000, guid: a0b77bcaaf776a04cb25491650de8fe7, type: 2}
-  - {fileID: 11400000, guid: ce915b561316dce40b7fe1bb272914a5, type: 2}
   _startingFoodPattern: {fileID: 11400000, guid: 70e44f1af10814c4595360e8cb79acd8, type: 2}
   _speedUpPattern: {fileID: 11400000, guid: 8a7065181388c534f870d4e50776e5a3, type: 2}
   _invulnerabilityPattern: {fileID: 11400000, guid: 2c1791c5fccabd1deb6e23349f6d5a21, type: 2}
@@ -12672,21 +12657,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   leaderboardView: {fileID: 6951880161164982458}
---- !u!4 &2635981483165192475
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3957871115277186475}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.0623, y: -0.0616, z: 0}
-  m_LocalScale: {x: 3.0021865, y: 2.936075, z: 2.9391649}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 8016157090230237457}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2659872463080389805
 GameObject:
   m_ObjectHideFlags: 0
@@ -15332,23 +15302,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1356236136346873566}
   m_CullTransparentMesh: 1
---- !u!1 &3957871115277186475
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2635981483165192475}
-  - component: {fileID: 5362237515028524751}
-  m_Layer: 0
-  m_Name: Square (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!114 &3973369582074978898
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27650,65 +27603,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7072728837394821664}
   m_CullTransparentMesh: 1
---- !u!212 &5362237515028524751
-SpriteRenderer:
-  serializedVersion: 2
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3957871115277186475}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_MaskInteraction: 0
-  m_Sprite: {fileID: 1763014460331064234, guid: 848a51bb76013104f970d30ef5c7db65, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 17.4, y: 17.4}
-  m_AdaptiveModeThreshold: 0.5
-  m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
-  m_SpriteSortPoint: 0
 --- !u!1 &5373401683050811912
 GameObject:
   m_ObjectHideFlags: 0
@@ -37337,8 +37231,7 @@ Transform:
   m_LocalPosition: {x: -0.37, y: -0.83, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 2635981483165192475}
+  m_Children: []
   m_Father: {fileID: 3386647575510938740}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8016157090230237458
@@ -37353,10 +37246,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27681ec157462f94bbe01d049cb9b6a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gameplay.Board.BoardVisuals
-  _spriteRenderer: {fileID: 5362237515028524751}
-  _easyBoard: {fileID: 6182136707997871493, guid: c8739e61c530d0944b7453d710a46b05, type: 3}
-  _mediumBoard: {fileID: 1763014460331064234, guid: 848a51bb76013104f970d30ef5c7db65, type: 3}
-  _hardBoard: {fileID: -737088235458171712, guid: 9edd1ae7f72d32c47bf574284d73f0e4, type: 3}
+  _tilePrefab: {fileID: 7334476789169882966, guid: fd057e3257a43d34f83ed01ce98a62ab, type: 3}
+  _boardContainer: {fileID: 8016157090230237457}
+  _easyStyle: {fileID: 11400000, guid: 38861f6823345a34db32ce28bd53620e, type: 2}
+  _mediumStyle: {fileID: 11400000, guid: 38861f6823345a34db32ce28bd53620e, type: 2}
+  _hardStyle: {fileID: 11400000, guid: 38861f6823345a34db32ce28bd53620e, type: 2}
 --- !u!1 &8020897879468735332
 GameObject:
   m_ObjectHideFlags: 0
