@@ -6,6 +6,7 @@ using Gameplay.GameItem;
 using Gameplay.Global;
 using Gameplay.Global.Data;
 using Gameplay.Snake;
+using Gameplay.SpawnConfig;
 using Services.Audio;
 using Services.Backend;
 using Services.Gameloop;
@@ -116,6 +117,7 @@ namespace Core.Installers
             Container.Bind<AchievementCompletion>().FromInstance(_achievementConfig).AsSingle();
 
             Container.BindInterfacesAndSelfTo<SnakeController>().AsSingle();
+            Container.BindInterfacesAndSelfTo<SpawnMapGenerator>().AsSingle();
             Container.BindInterfacesAndSelfTo<GameSessionController>().AsSingle();
         }
 
