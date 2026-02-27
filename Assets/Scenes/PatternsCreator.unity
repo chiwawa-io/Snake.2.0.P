@@ -148,10 +148,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dea47a6f29d5e344b578ab6a1be203a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Utilities.SpawnPatternDesigner
-  currentMode: 1
+  currentMode: 0
   cellSize: 1
   boardDimensions: {x: 15, y: 22}
-  targetPattern: {fileID: 11400000, guid: 14165ee7e4724f44e91528c5e968ddec, type: 2}
+  targetPattern: {fileID: 11400000, guid: cec48a56ca2134c4280096b0cde97135, type: 2}
   targetMap: {fileID: 11400000, guid: ce915b561316dce40b7fe1bb272914a5, type: 2}
   _itemPalette:
   - {fileID: 11400000, guid: 8b2125e2c323fd84b868542e09251576, type: 2}
@@ -161,7 +161,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 88cc60a91ed18fa478a6bffb0c000f27, type: 2}
   - {fileID: 11400000, guid: 965a6d6a6b04c044b9dec1c32e2e4b51, type: 2}
   _previewContainer: {fileID: 695648080}
-  brushItem: 2
+  brushItem: 4
   brushColor: {r: 1, g: 0, b: 0, a: 1}
   gridColor: {r: 0, g: 0, b: 0, a: 0.07058824}
   showGrid: 1

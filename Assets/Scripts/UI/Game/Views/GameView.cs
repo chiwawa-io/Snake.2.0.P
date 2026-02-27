@@ -11,7 +11,7 @@ namespace UI.Game.Views
         private const float FloatDuration = 1.2f;
         private const float FloatDistance = 5f;
         private const float DurationMultiplicator = 0.5f;
-        private const float PopupShowDuration = 3f;
+        private const float PopupShowDuration = 2.5f;
 
         [Header("Gameplay Data")] [SerializeField]
         private TextMeshProUGUI scoreText;

@@ -7,8 +7,8 @@ namespace Gameplay.Board
 {
     public class BoardVisuals : MonoBehaviour
     {[Header("Settings")]
-        [SerializeField] private GameObject _tilePrefab; // A simple prefab with a SpriteRenderer
-        [SerializeField] private Transform _boardContainer; // Empty GameObject to hold the generated tiles
+        [SerializeField] private GameObject _tilePrefab; 
+        [SerializeField] private Transform _boardContainer; 
 
         [Header("Styles")]
         [SerializeField] private BoardStyle _easyStyle;
@@ -98,7 +98,6 @@ namespace Gameplay.Board
             if (tile.TryGetComponent(out SpriteRenderer sr))
             {
                 sr.sprite = sprite;
-                sr.sortingOrder = 10; 
             }
 
             _spawnedTiles.Add(tile);

@@ -14,7 +14,6 @@ namespace Utilities
         private bool _isTimerRunning; 
         private Coroutine _timerCoroutine;
         private SignalBus _signalBus;
-        private bool _isOnMenu;
 
         [Inject]
         public void Construct(SignalBus signalBus)
@@ -24,7 +23,8 @@ namespace Utilities
 
         private void Start()
         {
-            _signalBus?.Subscribe<GameStateChangedSignal>(StartDetector);
+            StartDetector();
+            _signalBus?.Subscribe<GameStateChangedSignal>(UpdateGameState);
         }
 
         private void Update()
@@ -37,8 +37,7 @@ namespace Utilities
             {
                 Debug.LogWarning("Inactivity time limit reached!.");
 
-                if (!_isOnMenu) _signalBus.Fire(new InactivityTimeOut());
-                else _signalBus.Fire(new GameStateChangedSignal(GameState.InGame));
+                _signalBus.Fire(new GameStateChangedSignal(GameState.InGame));
                 
                 StopDetector(); 
             }
@@ -46,22 +45,12 @@ namespace Utilities
 
         private void OnDisable()
         {
-            _signalBus?.Unsubscribe<GameStateChangedSignal>(StartDetector);
+            _signalBus?.Unsubscribe<GameStateChangedSignal>(UpdateGameState);
         }
 
-        private void StartDetector(GameStateChangedSignal signal)
+        private void StartDetector()
         {
             _currentTime = 0f;
-            
-            if (signal.NewState == GameState.InGame)
-            {
-                StopDetector();   
-                return;
-            }
-            else if (signal.NewState == GameState.MainMenu && !_isOnMenu)
-            {
-                _isOnMenu = true;
-            }
 
             _isTimerRunning = true;
             
@@ -97,6 +86,13 @@ namespace Utilities
                 _signalBus.Fire(new InactivityTimerSignal (timeRemaining));
                 
                 yield return new WaitForSeconds(1f);
+            }
+        }
+        private void UpdateGameState(GameStateChangedSignal signal)
+        {
+            if (signal.NewState == GameState.InGame)
+            {
+                StopDetector();
             }
         }
     }

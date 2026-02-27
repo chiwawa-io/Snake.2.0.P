@@ -30,6 +30,7 @@ namespace Services.Backend
         public void Initialize(Action onReady, Action onError)
         {
             _networkManager.WebSocketService.ConnectToServer(onReady, onError);
+            _networkManager.HealthStatusCheckService.Activate();
             _signalBus.Subscribe<ErrorSignal>(HandleError);
             _signalBus.Subscribe<GameOverSignal>(OnGameOver);
             _signalBus.Subscribe<InactivityTimeOut>(Exit);
@@ -80,6 +81,7 @@ namespace Services.Backend
         // }
         public void Exit()
         {
+            _networkManager.HealthStatusCheckService.Deactivate();
             _networkManager.WebSocketService.BackToSystem();
         }
 

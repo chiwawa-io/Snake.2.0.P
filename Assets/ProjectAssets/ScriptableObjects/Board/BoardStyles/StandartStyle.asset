@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e171cc50b6e1bcb4f8a843c144a92beb, type: 3}
   m_Name: StandartStyle
   m_EditorClassIdentifier: Assembly-CSharp::Gameplay.Global.Data.BoardStyle
-  <CenterTile>k__BackingField: {fileID: 2049672371980047322, guid: 85278eb843bb14146a016637a1cd4ab9, type: 3}
-  <TopLeftCorner>k__BackingField: {fileID: -5203544476001024521, guid: f801661ca984d614a992a5899762cb57, type: 3}
-  <TopRightCorner>k__BackingField: {fileID: -1953445752039256487, guid: 5eae5ac9cc028764fa96f85f9dc6128c, type: 3}
-  <BottomLeftCorner>k__BackingField: {fileID: -6395022750141388751, guid: e683d42a00b96f54699c0c314540268b, type: 3}
-  <BottomRightCorner>k__BackingField: {fileID: 6608050393693163791, guid: 38c81264b991f8c4ebac86501f640b98, type: 3}
-  <TopBorder>k__BackingField: {fileID: 5876195527145578036, guid: 8a66567265365cc48876de44de5c46a0, type: 3}
-  <BottomBorder>k__BackingField: {fileID: -3084539570374121163, guid: 93022fa6ae5a2604cbc8bce556db9a26, type: 3}
-  <LeftBorder>k__BackingField: {fileID: -8284811582538768567, guid: 7b3a9262e9c2e5a4fb9580e45ce8353d, type: 3}
-  <RightBorder>k__BackingField: {fileID: 8467441741265662999, guid: 42667bb2644118543b47e5c83828305e, type: 3}
+  <CenterTile>k__BackingField: {fileID: 21300000, guid: 85278eb843bb14146a016637a1cd4ab9, type: 3}
+  <TopLeftCorner>k__BackingField: {fileID: 21300000, guid: f801661ca984d614a992a5899762cb57, type: 3}
+  <TopRightCorner>k__BackingField: {fileID: 21300000, guid: 5eae5ac9cc028764fa96f85f9dc6128c, type: 3}
+  <BottomLeftCorner>k__BackingField: {fileID: 21300000, guid: e683d42a00b96f54699c0c314540268b, type: 3}
+  <BottomRightCorner>k__BackingField: {fileID: 21300000, guid: 38c81264b991f8c4ebac86501f640b98, type: 3}
+  <TopBorder>k__BackingField: {fileID: 21300000, guid: 8a66567265365cc48876de44de5c46a0, type: 3}
+  <BottomBorder>k__BackingField: {fileID: 21300000, guid: 93022fa6ae5a2604cbc8bce556db9a26, type: 3}
+  <LeftBorder>k__BackingField: {fileID: 21300000, guid: 7b3a9262e9c2e5a4fb9580e45ce8353d, type: 3}
+  <RightBorder>k__BackingField: {fileID: 21300000, guid: 42667bb2644118543b47e5c83828305e, type: 3}

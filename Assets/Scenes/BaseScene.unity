@@ -3059,7 +3059,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.0141509175, g: 0.44093105, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3146,8 +3146,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 78.3, y: -19.645}
-  m_SizeDelta: {x: 29.647, y: 21.798}
+  m_AnchoredPosition: {x: 144.1, y: -0}
+  m_SizeDelta: {x: 50.043, y: 37.095}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &50520420562600598
 CanvasRenderer:
@@ -27694,7 +27694,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24.2
+  m_fontSize: 41.2
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -35221,7 +35221,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 9.3, y: -3.8}
+  m_AnchoredPosition: {x: -30.246, y: 0.000016928}
   m_SizeDelta: {x: 288.2278, y: 50.9533}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &6901975878068211805
@@ -35722,7 +35722,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Exit to game selection menu in:'
+  m_text: 'Game Starts in:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2b8914f628e303b4c8c10493c6ce485b, type: 2}
   m_sharedMaterial: {fileID: -8688239714061454583, guid: 2b8914f628e303b4c8c10493c6ce485b, type: 2}
@@ -35749,7 +35749,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 21.5
+  m_fontSize: 32
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
