@@ -21,5 +21,19 @@ namespace Gameplay.SpawnConfig
         {
             return _map.GetValueOrDefault(type, new List<Vector2Int>());
         }
+
+        public void ShuffleAll()
+        {
+            foreach (var list in _map.Values)
+            {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    int randomIndex = Random.Range(i, list.Count);
+                    Vector2Int temp = list[i];
+                    list[i] = list[randomIndex];
+                    list[randomIndex] = temp;
+                }
+            }
+        }
     }
 }

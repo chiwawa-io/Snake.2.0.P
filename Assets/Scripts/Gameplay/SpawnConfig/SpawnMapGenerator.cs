@@ -36,6 +36,7 @@ namespace Gameplay.SpawnConfig
             map.AddPoint(ItemType.SpeedUp, new Vector2Int(xBound - PowerUpPadding, yBound - PowerUpPadding));
             map.AddPoint(ItemType.SpeedUp, new Vector2Int(-xBound + PowerUpPadding, -yBound + PowerUpPadding));
             map.AddPoint(ItemType.Invulnerability, new Vector2Int(xBound - PowerUpPadding, -yBound + PowerUpPadding));
+            map.ShuffleAll();
 
             return map;
         }
