@@ -32,6 +32,7 @@ namespace Services.Audio
         {
             public SoundType Type;
             public AudioClip Clip;
+            
         }
 
         private Dictionary<SoundType, AudioClip> _clipMap;
@@ -41,6 +42,7 @@ namespace Services.Audio
         public void Construct(SignalBus signalBus)
         {
             _signalBus = signalBus;
+            
         }
         
         private void Awake()

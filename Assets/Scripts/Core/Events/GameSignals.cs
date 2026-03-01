@@ -52,7 +52,18 @@ namespace Core.Events
     }
     
     //Snake
+    public readonly struct StrategicBettingStartedSignal 
+    { 
+        public readonly int TargetLength; 
+        public readonly int Hardness;
 
+        public StrategicBettingStartedSignal(int target, int hardness)
+        {
+            TargetLength = target; 
+            Hardness = hardness;
+        }
+    }
+    
     public readonly struct LifeUpdatedSignal
     {
         public readonly int LifeRemaining; 

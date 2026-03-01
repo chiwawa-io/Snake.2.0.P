@@ -12,6 +12,7 @@ using Services.Backend;
 using Services.Gameloop;
 using Services.PlayerData;
 using Services.PlayerInput;
+using Services.RNG;
 using UI.Achievements.Logic;
 using UI.Achievements.Presenters;
 using UI.Achievements.Views;
@@ -118,6 +119,7 @@ namespace Core.Installers
 
             Container.BindInterfacesAndSelfTo<SnakeController>().AsSingle();
             Container.BindInterfacesAndSelfTo<SpawnMapGenerator>().AsSingle();
+            Container.BindInterfacesAndSelfTo<RngService>().AsSingle();
             Container.BindInterfacesAndSelfTo<GameSessionController>().AsSingle();
         }
 

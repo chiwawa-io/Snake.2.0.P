@@ -5,9 +5,9 @@ using Core.Events;
 using Cysharp.Threading.Tasks;
 using Luxodd.Game.Scripts.Missions;
 using Luxodd.Game.Scripts.Network;
-using Luxodd.Game.Scripts.Network.CommandHandler;
 using Luxodd.Game.Scripts.Network.Payloads;
 using Services.PlayerData;
+using Services.RNG;
 using UnityEngine;
 using Zenject;
 
@@ -19,12 +19,18 @@ namespace Services.Backend
         private readonly NetworkManager _networkManager;
         private readonly PlayerDataManager _playerDataManager;
         private readonly SignalBus _signalBus;
+        private readonly IRngService _rngService;
         
-        public LuxoddBackendService(NetworkManager networkManager, PlayerDataManager playerDataManager, SignalBus signalBus)
+        public LuxoddBackendService(
+            NetworkManager networkManager, 
+            PlayerDataManager playerDataManager, 
+            SignalBus signalBus, 
+            IRngService rngService)
         {
             _networkManager = networkManager;
             _playerDataManager = playerDataManager;
             _signalBus = signalBus;
+            _rngService = rngService;
         }
 
         public void Initialize(Action onReady, Action onError)
@@ -51,6 +57,11 @@ namespace Services.Backend
             );
         }
 
+        public void GetSeedForRNG(int seed)
+        {
+            _rngService.Initialize(seed);
+        }
+
         public void HandleError(ErrorSignal signal)
         {
             _networkManager.WebSocketService.BackToSystemWithError(signal.Code.ToString(), signal.Message);
@@ -70,15 +81,24 @@ namespace Services.Backend
                 }
             });
         }
-        // public void GetGameSessionInfo(Action<BettingSessionMissionsPayload> onSuccess, Action<int, string> onError)
-        // {
-        //     _networkManager.WebSocketCommandHandler.SendGetBettingSessionMissionsRequestCommand(onSuccess, onError);
-        // }
+        public void GetGameSessionInfo(Action<SessionInfoPayload> onSuccess, Action<int, string> onError)
+        {
+            _networkManager.WebSocketCommandHandler.SendGetGameSessionInfoRequestCommand(
+                (payload) =>
+                {
+                    if (payload.SessionType == "sb" && payload.Data != null)
+                    {
+                        // _rngService.Initialize(payload.Data.Seed);   
+                    }
+                    onSuccess?.Invoke(payload);
+                },
+                onError);
+        }
 
-        // public void SendStrategicBettingResult(List<MissionResultDto> results, Action onSuccess, Action<string> onError)
-        // {
-        //     throw new NotImplementedException();
-        // }
+        public void SendStrategicBettingResult(List<MissionResultDto> results, Action onSuccess, Action<string> onError)
+        {
+            
+        }
         public void Exit()
         {
             _networkManager.HealthStatusCheckService.Deactivate();

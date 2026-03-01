@@ -1,4 +1,5 @@
 using Core.Enums;
+using Services.RNG;
 using UnityEngine;
 
 namespace Gameplay.SpawnConfig
@@ -8,6 +9,13 @@ namespace Gameplay.SpawnConfig
         private const int FoodSpacing = 5;
         private const int PreciousSpacing = 10;
         private const int PowerUpPadding = 3;
+
+        private readonly IRngService _rngService;
+        
+        public SpawnMapGenerator(IRngService rngService)
+        {
+            _rngService = rngService;
+        }
 
         public RuntimeSpawnMap Generate(Vector2Int boardSize)
         {
@@ -36,7 +44,8 @@ namespace Gameplay.SpawnConfig
             map.AddPoint(ItemType.SpeedUp, new Vector2Int(xBound - PowerUpPadding, yBound - PowerUpPadding));
             map.AddPoint(ItemType.SpeedUp, new Vector2Int(-xBound + PowerUpPadding, -yBound + PowerUpPadding));
             map.AddPoint(ItemType.Invulnerability, new Vector2Int(xBound - PowerUpPadding, -yBound + PowerUpPadding));
-            map.ShuffleAll();
+            
+            map.ShuffleAll(_rngService);
 
             return map;
         }

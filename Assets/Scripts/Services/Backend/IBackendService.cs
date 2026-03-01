@@ -11,7 +11,8 @@ namespace Services.Backend
         void StartLevel(Action onSuccess, Action<string> onError);
         void TriggerGameOverFlow(int score, Action onRevive);
         
-        // public void GetGameSessionInfo(Action<BettingSessionMissionsPayload> onSuccess, Action<int, string> onError);
+        void GetGameSessionInfo(Action<SessionInfoPayload> onSuccess, Action<int, string> onError);
+        void GetSeedForRNG(int seed);
         // void SendStrategicBettingResult(List<MissionResultDto> results, Action onSuccess, Action<string> onError);
     }
 }

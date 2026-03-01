@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace Achievements.Data
 {
-
     [CreateAssetMenu(fileName = "SnakeAchievementConfig", menuName = "Snake/Achievement Completion")]
     public class AchievementCompletion : ScriptableObject
     {
