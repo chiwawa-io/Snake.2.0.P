@@ -74,7 +74,6 @@ namespace Gameplay.Global
             if (signal.NewState == GameState.InGame)
             {
                 StartNewSession();
-                _signalBus.Fire(new GameStartedSignal());
             }
             else if (signal.NewState == GameState.MainMenu)
             {
@@ -106,6 +105,7 @@ namespace Gameplay.Global
                 },
                 onError: (err, msg) => Debug.LogError(err + msg)
             );
+            
         }
 
         private void InitializeStandardGame()
@@ -114,16 +114,18 @@ namespace Gameplay.Global
             {
                 if (boardConfig.gameDifficulty == _currentDifficulty)
                     bounds = boardConfig.boardSize;
+                    Debug.LogWarning(bounds + " " + Time.time);
             }
 
             _itemSpawner.Initialize(bounds, _snakeModel.Body, _currentDifficulty, false);
             _snakeEngine.Initialize(bounds);
             _boardVisuals.GenerateBoard(bounds, _currentDifficulty);
+            
+            _signalBus.Fire(new GameStartedSignal());
         }
 
         private void InitializeStrategicBetting(StrategicBettingData payload)
         {
-            
             var difficulty = CalculateGameHardness((int)payload.LevelDifficulty); 
             var _currentBounds = CalculateBounds((int)payload.LevelDifficulty);
 

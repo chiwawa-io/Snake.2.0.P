@@ -34,7 +34,6 @@ namespace Gameplay.Snake
         private int _score;
         private int _targetLength;
         private bool _isSbMode;
-
         public float InterpolationFactor => _gameIsRunning ? (_moveTimer / _model.MoveFrequency) : 0f;
 
         public SnakeController(
@@ -56,7 +55,7 @@ namespace Gameplay.Snake
         public void Initialize()
         {
             _signalBus.Subscribe<InputDirectionSignal>(OnInput);
-            _signalBus.Subscribe<GameStateChangedSignal>(OnStateChange);
+            _signalBus.Subscribe<GameStartedSignal>(OnGameStarted);
             _signalBus.Subscribe<RevivePlayerSignal>(OnRevive);
             _signalBus.Subscribe<StrategicBettingStartedSignal>(OnSbStarted);
         }
@@ -64,7 +63,7 @@ namespace Gameplay.Snake
         public void Dispose()
         {
             _signalBus.TryUnsubscribe<InputDirectionSignal>(OnInput);
-            _signalBus.TryUnsubscribe<GameStateChangedSignal>(OnStateChange);
+            _signalBus.TryUnsubscribe<GameStartedSignal>(OnGameStarted);
             _signalBus.TryUnsubscribe<RevivePlayerSignal>(OnRevive);
             _signalBus.TryUnsubscribe<StrategicBettingStartedSignal>(OnSbStarted);
         }
@@ -181,6 +180,8 @@ namespace Gameplay.Snake
 
         private void HandleDeath(string reason)
         {
+            Debug.LogWarning(Time.time);
+
             _gameIsRunning = false;
             _signalBus.Fire(new PlaySoundSignal(SoundType.GameOver));
             _signalBus.Fire(new PlayerDiedSignal(reason));
@@ -249,18 +250,17 @@ namespace Gameplay.Snake
             _signalBus.Fire(new GameOverSignal(_score, _model.Body.Count, default));
         }
 
+        private void OnGameStarted() 
+        {
+            _gameIsRunning = true;
+            ResetForNewSession();
+        }
         private void OnSbStarted(StrategicBettingStartedSignal signal)
         {
             _isSbMode = true;
             _targetLength = signal.TargetLength;
             _lives = 1;
             _signalBus.Fire(new LifeUpdatedSignal(_lives));
-        }
-
-        private void OnStateChange(GameStateChangedSignal signal)
-        {
-            _gameIsRunning = (signal.NewState == GameState.InGame);
-            if (signal.NewState == GameState.MainMenu) ResetForNewSession();
         }
 
         private void ResetForNewSession()

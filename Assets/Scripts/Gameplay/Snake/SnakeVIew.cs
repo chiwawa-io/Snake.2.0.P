@@ -7,7 +7,7 @@ namespace Gameplay.Snake
 {
     public class SnakeView : MonoBehaviour
     {
-        private const float FlickerPulseSpeed = 10f;
+        private const float FlickerSpeed = 2.5f;
 
         [Header("Visuals")] 
         [SerializeField] private GameObject _snakeHeadVisual;
@@ -17,10 +17,8 @@ namespace Gameplay.Snake
         [SerializeField] private float _visualLerpSpeed = 8f;
 
         private SpriteRenderer _headRenderer;
-        private SpriteRenderer _tailRenderer;
         private SnakeModel _model;
         private Color _originalColor;
-        private Color _flickerColor;
 
         [Inject]
         public void Construct(SnakeModel model)
@@ -94,18 +92,16 @@ namespace Gameplay.Snake
         private void Awake()
         {
             _headRenderer = _snakeHeadVisual.GetComponent<SpriteRenderer>();
-            _tailRenderer = _snakeTailVisual.GetComponent<SpriteRenderer>();
             
             _originalColor = _headRenderer.color;
-            _flickerColor = Color.white;
         }
 
         private void UpdateRotation(Transform target, Vector2 to, Vector2 from)
         {
-            Vector2 dir = to - from;
+            var dir = to - from;
             if (dir == Vector2.zero) return;
 
-            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
             Quaternion targetRot = Quaternion.Euler(0, 0, angle - 90);
             target.rotation = Quaternion.Slerp(target.rotation, targetRot, _visualLerpSpeed * Time.deltaTime);
         }
@@ -114,10 +110,16 @@ namespace Gameplay.Snake
         {
             if (_model.IsInvulnerable)
             {
-                float t = (Mathf.Sin(Time.time * FlickerPulseSpeed) + 1f) / 2f;
-                Color currentColor = Color.Lerp(_originalColor, _flickerColor, t);
+                var isWhiteFrame = Mathf.PingPong(Time.time * FlickerSpeed, 1f) > 0.5f;
 
-                SetSnakeColor(currentColor);
+                if (isWhiteFrame)
+                {
+                    SetSnakeColor(new Color(10f, 10f, 10f, 1f));
+                }
+                else
+                {
+                    SetSnakeColor(_originalColor);
+                }
             }
             else
             {
@@ -128,13 +130,7 @@ namespace Gameplay.Snake
             }
         }
 
-        private void SetSnakeColor(Color color)
-        {
-            _headRenderer.color = color;
-            _tailRenderer.color = color;
-            
-            _lineRenderer.startColor = color;
-            _lineRenderer.endColor = color;
-        }
+        private void SetSnakeColor(Color color) => _headRenderer.color = color;
+
     }
 }
