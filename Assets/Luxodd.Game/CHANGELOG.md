@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.12] - 2026-02-16
+
+### Added
+- Added mobile detection demo example.
+- Added screen resize detection with event propagation.
+- Added orientation handling demo (portrait/landscape example panel).
+- Added WebGL Safe Area applier for mobile browsers.
+- Added additional debug information for mobile runtime validation.
+- Added UI layout example scene updates for mobile testing.
+
+### Changed
+- Updated mobile detection logic and orientation handling flow.
+- Improved Unity logo resizing behavior.
+- Updated example scene structure and related UI handlers.
+- Updated LuxoddRuntimeContext to support VisualViewport integration.
+- Updated WebGL template integration (LuxoddRuntimeContext.jslib adjustments).
+
+### Fixed
+- Fixed UI layout issues on mobile devices.
+- Fixed orientation-related UI inconsistencies.
+- Minor runtime fixes and cleanup.
+
 ## [1.0.10] — 2026-01-12
 ### Fixed
 - Fixed an issue with **WebSocket connection in local WebGL builds**:

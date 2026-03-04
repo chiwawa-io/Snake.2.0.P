@@ -131,6 +131,7 @@ Transform:
   - {fileID: 6095176687592549723}
   - {fileID: 4929295663302122597}
   - {fileID: 9197647549891477280}
+  - {fileID: 8432390470418840848}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2553146603025829048
@@ -497,6 +498,85 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Luxodd.Game.Scripts.Input.ArcadeInputSetup
   _inputConfigAsset: {fileID: 11400000, guid: 76033eaa5c9ef604c9ae187cb0530998, type: 2}
+--- !u!1 &6342965288527802393
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8432390470418840848}
+  - component: {fileID: 2969531290866736190}
+  - component: {fileID: 1632921571168399100}
+  - component: {fileID: 3056625889586252560}
+  m_Layer: 0
+  m_Name: LuxoddViewport
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8432390470418840848
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6342965288527802393}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1193278128809462904}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2969531290866736190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6342965288527802393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d9ba3562d4c1744181574354a0aefda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Luxodd.Game.Scripts.Runtime.Viewport.LuxoddViewportWatcher
+  _checkIntervalSeconds: 0.1
+--- !u!114 &1632921571168399100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6342965288527802393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd1557aa586d3084cb6315db6aac487a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Luxodd.Game.Scripts.Runtime.Viewport.LuxoddViewportApplier
+  _watcher: {fileID: 2969531290866736190}
+  _camera: {fileID: 0}
+  _forceUpdateCanvases: 1
+--- !u!114 &3056625889586252560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6342965288527802393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c12257154557ddb4c9445cd06a50425a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Luxodd.Game.Scripts.Runtime.Viewport.LuxoddUiViewportResizer
+  _watcher: {fileID: 2969531290866736190}
+  _rootUi: {fileID: 0}
+  _canvasScaler: {fileID: 0}
+  _applyBottomPadding: 0
+  _bottomPaddingPixels: 48
 --- !u!1 &7596963440579161342
 GameObject:
   m_ObjectHideFlags: 0

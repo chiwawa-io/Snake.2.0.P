@@ -3,10 +3,74 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, viewport-fit=cover, user-scalable=no">
     <title>Unity WebGL Player | {{{ PRODUCT_NAME }}}</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
     <link rel="manifest" href="manifest.webmanifest">
+	<script>
+  function LuxoddApplyVisualViewportSize() {
+    const vv = window.visualViewport;
+
+    const cssW = Math.floor(vv ? vv.width : window.innerWidth);
+    const cssH = Math.floor(vv ? vv.height : window.innerHeight);
+
+    const offX = Math.floor(vv ? vv.offsetLeft : 0);
+    const offY = Math.floor(vv ? vv.offsetTop : 0);
+
+    const container = document.querySelector("#unity-container");
+    const canvas = document.querySelector("#unity-canvas");
+    if (!container || !canvas) return;
+
+    container.style.left = offX + "px";
+    container.style.top = offY + "px";
+    container.style.width = cssW + "px";
+    container.style.height = cssH + "px";
+
+    canvas.style.width = cssW + "px";
+    canvas.style.height = cssH + "px";
+
+    const dpr = window.devicePixelRatio || 1;
+    const pxW = Math.floor(cssW * dpr);
+    const pxH = Math.floor(cssH * dpr);
+
+    if (canvas.width !== pxW) canvas.width = pxW;
+    if (canvas.height !== pxH) canvas.height = pxH;
+  }
+
+  function LuxoddInstallViewportHandlers() {
+    if (window.__luxoddViewportHandlersInstalled) return;
+    window.__luxoddViewportHandlersInstalled = true;
+
+    const apply = () => LuxoddApplyVisualViewportSize();
+
+    window.addEventListener("resize", apply);
+    window.addEventListener("orientationchange", apply);
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", apply);
+      window.visualViewport.addEventListener("scroll", apply);
+    }
+
+    apply();
+    setTimeout(apply, 0);
+    setTimeout(apply, 200);
+    setTimeout(apply, 500);
+  }
+
+
+  function LuxoddForceApplyViewportAfterUnityStart() {
+    const apply = () => LuxoddApplyVisualViewportSize();
+
+    apply();
+    setTimeout(apply, 0);
+    setTimeout(apply, 100);
+    setTimeout(apply, 250);
+    setTimeout(apply, 500);
+    setTimeout(apply, 1000);
+  }
+</script>
+
   </head>
   <body>
     <div id="unity-container">
@@ -45,6 +109,7 @@
 
       var container = document.querySelector("#unity-container");
       var canvas = document.querySelector("#unity-canvas");
+	  LuxoddInstallViewportHandlers();
       var loadingBar = document.querySelector("#unity-loading-bar");
       var progressBarFull = document.querySelector("#unity-progress-bar-full");
       var warningBanner = document.querySelector("#unity-warning");
@@ -102,15 +167,8 @@
       // Set this to false if you want to decouple this synchronization from
       // happening inside the engine, and you would instead like to size up
       // the canvas DOM size and WebGL render target sizes yourself.
-      // config.matchWebGLToCanvasSize = false;
+      config.matchWebGLToCanvasSize = false;
 
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        // Mobile device style: fill the whole browser client area with the game canvas:
-        var meta = document.createElement('meta');
-        meta.name = 'viewport';
-        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-        document.getElementsByTagName('head')[0].appendChild(meta);
-      }
 
 #if BACKGROUND_FILENAME
       canvas.style.background = "url('" + buildUrl + "/{{{ BACKGROUND_FILENAME.replace(/'/g, '%27') }}}') center / cover";
@@ -126,6 +184,7 @@
           progressBarFull.style.width = 100 * progress + "%";
         }).then((unityInstance) => {
 		  window.unityInstance = unityInstance;
+		  LuxoddForceApplyViewportAfterUnityStart();
           loadingBar.style.display = "none";
         }).catch((message) => {
           alert(message);
