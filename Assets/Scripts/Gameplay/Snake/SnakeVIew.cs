@@ -7,6 +7,8 @@ namespace Gameplay.Snake
 {
     public class SnakeView : MonoBehaviour
     {
+        private const float FlickerPulseSpeed = 10f;
+
         [Header("Visuals")] 
         [SerializeField] private GameObject _snakeHeadVisual;
         [SerializeField] private GameObject _snakeTailVisual;
@@ -14,7 +16,11 @@ namespace Gameplay.Snake
         [SerializeField] private GameObject _boomEffect;
         [SerializeField] private float _visualLerpSpeed = 8f;
 
+        private SpriteRenderer _headRenderer;
+        private SpriteRenderer _tailRenderer;
         private SnakeModel _model;
+        private Color _originalColor;
+        private Color _flickerColor;
 
         [Inject]
         public void Construct(SnakeModel model)
@@ -81,6 +87,17 @@ namespace Gameplay.Snake
 
             _lineRenderer.positionCount = visualPoints.Count;
             _lineRenderer.SetPositions(visualPoints.ToArray());
+
+            ApplyFlickerEffect();
+        }
+
+        private void Awake()
+        {
+            _headRenderer = _snakeHeadVisual.GetComponent<SpriteRenderer>();
+            _tailRenderer = _snakeTailVisual.GetComponent<SpriteRenderer>();
+            
+            _originalColor = _headRenderer.color;
+            _flickerColor = Color.white;
         }
 
         private void UpdateRotation(Transform target, Vector2 to, Vector2 from)
@@ -91,6 +108,33 @@ namespace Gameplay.Snake
             float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
             Quaternion targetRot = Quaternion.Euler(0, 0, angle - 90);
             target.rotation = Quaternion.Slerp(target.rotation, targetRot, _visualLerpSpeed * Time.deltaTime);
+        }
+
+        private void ApplyFlickerEffect()
+        {
+            if (_model.IsInvulnerable)
+            {
+                float t = (Mathf.Sin(Time.time * FlickerPulseSpeed) + 1f) / 2f;
+                Color currentColor = Color.Lerp(_originalColor, _flickerColor, t);
+
+                SetSnakeColor(currentColor);
+            }
+            else
+            {
+                if (_headRenderer.color != _originalColor)
+                {
+                    SetSnakeColor(_originalColor);
+                }
+            }
+        }
+
+        private void SetSnakeColor(Color color)
+        {
+            _headRenderer.color = color;
+            _tailRenderer.color = color;
+            
+            _lineRenderer.startColor = color;
+            _lineRenderer.endColor = color;
         }
     }
 }

@@ -13,19 +13,33 @@ namespace UI.Game.Views
         private const float DurationMultiplicator = 0.5f;
         private const float PopupShowDuration = 2.5f;
 
-        [Header("Gameplay Data")] [SerializeField]
-        private TextMeshProUGUI scoreText;
+        [Header("Gameplay Data")] 
+        [SerializeField] private TextMeshProUGUI scoreText;
+        [SerializeField] private TextMeshProUGUI lengthText;
+        [SerializeField] private TextMeshProUGUI growthText;
 
-        [Header("Lives System")] [SerializeField]
-        private List<GameObject> lifeIcons;
 
-        [Header("Feedback")] [SerializeField] private TextMeshProUGUI floatingText;
+        [Header("Lives System")] 
+        [SerializeField] private List<GameObject> lifeIcons;
+
+        [Header("Feedback")] 
+        [SerializeField] private TextMeshProUGUI floatingText;
         [SerializeField] private GameObject achievementToastRoot;
         [SerializeField] private TextMeshProUGUI achievementNameText;
 
         public void SetScoreDisplay(int score)
         {
             if (scoreText) scoreText.text = score.ToString("D10");
+        }
+
+        public void SetLength(int length, int target)
+        {
+            lengthText.text = $"{length}/{target}";
+        }
+
+        public void SetGrowthTimer(int timeRemaining)
+        {
+            growthText.text = timeRemaining.ToString();
         }
 
         public void SetLives(int currentLives)

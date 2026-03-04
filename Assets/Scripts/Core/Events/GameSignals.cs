@@ -1,5 +1,6 @@
 using Core.Enums;
 using Services.Audio;
+using Services.Gameloop;
 using UnityEngine;
 
 namespace Core.Events
@@ -14,10 +15,18 @@ namespace Core.Events
         public GameStateChangedSignal (GameState newState) => NewState = newState;
     }
 
+    public readonly struct LevelCompletedSignal { }
     public readonly struct GameOverSignal
     {
         public readonly int FinalScore; 
-        public GameOverSignal(int finalScore) => FinalScore = finalScore;
+        public readonly int FinalLength;
+        public readonly GameSessionStats Stats;
+        public GameOverSignal(int finalScore, int finalLength, GameSessionStats stats)
+        {
+            FinalScore = finalScore;
+            FinalLength = finalLength;
+            Stats = stats;
+        } 
     }
 
     public readonly struct InputDirectionSignal
@@ -52,6 +61,28 @@ namespace Core.Events
     }
     
     //Snake
+    public readonly struct LengthUpdatedSignal 
+    { 
+        public readonly int CurrentLength; 
+        public readonly int TargetLength;
+
+        public LengthUpdatedSignal(int current, int target) 
+        { 
+            CurrentLength = current; 
+            TargetLength = target; 
+        }
+    }
+    
+    public readonly struct GrowthTimerUpdatedSignal 
+    { 
+        public readonly float TimeRemaining; 
+        public readonly float TotalTime;
+        public GrowthTimerUpdatedSignal(float remaining, float total) 
+        {
+            TimeRemaining = remaining; 
+            TotalTime = total; 
+        }
+    }
     public readonly struct StrategicBettingStartedSignal 
     { 
         public readonly int TargetLength; 

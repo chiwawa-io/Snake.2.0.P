@@ -1,14 +1,16 @@
 using System;
 using Core.Enums;
 using Core.Events;
-using Gameplay.GameItem;
+using Gameplay.GameItems;
 using Gameplay.Snake;
 using Zenject;
 using UnityEngine;
 using Gameplay.Global.Data;
 using Gameplay.Board;
-using Luxodd.Game.Scripts.Network.Payloads;
 using Services.Backend;
+using Luxodd.Game.Scripts.Missions;
+using System.Linq;
+using Luxodd.Game.Scripts.Game;
 
 namespace Gameplay.Global
 {
@@ -24,8 +26,13 @@ namespace Gameplay.Global
         private readonly LuxoddBackendService _backendService;
         
         private GameDifficulty _currentDifficulty = GameDifficulty.Medium;
-        private GameType _currentGameType = GameType.Normal;
+        private GameType _currentGameType = GameType.Pay2Play;
         private Vector2Int bounds;
+
+        private const int MinBoardWidth = 15;
+        private const int MaxBoardWidth = 40;
+        private const int DefaultBoardHeight = 22;
+        private const float MaxHardness = 99f;
 
         public GameSessionController(
             SignalBus signalBus,
@@ -82,17 +89,15 @@ namespace Gameplay.Global
             _gameElements.SetActive(true);
 
             
-            //TODO: Get mission data here
-            
             _backendService.GetGameSessionInfo(
-                onSuccess: (payload) => 
+                onSuccess: (payload, sbData) => 
                 {
-                    if (payload.SessionType == "sb") _currentGameType = GameType.Betting;
-                    else _currentGameType = GameType.Normal;
+                    if (payload.SessionType == "sb") _currentGameType = GameType.StrategicBetting;
+                    else _currentGameType = GameType.Pay2Play;
             
-                    if (_currentGameType == GameType.Betting)
+                    if (_currentGameType == GameType.StrategicBetting)
                     {
-                        InitializeStrategicBetting(payload);
+                        InitializeStrategicBetting(sbData);
                     }
                     else
                     {
@@ -111,14 +116,46 @@ namespace Gameplay.Global
                     bounds = boardConfig.boardSize;
             }
 
-            _itemSpawner.Initialize(bounds, _snakeModel.Body, _currentDifficulty);
+            _itemSpawner.Initialize(bounds, _snakeModel.Body, _currentDifficulty, false);
             _snakeEngine.Initialize(bounds);
             _boardVisuals.GenerateBoard(bounds, _currentDifficulty);
         }
 
-        private void InitializeStrategicBetting(SessionInfoPayload payload)
+        private void InitializeStrategicBetting(StrategicBettingData payload)
         {
             
+            var difficulty = CalculateGameHardness((int)payload.LevelDifficulty); 
+            var _currentBounds = CalculateBounds((int)payload.LevelDifficulty);
+
+            var primaryMission = payload.Missions.FirstOrDefault();
+            int targetLength = primaryMission != null ? (int)primaryMission.Value : 20;
+
+            _itemSpawner.Initialize(_currentBounds, _snakeModel.Body, difficulty, true); 
+            _snakeEngine.Initialize(_currentBounds);
+            _boardVisuals.GenerateBoard(_currentBounds, difficulty);
+
+            _signalBus.Fire(new StrategicBettingStartedSignal(targetLength, (int)payload.LevelDifficulty));
+            
+            Debug.Log($"[SB] Started. Target Length: {targetLength}, Bounds: {_currentBounds}");
+        }
+
+        private GameDifficulty CalculateGameHardness(int hardness)
+        {
+            return hardness switch
+            {
+                <= 30 => GameDifficulty.Easy,
+                <= 60 => GameDifficulty.Medium,
+                _ => GameDifficulty.Hard
+            };
+        }
+
+        private Vector2Int CalculateBounds(int hardness)
+        {
+            float t = hardness / MaxHardness;
+
+            int dynamicWidth = Mathf.RoundToInt(Mathf.Lerp(MaxBoardWidth, MinBoardWidth, t));
+
+            return new Vector2Int(dynamicWidth, DefaultBoardHeight);             
         }
     }
 }

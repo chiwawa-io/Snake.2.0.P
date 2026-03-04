@@ -24,6 +24,8 @@ namespace UI.Game.Presenters
             _signalBus.Subscribe<AchievementProgressSignal>(OnAchievementUnlocked);
             _signalBus.Subscribe<SnakeEffectSignal>(OnEffectMessage);
             _signalBus.Subscribe<GameOverSignal>(OnGameOver);
+            _signalBus.Subscribe<LengthUpdatedSignal>(OnLengthUpdated);
+            _signalBus.Subscribe<GrowthTimerUpdatedSignal>(OnGrowthTimerUpdated);
             
             _view.SetLives(3); 
             _view.SetScoreDisplay(0);
@@ -37,6 +39,8 @@ namespace UI.Game.Presenters
             _signalBus.TryUnsubscribe<AchievementProgressSignal>(OnAchievementUnlocked);
             _signalBus.TryUnsubscribe<SnakeEffectSignal>(OnEffectMessage);
             _signalBus.TryUnsubscribe<GameOverSignal>(OnGameOver);
+            _signalBus.TryUnsubscribe<LengthUpdatedSignal>(OnLengthUpdated);
+            _signalBus.TryUnsubscribe<GrowthTimerUpdatedSignal>(OnGrowthTimerUpdated);
         }
 
         private void OnScoreUpdated(ScoreUpdatedSignal signal)
@@ -48,6 +52,16 @@ namespace UI.Game.Presenters
         {
             string msg = $"+{signal.Amount}";
             _view.ShowFloatingText(msg, signal.Position);
+        }
+
+        private void OnLengthUpdated(LengthUpdatedSignal signal)
+        {
+            _view.SetLength(signal.CurrentLength, signal.TargetLength);
+        }
+
+        private void OnGrowthTimerUpdated(GrowthTimerUpdatedSignal signal)
+        {
+            _view.SetGrowthTimer((int)signal.TimeRemaining);
         }
 
         private void OnEffectMessage(SnakeEffectSignal signal)
