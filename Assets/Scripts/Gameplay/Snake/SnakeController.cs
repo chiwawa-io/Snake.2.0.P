@@ -146,7 +146,17 @@ namespace Gameplay.Snake
 
             _sbPressure.ResetTimer();
 
-            _signalBus.Fire(isPrecious ? new PreciousGemCollected() : new GemCollected());
+            if (isPrecious)
+            {
+                _signalBus.Fire(new PreciousGemCollected());
+                _view.PlayPreciousGemEffect();
+            }
+            else
+            {
+                _signalBus.Fire(new GemCollected());
+                _view.PlayGemEffect();
+            }
+
             if (isPrecious && _itemSpawner.HasActiveObstacles()) _signalBus.Fire(new TrapAvoided());
 
             int points = data.scoreValue * _model.Body.Count * 100;
@@ -169,12 +179,14 @@ namespace Gameplay.Snake
                 _powerUpTimer = data.effectDuration;
                 _model.MoveFrequency = SpeedUpFrequency;
                 _signalBus.Fire(new SnakeEffectSignal("Speed Up!", pos));
+                _view.PlaySpeedUpEffect();
             }
             else if (data.effectType == PowerUpEffectType.Invulnerable)
             {
                 _invulnerableTimer = data.effectDuration;
                 _model.IsInvulnerable = true;
                 _signalBus.Fire(new SnakeEffectSignal("Invulnerable!", pos));
+                _view.PlayInvulnerabilityEffect();
             }
         }
 

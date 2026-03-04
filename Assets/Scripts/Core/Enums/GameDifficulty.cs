@@ -1,6 +1,9 @@
-public enum GameDifficulty 
+namespace Core.Enums
 {
-    Easy,
-    Medium,
-    Hard
+    public enum GameDifficulty 
+    {
+        Easy,
+        Medium,
+        Hard
+    }
 }

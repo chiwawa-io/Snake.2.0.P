@@ -31,7 +31,6 @@ using Zenject;
 
 namespace Core.Installers
 {
-
     public class GameInstaller : MonoInstaller
     {
         [Header("--- Scene Systems ---")] 

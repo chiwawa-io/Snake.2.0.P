@@ -1,3 +1,4 @@
+using Core.Enums;
 using UnityEngine;
 
 namespace Gameplay.Global.Data

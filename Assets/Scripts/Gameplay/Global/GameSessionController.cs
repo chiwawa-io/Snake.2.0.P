@@ -1,21 +1,26 @@
 using System;
-using Core.Enums;
-using Core.Events;
-using Gameplay.GameItems;
-using Gameplay.Snake;
 using Zenject;
 using UnityEngine;
+using System.Linq;
+using Core.Events;
+using Core.Enums;
+using Gameplay.GameItems;
+using Gameplay.Snake;
 using Gameplay.Global.Data;
 using Gameplay.Board;
 using Services.Backend;
-using Luxodd.Game.Scripts.Missions;
-using System.Linq;
 using Luxodd.Game.Scripts.Game;
+using Luxodd.Game.Scripts.Missions;
 
 namespace Gameplay.Global
 {
     public class GameSessionController : IInitializable, IDisposable
     {
+        private const int MinBoardWidth = 15;
+        private const int MaxBoardWidth = 40;
+        private const int DefaultBoardHeight = 22;
+        private const float MaxHardness = 99f;
+
         private readonly SignalBus _signalBus;
         private readonly ItemSpawner _itemSpawner;
         private readonly SnakeModel _snakeModel;
@@ -28,11 +33,6 @@ namespace Gameplay.Global
         private GameDifficulty _currentDifficulty = GameDifficulty.Medium;
         private GameType _currentGameType = GameType.Pay2Play;
         private Vector2Int bounds;
-
-        private const int MinBoardWidth = 15;
-        private const int MaxBoardWidth = 40;
-        private const int DefaultBoardHeight = 22;
-        private const float MaxHardness = 99f;
 
         public GameSessionController(
             SignalBus signalBus,

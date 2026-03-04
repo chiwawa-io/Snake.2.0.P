@@ -13,7 +13,14 @@ namespace Gameplay.Snake
         [SerializeField] private GameObject _snakeHeadVisual;
         [SerializeField] private GameObject _snakeTailVisual;
         [SerializeField] private LineRenderer _lineRenderer;
+        
+        [Header("Effects")]
         [SerializeField] private GameObject _boomEffect;
+        [SerializeField] private GameObject _preciousGemEffect;
+        [SerializeField] private GameObject _gemEffect;
+        [SerializeField] private GameObject _speedUpEffect;
+        [SerializeField] private GameObject _invulnerabilityEffect;
+
         [SerializeField] private float _visualLerpSpeed = 8f;
 
         private SpriteRenderer _headRenderer;
@@ -31,16 +38,6 @@ namespace Gameplay.Snake
             _snakeHeadVisual.SetActive(isActive);
             _snakeTailVisual.SetActive(isActive);
             _lineRenderer.gameObject.SetActive(isActive);
-        }
-
-        public void PlayBoomEffect()
-        {
-            if (_boomEffect)
-            {
-                _boomEffect.transform.position = _snakeHeadVisual.transform.position;
-                _boomEffect.SetActive(false);
-                _boomEffect.SetActive(true);
-            }
         }
 
         public void UpdateVisuals(float interpolationFactor)
@@ -89,10 +86,59 @@ namespace Gameplay.Snake
             ApplyFlickerEffect();
         }
 
+        public void PlayBoomEffect()
+        {
+            if (_boomEffect)
+            {
+                _boomEffect.transform.position = _snakeHeadVisual.transform.position;
+                _boomEffect.SetActive(false);
+                _boomEffect.SetActive(true);
+            }
+        }
+
+        public void PlayGemEffect()
+        {
+            if (_gemEffect)
+            {
+                _gemEffect.transform.position = _snakeHeadVisual.transform.position;
+                _gemEffect.SetActive(false);
+                _gemEffect.SetActive(true);
+            }
+        }
+
+        public void PlayPreciousGemEffect()
+        {
+            if (_preciousGemEffect)
+            {
+                _preciousGemEffect.transform.position = _snakeHeadVisual.transform.position;
+                _preciousGemEffect.SetActive(false);
+                _preciousGemEffect.SetActive(true);
+            }
+        }
+
+        public void PlaySpeedUpEffect()
+        {
+            if (_speedUpEffect)
+            {
+                _speedUpEffect.transform.position = _snakeHeadVisual.transform.position;
+                _speedUpEffect.SetActive(false);
+                _speedUpEffect.SetActive(true);
+            }
+        }
+
+        public void PlayInvulnerabilityEffect()
+        {
+            if (_invulnerabilityEffect)
+            {
+                _invulnerabilityEffect.transform.position = _snakeHeadVisual.transform.position;
+                _invulnerabilityEffect.SetActive(false);
+                _invulnerabilityEffect.SetActive(true);
+            }
+        }
+        
         private void Awake()
         {
             _headRenderer = _snakeHeadVisual.GetComponent<SpriteRenderer>();
-            
             _originalColor = _headRenderer.color;
         }
 
