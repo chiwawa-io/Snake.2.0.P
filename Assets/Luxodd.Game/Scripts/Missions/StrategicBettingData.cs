@@ -25,6 +25,9 @@ namespace Luxodd.Game.Scripts.Missions
         [JsonProperty("id")] public string MissionId { get; set; }
         [JsonProperty("bet")] public float Bet { get; set; }
         [JsonProperty("calculated_hardness")] public float CalculatedHardness { get; set; }
+        [JsonProperty("ratio")] public float Ratio { get; set; }
+        [JsonProperty("hardness")] public int Hardness { get; set; }
+        [JsonProperty("value")] public int Value { get; set; }
 #else
         public string MissionId { get; set; }
         public float Bet { get; set; }

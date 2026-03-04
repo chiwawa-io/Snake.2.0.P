@@ -21,6 +21,7 @@ namespace Luxodd.Game.Example.Scripts
     {
         [SerializeField] private MainMenuPanelViewHandler _mainMenuPanelViewHandler;
         [SerializeField] private ControlExamplePanelHandler _controlExamplePanelHandler;
+        [SerializeField] private MobileOrientationExamplePanelHandler _mobileOrientationExamplePanelHandler;
         
         [SerializeField] private WebSocketService _webSocketService;
         [SerializeField] private WebSocketCommandHandler _webSocketCommandHandler;
@@ -28,6 +29,8 @@ namespace Luxodd.Game.Example.Scripts
         [SerializeField] private ReconnectService _reconnectService;
         
         [SerializeField] private ControlExampleBehaviour _controlExampleBehaviour;
+        
+        [SerializeField] private MobileDetectionDemo.MobileDetectionDemo _mobileDetectionDemo;
 
         [SerializeField] private int _creditsToCharge = 3;
         [SerializeField] private int _creditsToAdd = 5;
@@ -97,6 +100,10 @@ namespace Luxodd.Game.Example.Scripts
             
             _controlExamplePanelHandler.SetBackButtonClickCallback(OnControlTestBackButtonCLickedHandler);
             _controlExampleBehaviour.SetArcadeButtonColorCallback(OnControlArcadeButtonButtonClickedHandler);
+            
+            _mainMenuPanelViewHandler.SetIsMobileTestClickedHandler(OnIsMobileTestButtonClickedHandler);
+            
+            _mobileOrientationExamplePanelHandler.SetBackButtonClickedCallback(OnMobileOrientationBackButtonClickedHandler);
         }
 
         private void OnCommandProcessStateChange(CommandProcessState state)
@@ -239,6 +246,19 @@ namespace Luxodd.Game.Example.Scripts
         private void OnChargeCreditsFailure(int code, string message)
         {
             _rawResponse.SetValue(message);
+        }
+
+        private void OnIsMobileTestButtonClickedHandler()
+        {
+            Debug.Log($"[{GetType().Name}][{nameof(OnIsMobileTestButtonClickedHandler)}] OK");
+            _mobileOrientationExamplePanelHandler.ShowPanel();
+            _mobileDetectionDemo.Activate();
+        }
+
+        private void OnMobileOrientationBackButtonClickedHandler()
+        {
+            _mobileDetectionDemo.Activate();
+            _mobileOrientationExamplePanelHandler.HidePanel();
         }
         
         #region For Storage

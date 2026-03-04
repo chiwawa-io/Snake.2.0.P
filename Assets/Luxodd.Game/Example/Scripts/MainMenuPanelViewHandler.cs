@@ -197,6 +197,11 @@ namespace Luxodd.Game.Example.Scripts
             _unityPluginVersionText.text = string.Format(_unityPluginVersionTextFormat, unityPluginVersion);
         }
 
+        public void SetIsMobileTestClickedHandler(Action onIsMobileTestClickedCallback)
+        {
+            _mainButtonViewHandler.SetIsMobileTestButtonClickedCallback(onIsMobileTestClickedCallback);
+        }
+
         private void Awake()
         {
             _connectionStatusTextFormat = _connectionStatusText.text;

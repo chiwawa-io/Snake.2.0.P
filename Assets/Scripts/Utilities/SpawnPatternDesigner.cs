@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using Gameplay.SpawnConfig;
 using Core.Enums;
-using Gameplay.GameItem;
+using Gameplay.GameItems;
 using System.Linq;
 
 #if UNITY_EDITOR

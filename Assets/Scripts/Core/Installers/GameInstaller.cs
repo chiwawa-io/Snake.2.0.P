@@ -1,12 +1,15 @@
 using System.Collections.Generic;
+using Achievements;
 using Achievements.Data;
 using Core.Events;
 using Gameplay.Board;
-using Gameplay.GameItem;
+using Gameplay.GameItems;
 using Gameplay.Global;
 using Gameplay.Global.Data;
 using Gameplay.Snake;
 using Gameplay.SpawnConfig;
+using Luxodd.Game.Scripts.Missions;
+using SBetting;
 using Services.Audio;
 using Services.Backend;
 using Services.Gameloop;
@@ -40,6 +43,7 @@ namespace Core.Installers
         [SerializeField] private NetworkManager _networkManager;
         [SerializeField] private PlayerDataManager _playerDataManager;
         [SerializeField] private AudioManager _audioManager;
+        [SerializeField] private MissionService _missionService;
 
         [Header("--- UI Views ---")] 
         [SerializeField] private MainMenuView _mainMenuView;
@@ -96,6 +100,10 @@ namespace Core.Installers
             Container.DeclareSignal<InactivityTimeOut>();
 
             Container.DeclareSignal<AchievementProgressSignal>();
+            Container.DeclareSignal<LengthUpdatedSignal>();
+            Container.DeclareSignal<GrowthTimerUpdatedSignal>();
+            Container.DeclareSignal<StrategicBettingStartedSignal>();
+            Container.DeclareSignal<LevelCompletedSignal>();
         }
 
         private void InstallGameSystems()
@@ -103,11 +111,13 @@ namespace Core.Installers
             Container.BindInterfacesAndSelfTo<Startup>().AsSingle();
             Container.Bind<PlayerDataManager>().FromInstance(_playerDataManager).AsSingle();
             Container.Bind<NetworkManager>().FromInstance(_networkManager).AsSingle();
+            Container.Bind<MissionService>().FromInstance(_missionService).AsSingle();
 
             Container.BindInterfacesTo<InputService>().AsSingle();
 
             Container.BindInterfacesAndSelfTo<LuxoddBackendService>().AsSingle();
             Container.BindInterfacesAndSelfTo<StatsRecorder>().AsSingle();
+            Container.BindInterfacesAndSelfTo<PluginEventBridge>().AsSingle();
 
             Container.Bind<GameObject>().WithId("GameElements").FromInstance(_gameElements);
             Container.Bind<SnakeModel>().AsSingle();
@@ -121,6 +131,10 @@ namespace Core.Installers
             Container.BindInterfacesAndSelfTo<SpawnMapGenerator>().AsSingle();
             Container.BindInterfacesAndSelfTo<RngService>().AsSingle();
             Container.BindInterfacesAndSelfTo<GameSessionController>().AsSingle();
+
+            Container.BindInterfacesAndSelfTo<AchievementTracker>().AsSingle();
+            Container.BindInterfacesAndSelfTo<SbPressureManager>().AsSingle();
+            
         }
 
         private void InstallUISystems()

@@ -14,6 +14,7 @@ namespace Luxodd.Game.Example.Scripts
         [SerializeField] private Button _chargeCreditsButton;
         [SerializeField] private Button _storageCommandsButton;
         [SerializeField] private Button _controllTestButton;
+        [SerializeField] private Button _isMobileTestButton;
 
         private Action _onConnectedToServerButtonClickedCallback;
         private Action _onGetUserProfileButtonClickedCallback;
@@ -22,6 +23,7 @@ namespace Luxodd.Game.Example.Scripts
         private Action _onStorageCommandsButtonClickedCallback;
         private Action _onControlTestButtonClickedCallback;
         private Action<bool> _onSendHealthStatusToServerButtonClickedCallback;
+        private Action _isMobileTestButtonClickedCallback;
 
         public void SetOnConnectedToServerButtonClickedCallback(Action onConnectedToServerButtonClickedCallback)
         {
@@ -58,6 +60,11 @@ namespace Luxodd.Game.Example.Scripts
         {
             _onControlTestButtonClickedCallback = onControlTestButtonClickedCallback;
         }
+
+        public void SetIsMobileTestButtonClickedCallback(Action onIsMobileTestButtonClickedCallback)
+        {
+            _isMobileTestButtonClickedCallback = onIsMobileTestButtonClickedCallback;
+        }
         
         private void Awake()
         {
@@ -68,6 +75,8 @@ namespace Luxodd.Game.Example.Scripts
             _sendHealthStatusToServerButton.ToggleEvent.AddListener(OnSendHealthStatusToServerButtonClickedHandler);
             _storageCommandsButton.onClick.AddListener(OnStorageCommandsButtonClickedHandler);
             _controllTestButton.onClick.AddListener(OnControlTestButtonClickedHandler);
+            _isMobileTestButton.onClick.AddListener(OnIsMobileTestButtonClickedHandler);
+            
         }
         
         private void OnConnectToServerButtonClickedHandler()
@@ -103,6 +112,11 @@ namespace Luxodd.Game.Example.Scripts
         private void OnControlTestButtonClickedHandler()
         {
             _onControlTestButtonClickedCallback?.Invoke();
+        }
+
+        private void OnIsMobileTestButtonClickedHandler()
+        {
+            _isMobileTestButtonClickedCallback?.Invoke();
         }
     }
 }

@@ -17,7 +17,7 @@ namespace Gameplay.SpawnConfig
             _rngService = rngService;
         }
 
-        public RuntimeSpawnMap Generate(Vector2Int boardSize)
+        public RuntimeSpawnMap Generate(Vector2Int boardSize, bool isSbSession)
         {
             var map = new RuntimeSpawnMap();
 
@@ -45,7 +45,8 @@ namespace Gameplay.SpawnConfig
             map.AddPoint(ItemType.SpeedUp, new Vector2Int(-xBound + PowerUpPadding, -yBound + PowerUpPadding));
             map.AddPoint(ItemType.Invulnerability, new Vector2Int(xBound - PowerUpPadding, -yBound + PowerUpPadding));
             
-            map.ShuffleAll(_rngService);
+            if (isSbSession) map.ShuffleAll(_rngService);
+            else map.ShuffleAll();
 
             return map;
         }
