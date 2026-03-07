@@ -17,6 +17,11 @@ namespace UI.Game.Views
         [SerializeField] private TextMeshProUGUI scoreText;
         [SerializeField] private TextMeshProUGUI lengthText;
         [SerializeField] private TextMeshProUGUI growthText;
+        
+        [Header("Visual")]
+        [SerializeField] private GameObject scoreParent;
+        [SerializeField] private GameObject lengthParent;
+        [SerializeField] private GameObject growthParent;
 
         [Header("Lives System")] 
         [SerializeField] private List<GameObject> lifeIcons;
@@ -26,9 +31,9 @@ namespace UI.Game.Views
         [SerializeField] private GameObject achievementToastRoot;
         [SerializeField] private TextMeshProUGUI achievementNameText;
 
-        public void SetScoreVisibility(bool isVisible) => scoreText.gameObject.SetActive(isVisible);
-        public void SetGrowthTimerVisibility(bool isVisible) => growthText.gameObject.SetActive(isVisible);
-        public void SetLengthVisibility(bool isVisible) => lengthText.gameObject.SetActive(isVisible);
+        public void SetScoreVisibility(bool isVisible) => scoreParent.gameObject.SetActive(isVisible);
+        public void SetGrowthTimerVisibility(bool isVisible) => growthParent.gameObject.SetActive(isVisible);
+        public void SetLengthVisibility(bool isVisible) => lengthParent.gameObject.SetActive(isVisible);
         public void SetScoreDisplay(int score) => scoreText.text = score.ToString("D10");
         public void SetLength(int length, int target) => lengthText.text = $"{length}/{target}";
         public void SetGrowthTimer(int timeRemaining) => growthText.text = timeRemaining.ToString();

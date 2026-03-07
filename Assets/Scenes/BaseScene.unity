@@ -13826,6 +13826,9 @@ MonoBehaviour:
   scoreText: {fileID: 4774738608221267682}
   lengthText: {fileID: 916808437}
   growthText: {fileID: 651224276}
+  scoreParent: {fileID: 4197907369946157657}
+  lengthParent: {fileID: 1646499913}
+  growthParent: {fileID: 2062389620}
   lifeIcons:
   - {fileID: 5923356050238503771}
   - {fileID: 7609065096136984529}

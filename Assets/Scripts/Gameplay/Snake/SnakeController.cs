@@ -244,12 +244,12 @@ namespace Gameplay.Snake
                 }
             }
 
-            if (Mathf.Abs(_model.MoveFrequency - BaseFrequency) > FloatTolerance)
+            if (Mathf.Abs(_model.MoveFrequency - _model.BaseMoveFrequency) > FloatTolerance)
             {
                 _powerUpTimer -= Time.deltaTime;
                 if (_powerUpTimer <= 0)
                 {
-                    _model.MoveFrequency = BaseFrequency;
+                    _model.MoveFrequency = _model.BaseMoveFrequency;
                     _signalBus.Fire(new PlaySoundSignal(SoundType.SpeedDown));
                 }
             }
@@ -280,6 +280,7 @@ namespace Gameplay.Snake
             _score = 0;
             _lives = StartingLives;
             _isSbMode = false;
+            _model.BaseMoveFrequency = BaseFrequency;
             _model.MoveFrequency = BaseFrequency;
             _model.IsInvulnerable = false;
             _model.IsRespawning = false;

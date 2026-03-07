@@ -117,7 +117,7 @@ namespace Gameplay.Global
             {
                 if (boardConfig.gameDifficulty == _currentDifficulty)
                     bounds = boardConfig.boardSize;
-                    Debug.LogWarning(bounds + " " + Time.time);
+                Debug.LogWarning(bounds + " " + Time.time);
             }
 
             _itemSpawner.Initialize(bounds, _snakeModel.Body, _currentDifficulty, false);
@@ -128,36 +128,39 @@ namespace Gameplay.Global
         private void InitializeStrategicBetting(StrategicBettingData payload)
         {
             var difficulty = CalculateGameHardness((int)payload.LevelDifficulty); 
-            var _currentBounds = CalculateBounds((int)payload.LevelDifficulty);
 
             var primaryMission = payload.Missions.FirstOrDefault();
             int targetLength = primaryMission != null ? (int)primaryMission.Value : 20;
+            
+            var currentBounds = CalculateBounds((int)primaryMission.CalculatedHardness);
 
-            _itemSpawner.Initialize(_currentBounds, _snakeModel.Body, difficulty, true); 
-            _snakeEngine.Initialize(_currentBounds);
-            _boardVisuals.GenerateBoard(_currentBounds, difficulty);
+            _itemSpawner.Initialize(currentBounds, _snakeModel.Body, difficulty, true); 
+            _snakeEngine.Initialize(currentBounds);
+            _boardVisuals.GenerateBoard(currentBounds, difficulty);
 
             _signalBus.Fire(new StrategicBettingStartedSignal(targetLength, (int)payload.LevelDifficulty));
             
-            Debug.Log($"[SB] Started. Target Length: {targetLength}, Bounds: {_currentBounds}");
+            Debug.Log($"[SB] Started. Target Length: {targetLength}, Bounds: {currentBounds}");
         }
 
         private GameDifficulty CalculateGameHardness(int hardness)
         {
             return hardness switch
             {
-                <= 30 => GameDifficulty.Easy,
-                <= 60 => GameDifficulty.Medium,
+                0 => GameDifficulty.Easy,
+                1 => GameDifficulty.Medium,
                 _ => GameDifficulty.Hard
             };
         }
 
         private Vector2Int CalculateBounds(int hardness)
         {
+            Debug.LogWarning("Hardness sent to calculate bounds: " + hardness);
             float t = hardness / MaxHardness;
 
             int dynamicWidth = Mathf.RoundToInt(Mathf.Lerp(MaxBoardWidth, MinBoardWidth, t));
-
+            
+            Debug.LogWarning($"Calculated Bounds: ({dynamicWidth}x{DefaultBoardHeight})");
             return new Vector2Int(dynamicWidth, DefaultBoardHeight);             
         }
     }

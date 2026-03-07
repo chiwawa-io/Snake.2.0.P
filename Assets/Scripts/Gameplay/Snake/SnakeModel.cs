@@ -13,6 +13,7 @@ namespace Gameplay.Snake
         public bool IsInvulnerable;
         public bool IsRespawning;
         public float MoveFrequency;
+        public float BaseMoveFrequency; 
 
         public int GemsCollected;
         public int SpeedUpsCollected;

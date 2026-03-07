@@ -116,7 +116,7 @@ namespace Services.Backend
             #if UNITY_EDITOR
             if (UseMockDataInEditor)
             {
-                Debug.LogWarning("<b>[SB MOCK]</b> Generating Fake Strategic Betting Payload!");
+                Debug.LogWarning("Generating Fake Strategic Betting Payload");
                 
                 _currentSbData = new StrategicBettingData
                 {
