@@ -4,6 +4,7 @@ using System.Linq;
 using Core.Enums;
 using Core.Events;
 using Gameplay.SpawnConfig;
+using Unity.VisualScripting;
 using UnityEngine;
 using Zenject;
 using Random = UnityEngine.Random;
@@ -68,6 +69,8 @@ namespace Gameplay.GameItems
             _isSpawningActive = true;
 
             _signalBus.Subscribe<ItemDestroyedSignal>(OnItemDestroyedByTimer);
+            _signalBus.Subscribe<StrategicBettingStartedSignal>(
+                () => _challengeChance = 0);
 
             _currentSpawnPointMap = _mapGenerator.Generate(_gridBounds, isSbSession);
 

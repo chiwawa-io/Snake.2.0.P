@@ -17,6 +17,14 @@ namespace Services.Backend
 {
     public class LuxoddBackendService : IBackendService, IDisposable
     {
+        #if UNITY_EDITOR
+        private const bool UseMockDataInEditor = true; 
+        private const int MockSeed = 12345;
+        private const int MockTargetLength = 24; 
+        private const DifficultyLevel MockDifficulty = DifficultyLevel.Hard;
+        private const string MockPrimaryMissionId = "mission_main_1"; 
+        #endif
+
         private const int PostGameFlowWaitTime = 5;
         private readonly NetworkManager _networkManager;
         private readonly PlayerDataManager _playerDataManager;
@@ -52,10 +60,18 @@ namespace Services.Backend
         {
             _signalBus.Unsubscribe<ErrorSignal>(HandleError);
             _signalBus.Unsubscribe<GameOverSignal>(OnGameOver);
+            _signalBus.Unsubscribe<InactivityTimeOut>(Exit);
         }
 
         public void StartLevel(Action onSuccess, Action<string> onError)
         {
+            #if UNITY_EDITOR
+             if (UseMockDataInEditor)
+            {
+                UniTask.Delay(TimeSpan.FromSeconds(0.2f)).ContinueWith(() => onSuccess?.Invoke());
+                return;
+            }
+            #endif
             _networkManager.WebSocketCommandHandler.SendLevelBeginRequestCommand(
                 0, 
                 () => onSuccess?.Invoke(),
@@ -75,6 +91,14 @@ namespace Services.Backend
         }
         public void TriggerGameOverFlow(int score, int finalLength, GameSessionStats stats, StrategicBettingData sbData, Action onRevive)
         {
+            #if UNITY_EDITOR
+            if (UseMockDataInEditor)
+            {
+                Debug.LogWarning("Finalizing session.");
+                FinalizeSession(score, finalLength, stats, sbData);
+                return;
+            }
+            #endif
             _networkManager.WebSocketService.SendSessionOptionContinue((action) => 
             {
                 if (action == SessionOptionAction.Continue)
@@ -89,6 +113,40 @@ namespace Services.Backend
         }
         public void GetGameSessionInfo(Action<SessionInfoPayload, StrategicBettingData> onSuccess, Action<int, string> onError)
         {
+            #if UNITY_EDITOR
+            if (UseMockDataInEditor)
+            {
+                Debug.LogWarning("<b>[SB MOCK]</b> Generating Fake Strategic Betting Payload!");
+                
+                _currentSbData = new StrategicBettingData
+                {
+                    LevelId = 1,
+                    LevelDifficulty = MockDifficulty,
+                    Missions = new List<MissionBettingInfo>
+                    {
+                        new MissionBettingInfo
+                        {
+                            MissionId = MockPrimaryMissionId, 
+                            Bet = 10f,
+                            CalculatedHardness = 85f,
+                            Value = MockTargetLength
+                        }
+                    }
+                };
+
+                var mockPayload = new SessionInfoPayload
+                {
+                    SessionType = "sb",
+                    Data = null 
+                };
+
+                _rngService.Initialize(MockSeed);
+                _pluginMissionService.PrepareSelectedMissionList(_currentSbData);
+                
+                UniTask.Delay(TimeSpan.FromSeconds(0.5f)).ContinueWith(() => onSuccess?.Invoke(mockPayload, _currentSbData));
+                return;
+            }
+            #endif
             _networkManager.WebSocketCommandHandler.SendGetGameSessionInfoRequestCommand(
                 (payload) =>
                 {
@@ -131,6 +189,19 @@ namespace Services.Backend
 
         public void SendStrategicBettingResult(List<MissionResultDto> results, Action onSuccess, Action<int,string> onError)
         {
+            #if UNITY_EDITOR
+            if (UseMockDataInEditor)
+            {
+                Debug.LogWarning("Intercepted Results sent to fake server:");
+                foreach (var r in results)
+                {
+                    Debug.Log($"   -> Mission ID: {r.MissionId} | Outcome: {r.Outcome}");
+                }
+                UniTask.Delay(TimeSpan.FromSeconds(0.3f)).ContinueWith(() => onSuccess?.Invoke());
+                return;
+            }
+            #endif
+
             _networkManager.WebSocketCommandHandler.SendStrategicBettingResultRequest(
                 results,
                 onSuccess, 
@@ -160,6 +231,13 @@ namespace Services.Backend
 
         private void FinalizeSession(int score, int finalLength, GameSessionStats stats, StrategicBettingData sbData)
         {
+            #if UNITY_EDITOR
+            if (UseMockDataInEditor)
+            {
+                PostGameFlow(score, finalLength, stats, sbData).Forget();
+                return;
+            }
+            #endif
             _networkManager.WebSocketCommandHandler.SendLevelEndRequestCommand(
                 0,
                 score,

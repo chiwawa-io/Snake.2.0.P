@@ -34,7 +34,6 @@ namespace Gameplay.Board
             int visualXBound = xBound + 1;
             int visualYBound = yBound + 1;
 
-            // Loop from bottom-left to top-right
             for (int x = -visualXBound; x <= visualXBound; x++)
             {
                 for (int y = -visualYBound; y <= visualYBound; y++)

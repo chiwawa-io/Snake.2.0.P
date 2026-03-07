@@ -6,6 +6,7 @@ namespace Core.Enums
         MainMenu,
         Leaderboard,
         Achievements,
+        LevelLoading,
         InGame,
         Error,
         PostGameStats 

@@ -71,7 +71,7 @@ namespace Gameplay.Global
 
         private void OnStateChanged(GameStateChangedSignal signal)
         {
-            if (signal.NewState == GameState.InGame)
+            if (signal.NewState == GameState.LevelLoading) 
             {
                 StartNewSession();
             }
@@ -85,15 +85,16 @@ namespace Gameplay.Global
         private void StartNewSession()
         {
             _snakeEngine.Reset();
-            _gameElements.SetActive(true);
 
-            
             _backendService.GetGameSessionInfo(
                 onSuccess: (payload, sbData) => 
                 {
                     if (payload.SessionType == "sb") _currentGameType = GameType.StrategicBetting;
                     else _currentGameType = GameType.Pay2Play;
             
+                    _gameElements.SetActive(true);
+                    _signalBus.Fire(new GameStateChangedSignal(GameState.InGame));
+
                     if (_currentGameType == GameType.StrategicBetting)
                     {
                         InitializeStrategicBetting(sbData);
@@ -102,10 +103,12 @@ namespace Gameplay.Global
                     {
                         InitializeStandardGame();
                     }
+                    
+                    _signalBus.Fire(new GameStartedSignal());
+
                 },
                 onError: (err, msg) => Debug.LogError(err + msg)
             );
-            
         }
 
         private void InitializeStandardGame()
@@ -120,8 +123,6 @@ namespace Gameplay.Global
             _itemSpawner.Initialize(bounds, _snakeModel.Body, _currentDifficulty, false);
             _snakeEngine.Initialize(bounds);
             _boardVisuals.GenerateBoard(bounds, _currentDifficulty);
-            
-            _signalBus.Fire(new GameStartedSignal());
         }
 
         private void InitializeStrategicBetting(StrategicBettingData payload)

@@ -16,7 +16,7 @@ namespace Luxodd.Game.Scripts.Missions
 #if UNITY_EDITOR
         
 
-        private const string MissionListResourcePath = "Missions/MissionDataBase";
+        private const string MissionListResourcePath = "Missions/MissionDataBase/MissionDataBase";
         private const string ExportFileName = "missions_export.json";
 
         [MenuItem("Luxodd Unity Plugin/Missions/Export Missions to JSON")]
@@ -25,7 +25,8 @@ namespace Luxodd.Game.Scripts.Missions
             var missionsList = Resources.Load<MissionDataBase>(MissionListResourcePath);
             if (missionsList == null)
             {
-                LoggerHelper.LogError($"[{DateTime.Now}][{nameof(MissionsExporter)}][{nameof(ExportMissions)}] Missions data base not found at path: {MissionListResourcePath}.");
+                Debug.LogError($"[{DateTime.Now}][{nameof(MissionsExporter)}][{nameof(ExportMissions)}] Missions data base not found at path: {MissionListResourcePath}.");
+                // LoggerHelper.LogError($"[{DateTime.Now}][{nameof(MissionsExporter)}][{nameof(ExportMissions)}] Missions data base not found at path: {MissionListResourcePath}.");
                 EditorUtility.DisplayDialog("Export Error", $"Missions data base not found at path: {MissionListResourcePath}", "OK");
                 return;
             }
@@ -70,7 +71,8 @@ namespace Luxodd.Game.Scripts.Missions
             string exportPath = Path.Combine(Application.dataPath, ExportFileName);
             File.WriteAllText(exportPath, json);
 
-            LoggerHelper.Log($"[{DateTime.Now}][{nameof(MissionsExporter)}][{nameof(ExportMissions)}] OK, exported to: {exportPath}.");
+            // LoggerHelper.Log($"[{DateTime.Now}][{nameof(MissionsExporter)}][{nameof(ExportMissions)}] OK, exported to: {exportPath}.");
+            Debug.Log($"[{DateTime.Now}][{nameof(MissionsExporter)}][{nameof(ExportMissions)}] OK, exported to: {exportPath}.");
             
             EditorUtility.ClearProgressBar();
             EditorUtility.DisplayDialog("Export Complete", "Missions exported successfully", "OK");

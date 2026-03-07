@@ -18,7 +18,6 @@ namespace UI.Game.Views
         [SerializeField] private TextMeshProUGUI lengthText;
         [SerializeField] private TextMeshProUGUI growthText;
 
-
         [Header("Lives System")] 
         [SerializeField] private List<GameObject> lifeIcons;
 
@@ -27,20 +26,13 @@ namespace UI.Game.Views
         [SerializeField] private GameObject achievementToastRoot;
         [SerializeField] private TextMeshProUGUI achievementNameText;
 
-        public void SetScoreDisplay(int score)
-        {
-            if (scoreText) scoreText.text = score.ToString("D10");
-        }
-
-        public void SetLength(int length, int target)
-        {
-            lengthText.text = $"{length}/{target}";
-        }
-
-        public void SetGrowthTimer(int timeRemaining)
-        {
-            growthText.text = timeRemaining.ToString();
-        }
+        public void SetScoreVisibility(bool isVisible) => scoreText.gameObject.SetActive(isVisible);
+        public void SetGrowthTimerVisibility(bool isVisible) => growthText.gameObject.SetActive(isVisible);
+        public void SetLengthVisibility(bool isVisible) => lengthText.gameObject.SetActive(isVisible);
+        public void SetScoreDisplay(int score) => scoreText.text = score.ToString("D10");
+        public void SetLength(int length, int target) => lengthText.text = $"{length}/{target}";
+        public void SetGrowthTimer(int timeRemaining) => growthText.text = timeRemaining.ToString();
+        public void HideFloatingTextImmediate() => floatingText.gameObject.SetActive(false);
 
         public void SetLives(int currentLives)
         {
@@ -75,11 +67,6 @@ namespace UI.Game.Views
             mySequence.OnComplete(() => { floatingText.gameObject.SetActive(false); });
         }
 
-        public void HideFloatingTextImmediate()
-        {
-            if (floatingText) floatingText.gameObject.SetActive(false);
-        }
-
         public void ShowAchievementToast(string achievementName)
         {
             if (achievementToastRoot == null) return;
@@ -91,9 +78,7 @@ namespace UI.Game.Views
             Invoke(nameof(HideAchievementToast), PopupShowDuration);
         }
 
-        private void HideAchievementToast()
-        {
-            achievementToastRoot.SetActive(false);
-        }
+        private void HideAchievementToast() => achievementToastRoot.SetActive(false);
+
     }
 }

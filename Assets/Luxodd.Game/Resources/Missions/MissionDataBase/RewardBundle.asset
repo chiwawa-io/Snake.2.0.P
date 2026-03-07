@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49f90234ebfc5bb4c8b1f758056fa270, type: 3}
+  m_Name: RewardBundle
+  m_EditorClassIdentifier: Assembly-CSharp::Luxodd.Game.Scripts.Missions.RewardBundle
+  <Rewards>k__BackingField:
+  - <Type>k__BackingField: 0
+    <Amount>k__BackingField: 0
+  <Id>k__BackingField: 1
+  <Name>k__BackingField: Got the target

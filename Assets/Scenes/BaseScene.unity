@@ -129,6 +129,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7846397}
   - component: {fileID: 7846396}
+  - component: {fileID: 7846400}
+  - component: {fileID: 7846399}
+  - component: {fileID: 7846398}
   m_Layer: 0
   m_Name: MissionService
   m_TagString: Untagged
@@ -148,11 +151,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3caae1c5fdd32648a8bf7855d433108, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Luxodd.Game.Scripts.Missions.MissionService
-  _missionRepository: {fileID: 0}
-  _missionControllerProvider: {fileID: 0}
-  _notificationController: {fileID: 0}
-  _rewardService: {fileID: 0}
-  _hardness: 0
+  _missionRepository: {fileID: 11400000, guid: 489b17ce84e3e504abe261b73bdbc235, type: 2}
+  _missionControllerProvider: {fileID: 7846400}
+  _notificationController: {fileID: 7846399}
+  _rewardService: {fileID: 7846398}
+  _hardness: 50
 --- !u!4 &7846397
 Transform:
   m_ObjectHideFlags: 0
@@ -168,6 +171,45 @@ Transform:
   m_Children: []
   m_Father: {fileID: 621309302}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7846398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7846395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ddc2f446be556048aec75ac62622075, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Luxodd.Game.Scripts.Missions.RewardService
+  _rewardDataBase: {fileID: 11400000, guid: b63f15ea594d42947a7d4b55331b4ffb, type: 2}
+  _itemResourceProvider: {fileID: 11400000, guid: c1eba3a29ca1b80449b4f0da9944e4ca, type: 2}
+  _itemsDataBase: {fileID: 11400000, guid: a96127c59f5233f4991770329e7a0425, type: 2}
+--- !u!114 &7846399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7846395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc13eb7c3e2b56848896498f98098e76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Luxodd.Game.Scripts.Missions.NotificationController
+--- !u!114 &7846400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7846395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd2f4404413d3fa4e822726fb0d53d6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Luxodd.Game.Scripts.Missions.MissionControllerProvider
 --- !u!1 &52307994
 GameObject:
   m_ObjectHideFlags: 0

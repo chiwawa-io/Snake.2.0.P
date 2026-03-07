@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9093432ed74301f4a9f1ddb98e36a1bb, type: 3}
+  m_Name: MissionRepository
+  m_EditorClassIdentifier: Assembly-CSharp::Luxodd.Game.Scripts.Missions.MissionRepository
+  <MissionDataList>k__BackingField:
+  - <ID>k__BackingField: mission_main_1
+    <Type>k__BackingField: 0
+    <DescriptionKey>k__BackingField: Reach 24 lenght
+    <MissionRewardBundleId>k__BackingField: 0
+    <ChainData>k__BackingField:
+    - <MinValue>k__BackingField: 1
+      <MaxValue>k__BackingField: 24
+      <ProgressValueType>k__BackingField: 0

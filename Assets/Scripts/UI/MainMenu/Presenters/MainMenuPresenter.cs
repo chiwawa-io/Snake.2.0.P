@@ -57,7 +57,7 @@ namespace UI.MainMenu.Presenters
         {
             _sessionController.SetDifficulty(difficulty);
 
-            _signalBus.Fire(new GameStateChangedSignal (GameState.InGame));
+            _signalBus.Fire(new GameStateChangedSignal(GameState.LevelLoading)); 
         }
 
         public void OnLeaderboardClicked()

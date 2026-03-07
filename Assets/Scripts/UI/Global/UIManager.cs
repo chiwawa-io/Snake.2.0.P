@@ -58,7 +58,8 @@ namespace UI.Global
             
             switch (signal.NewState)
             {
-                case GameState.Loading: _loadingView.Show(); break;
+                case GameState.Loading:
+                case GameState.LevelLoading: _loadingView.Show(); break;
                 case GameState.MainMenu: _mainMenu.Show(); break;
                 case GameState.InGame: _hud.Show(); break;
                 case GameState.Leaderboard: _leaderboard.Show(); break;
