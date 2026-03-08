@@ -139,6 +139,7 @@ namespace Gameplay.Global
             _boardVisuals.GenerateBoard(currentBounds, difficulty);
 
             _signalBus.Fire(new StrategicBettingStartedSignal(targetLength, (int)payload.LevelDifficulty));
+            _signalBus.Fire(new LifeUpdatedSignal(1));
             
             Debug.Log($"[SB] Started. Target Length: {targetLength}, Bounds: {currentBounds}");
         }
