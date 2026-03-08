@@ -13,6 +13,8 @@ namespace Achievements
         private readonly SnakeModel _model;
         private readonly AchievementCompletion _config;
 
+        private bool _isSbMode;
+
         public AchievementTracker(SignalBus signalBus, SnakeModel model, AchievementCompletion config)
         {
             _signalBus = signalBus;
@@ -22,6 +24,8 @@ namespace Achievements
 
         public void Initialize()
         {
+            _signalBus.Subscribe<StrategicBettingStartedSignal>(() => _isSbMode = true);
+            
             _signalBus.Subscribe<GemCollected>(OnGemCollected);
             _signalBus.Subscribe<PreciousGemCollected>(OnGemCollected);
             _signalBus.Subscribe<PowerUpCollected>(OnPowerUpCollected);
