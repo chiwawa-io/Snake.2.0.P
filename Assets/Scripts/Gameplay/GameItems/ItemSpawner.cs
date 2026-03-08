@@ -4,7 +4,6 @@ using System.Linq;
 using Core.Enums;
 using Core.Events;
 using Gameplay.SpawnConfig;
-using Unity.VisualScripting;
 using UnityEngine;
 using Zenject;
 using Random = UnityEngine.Random;
@@ -26,13 +25,18 @@ namespace Gameplay.GameItems
     public class ItemSpawner : MonoBehaviour
     {
         [Header("Item Database")] 
-        [SerializeField] private List<GameItem> _itemTypes;[Header("Spawning Intervals")] 
+        [SerializeField] private List<GameItem> _itemTypes;
+        
+        [Header("Spawning Intervals")] 
         [SerializeField] private int _speedUpSpawnDelay = 7;
         [SerializeField] private int _speedupSpawnInterval = 14;
         [SerializeField] private int _invulnerabilitySpawnDelay = 5;
-        [SerializeField] private int _invulnerabilitySpawnInterval = 25;[Header("Pattern Config")] 
+        [SerializeField] private int _invulnerabilitySpawnInterval = 25;
+        
+        [Header("Pattern Config")] 
         [SerializeField] private SpawnPattern _startingFoodPattern;
         [SerializeField] private SpawnPattern _speedUpPattern;
+        [SerializeField] private SpawnPattern _slowDownPattern;
         [SerializeField] private SpawnPattern _invulnerabilityPattern;
         [SerializeField] private SpawnPattern _regularFoodPattern;
         [SerializeField] private List<SpawnPattern> _easyChallengePatterns = new();
@@ -69,9 +73,7 @@ namespace Gameplay.GameItems
             _isSpawningActive = true;
 
             _signalBus.Subscribe<ItemDestroyedSignal>(OnItemDestroyedByTimer);
-            _signalBus.Subscribe<StrategicBettingStartedSignal>(
-                () => _challengeChance = 0);
-
+  
             _currentSpawnPointMap = _mapGenerator.Generate(_gridBounds, isSbSession);
 
             if (_startingFoodPattern != null)
@@ -79,6 +81,13 @@ namespace Gameplay.GameItems
                 SpawnPattern(_startingFoodPattern);
             }
 
+            if (isSbSession)
+            {
+                _invulnerabilitySpawnDelay = 1500;
+                _challengeChance = 0;
+                _speedUpPattern = _slowDownPattern;
+            }
+            
             StartCoroutine(SpawnSpeedUpCoroutine());
             StartCoroutine(SpawnInvulnerabilityCoroutine());
         }

@@ -10,6 +10,6 @@ namespace Core.Enums
         Wall,
         SpeedUp,
         Invulnerability,
-        Portal
+        SlowDown
     }
 }
