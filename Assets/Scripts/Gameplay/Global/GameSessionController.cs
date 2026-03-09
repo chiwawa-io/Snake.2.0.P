@@ -91,10 +91,9 @@ namespace Gameplay.Global
                 {
                     if (payload.SessionType == "sb") _currentGameType = GameType.StrategicBetting;
                     else _currentGameType = GameType.Pay2Play;
-            
-                    _gameElements.SetActive(true);
-                    _signalBus.Fire(new GameStateChangedSignal(GameState.InGame));
 
+                    _gameElements.SetActive(true);
+                    
                     if (_currentGameType == GameType.StrategicBetting)
                     {
                         InitializeStrategicBetting(sbData);
@@ -103,9 +102,11 @@ namespace Gameplay.Global
                     {
                         InitializeStandardGame();
                     }
-                    
+            
+            
+                    _signalBus.Fire(new GameStateChangedSignal(GameState.InGame));
+            
                     _signalBus.Fire(new GameStartedSignal());
-
                 },
                 onError: (err, msg) => Debug.LogError(err + msg)
             );
@@ -139,7 +140,6 @@ namespace Gameplay.Global
             _boardVisuals.GenerateBoard(currentBounds, difficulty);
 
             _signalBus.Fire(new StrategicBettingStartedSignal(targetLength, (int)payload.LevelDifficulty));
-            _signalBus.Fire(new LifeUpdatedSignal(1));
             
             Debug.Log($"[SB] Started. Target Length: {targetLength}, Bounds: {currentBounds}");
         }

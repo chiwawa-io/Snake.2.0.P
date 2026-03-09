@@ -39,10 +39,12 @@ namespace Gameplay.SpawnConfig
                     map.AddPoint(ItemType.PreciousFood, new Vector2Int(x, y));
                 }
             }
+            
+            var speedModifierType = isSbSession ? ItemType.SlowDown : ItemType.SpeedUp;
 
             map.AddPoint(ItemType.Invulnerability, new Vector2Int(-xBound + PowerUpPadding, yBound - PowerUpPadding));
-            map.AddPoint(ItemType.SpeedUp, new Vector2Int(xBound - PowerUpPadding, yBound - PowerUpPadding));
-            map.AddPoint(ItemType.SpeedUp, new Vector2Int(-xBound + PowerUpPadding, -yBound + PowerUpPadding));
+            map.AddPoint(speedModifierType, new Vector2Int(xBound - PowerUpPadding, yBound - PowerUpPadding));
+            map.AddPoint(speedModifierType, new Vector2Int(-xBound + PowerUpPadding, -yBound + PowerUpPadding));
             map.AddPoint(ItemType.Invulnerability, new Vector2Int(xBound - PowerUpPadding, -yBound + PowerUpPadding));
             
             if (isSbSession) map.ShuffleAll(_rngService);

@@ -56,6 +56,7 @@ namespace Gameplay.Snake
         {
             _signalBus.Subscribe<InputDirectionSignal>(OnInput);
             _signalBus.Subscribe<GameStartedSignal>(OnGameStarted);
+            _signalBus.Subscribe<GameStateChangedSignal>(OnStateChanged);
             _signalBus.Subscribe<RevivePlayerSignal>(OnRevive);
             _signalBus.Subscribe<StrategicBettingStartedSignal>(OnSbStarted);
         }
@@ -64,6 +65,7 @@ namespace Gameplay.Snake
         {
             _signalBus.TryUnsubscribe<InputDirectionSignal>(OnInput);
             _signalBus.TryUnsubscribe<GameStartedSignal>(OnGameStarted);
+            _signalBus.TryUnsubscribe<GameStateChangedSignal>(OnStateChanged);
             _signalBus.TryUnsubscribe<RevivePlayerSignal>(OnRevive);
             _signalBus.TryUnsubscribe<StrategicBettingStartedSignal>(OnSbStarted);
         }
@@ -82,6 +84,14 @@ namespace Gameplay.Snake
 
             HandlePowerUpTimers();
             HandleMovementTick();
+        }
+
+        private void OnStateChanged(GameStateChangedSignal signal)
+        {
+            if (signal.NewState == GameState.LevelLoading || signal.NewState == GameState.MainMenu)
+            {
+                ResetForNewSession();
+            }
         }
 
         private void HandleMovementTick()
@@ -188,6 +198,12 @@ namespace Gameplay.Snake
                 _signalBus.Fire(new SnakeEffectSignal("Invulnerable!", pos));
                 _view.PlayInvulnerabilityEffect();
             }
+            else if (data.effectType == PowerUpEffectType.SlowDown)
+            {
+                _powerUpTimer = data.effectDuration;
+                _model.MoveFrequency = BaseFrequency;
+                _signalBus.Fire(new SnakeEffectSignal("SlowDown!", pos));
+            }
         }
 
         private void HandleDeath(string reason)
@@ -264,8 +280,8 @@ namespace Gameplay.Snake
 
         private void OnGameStarted() 
         {
+            _moveTimer = 0f;
             _gameIsRunning = true;
-            ResetForNewSession();
         }
         private void OnSbStarted(StrategicBettingStartedSignal signal)
         {

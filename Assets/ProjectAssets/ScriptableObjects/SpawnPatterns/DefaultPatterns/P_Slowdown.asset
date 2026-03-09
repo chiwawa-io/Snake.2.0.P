@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: P_Slowdown
   m_EditorClassIdentifier: 
   items:
-  - type: 6
+  - type: 8
     relativePosition: {x: 0, y: 0}

@@ -9,6 +9,8 @@ namespace Core.Enums
         LevelLoading,
         InGame,
         Error,
-        PostGameStats 
+        PostGameStats,
+        MissionCompletion
+        
     }
 }

@@ -24,8 +24,6 @@ namespace Achievements
 
         public void Initialize()
         {
-            _signalBus.Subscribe<StrategicBettingStartedSignal>(() => _isSbMode = true);
-            
             _signalBus.Subscribe<GemCollected>(OnGemCollected);
             _signalBus.Subscribe<PreciousGemCollected>(OnGemCollected);
             _signalBus.Subscribe<PowerUpCollected>(OnPowerUpCollected);

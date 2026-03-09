@@ -111,6 +111,19 @@ namespace Services.Backend
                 }
             });
         }
+
+        public StrategicBettingData GetCachedGameSessionInfo()
+        {
+            if (_currentSbData != null) return _currentSbData;
+            else
+            {
+                GetGameSessionInfo(
+                    onSuccess: (payload, data) => {},
+                    onError: (i, s) => {});
+            }
+            return _currentSbData;
+        }
+
         public void GetGameSessionInfo(Action<SessionInfoPayload, StrategicBettingData> onSuccess, Action<int, string> onError)
         {
             #if UNITY_EDITOR
@@ -286,6 +299,9 @@ namespace Services.Backend
                     onSuccess: () => Debug.Log("[SB] Results verified by server."),
                     onError: (code, msg) => Debug.LogError($"[SB] Reporting Failed: {msg}")
                 );
+                
+                _signalBus.Fire(new GameStateChangedSignal(GameState.MissionCompletion));
+                await UniTask.WaitForSeconds(PostGameFlowWaitTime);
             }
             _signalBus.Fire(new GameStateChangedSignal(GameState.PostGameStats)); 
             await UniTask.WaitForSeconds(PostGameFlowWaitTime);

@@ -85,10 +85,11 @@ namespace Gameplay.GameItems
             {
                 _invulnerabilitySpawnDelay = 1500;
                 _challengeChance = 0;
-                _speedUpPattern = _slowDownPattern;
             }
             
-            StartCoroutine(SpawnSpeedUpCoroutine());
+            var currentSpeedModifierPattern = isSbSession ? _slowDownPattern : _speedUpPattern;
+            StartCoroutine(SpawnSpeedModifierCoroutine(currentSpeedModifierPattern));
+            
             StartCoroutine(SpawnInvulnerabilityCoroutine());
         }
 
@@ -252,12 +253,12 @@ namespace Gameplay.GameItems
             _activeItems.Remove(signal.ItemPosition);
         }
 
-        private IEnumerator SpawnSpeedUpCoroutine()
+        private IEnumerator SpawnSpeedModifierCoroutine(SpawnPattern patternToSpawn)
         {
             yield return new WaitForSeconds(_speedUpSpawnDelay);
             while (_isSpawningActive)
             {
-                SpawnPattern(_speedUpPattern);
+                SpawnPattern(patternToSpawn); // Use the parameter!
                 yield return new WaitForSeconds(_speedupSpawnInterval);
             }
         }

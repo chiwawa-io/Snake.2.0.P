@@ -17,7 +17,7 @@ namespace SBetting
         private float _growthTimer;
         
         private const float MaxPlayableFrequency = 0.05f;
-        private const float PenaltyMultiplier = 0.3f;
+        private const float PenaltyMultiplier = 0.5f;
 
         public SbPressureManager(SignalBus signalBus, SnakeModel model)
         {

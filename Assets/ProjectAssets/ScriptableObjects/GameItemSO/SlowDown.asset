@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: SlowDown
   m_EditorClassIdentifier: 
   type: 8
-  prefab: {fileID: 2270807337829933764, guid: 6e3fc8819cb2a4b4e8b9ea034ecf506a, type: 3}
+  prefab: {fileID: 2270807337829933764, guid: c715193f29984b54b8641de16118dd23, type: 3}
   isCollectible: 0
   scoreValue: 0
   isObstacle: 0
   isPowerUp: 1
-  effectType: 1
+  effectType: 2
   effectDuration: 7
