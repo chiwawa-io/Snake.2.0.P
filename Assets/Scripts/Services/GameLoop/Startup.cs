@@ -32,7 +32,16 @@ namespace Services.Gameloop
 
         private void OnConnectionSuccess()
         {
-            _playerDataManager.LoadData();
+            _backendService.FetchMissionDefinitions(
+            onSuccess: () => 
+            {
+                _playerDataManager.LoadData();
+            },
+            onError: (error) => 
+            {
+                _playerDataManager.LoadData(); 
+            }
+        );
         }
 
         private void OnConnectionError()

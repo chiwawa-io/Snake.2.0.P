@@ -25,6 +25,7 @@ using UI.Global;
 using UI.Leaderboard.Views;
 using UI.MainMenu.Presenters;
 using UI.MainMenu.Views;
+using UI.MissionCompletion.Views;
 using UI.Other;
 using UnityEngine;
 using Zenject;
@@ -51,6 +52,7 @@ namespace Core.Installers
         [SerializeField] private GameView _hudView;
         [SerializeField] private StatsView _statsView;
         [SerializeField] private BaseView _loadingView;
+        [SerializeField] private MissionCompletionView _missionCompletionView;
         [SerializeField] private ErrorView _errorView;
 
         [Header("--- Data & Config ---")] 

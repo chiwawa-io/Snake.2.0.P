@@ -32,6 +32,7 @@ namespace Services.Backend
         private readonly IRngService _rngService;
         private readonly MissionService _pluginMissionService;
         private StrategicBettingData _currentSbData;
+        private readonly Dictionary<string, MissionDto> _missionDefinitions = new();
         
         public LuxoddBackendService(
             NetworkManager networkManager, 
@@ -198,6 +199,64 @@ namespace Services.Backend
                     onSuccess?.Invoke(payload, _currentSbData);
                 },
                 onError);
+        }
+
+        public void FetchMissionDefinitions(Action onSuccess, Action<string> onError)
+        {
+        #if UNITY_EDITOR
+            if (UseMockDataInEditor)
+            {
+                Debug.LogWarning("<b>[SB MOCK]</b> Generating Fake Mission Definitions");
+                _missionDefinitions[MockPrimaryMissionId] = new MissionDto 
+                { 
+                    Id = MockPrimaryMissionId, 
+                    Name = "Beat the Boss!", 
+                    Description = $"Reach length {MockTargetLength} to win." 
+                };
+                
+                UniTask.Delay(TimeSpan.FromSeconds(0.2f)).ContinueWith(() => onSuccess?.Invoke());
+                return;
+            }
+        #endif
+
+            _networkManager.WebSocketCommandHandler.SendGetBettingSessionMissionsRequestCommand(
+                (payload) =>
+                {
+                    _missionDefinitions.Clear();
+                    if (payload != null && payload.Missions != null)
+                    {
+                        try
+                        {
+                            var token = JToken.FromObject(payload.Missions);
+                            var missionsList = token.ToObject<List<MissionDto>>();
+                            
+                            if (missionsList != null)
+                            {
+                                foreach (var m in missionsList)
+                                {
+                                    _missionDefinitions[m.Id] = m;
+                                }
+                            }
+                            Debug.Log($"Successfully downloaded {_missionDefinitions.Count} mission definitions from server.");
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.LogError($"Failed to parse mission definitions: {e.Message}");
+                        }
+                    }
+                    onSuccess?.Invoke();
+                },
+                (code, msg) => onError?.Invoke(msg)
+            );
+        }
+
+        public MissionDto GetMissionDefinition(string missionId)
+        {
+            if (_missionDefinitions.TryGetValue(missionId, out var dto))
+            {
+                return dto;
+            }
+            return null;
         }
 
         public void SendStrategicBettingResult(List<MissionResultDto> results, Action onSuccess, Action<int,string> onError)
