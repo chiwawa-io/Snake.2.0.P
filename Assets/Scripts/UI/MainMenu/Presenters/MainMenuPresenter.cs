@@ -50,7 +50,16 @@ namespace UI.MainMenu.Presenters
 
         public void OnPlayClicked()
         {
-            _view.SetDifficultyPopupActive(true);
+            var sbData = _backendService.GetCachedGameSessionInfo();
+            
+            if (sbData == null)
+            {
+                _view.SetDifficultyPopupActive(true);
+            }
+            else
+            {
+                _signalBus.Fire(new GameStateChangedSignal(GameState.LevelLoading));
+            }
         }
 
         public void OnDifficultySelected(GameDifficulty difficulty)

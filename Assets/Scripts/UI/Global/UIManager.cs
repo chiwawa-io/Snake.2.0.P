@@ -5,6 +5,7 @@ using UI.Achievements.Views;
 using UI.Game.Views;
 using UI.Leaderboard.Views;
 using UI.MainMenu.Views;
+using UI.MissionCompletion.Views;
 using UI.Other;
 using Zenject;
 
@@ -18,6 +19,7 @@ namespace UI.Global
         private readonly StatsView _statsView;
         private readonly LeaderboardView _leaderboard;
         private readonly AchievementsView _achievements;
+        private readonly MissionCompletionView _missionCompletionView;
         private readonly BaseView _loadingView;
         private readonly ErrorView _errorView; 
 
@@ -29,6 +31,7 @@ namespace UI.Global
             LeaderboardView leaderboard,
             AchievementsView achievements,
             [Inject(Id = "Loading")] BaseView loading,
+            MissionCompletionView missionCompletionView,
             ErrorView errorView)
         {
             _signalBus = signalBus;
@@ -38,6 +41,7 @@ namespace UI.Global
             _leaderboard = leaderboard;
             _achievements = achievements;
             _loadingView = loading;
+            _missionCompletionView = missionCompletionView;
             _errorView = errorView;
         }
 
@@ -65,6 +69,7 @@ namespace UI.Global
                 case GameState.Leaderboard: _leaderboard.Show(); break;
                 case GameState.Achievements: _achievements.Show(); break;
                 case GameState.PostGameStats: _statsView.Show(); break;
+                case GameState.MissionCompletion: _missionCompletionView.Show(); break;
                 case GameState.Error: _errorView.Show(); break;
             }
         }
@@ -77,6 +82,7 @@ namespace UI.Global
             _leaderboard.Hide();
             _achievements.Hide();
             _loadingView.Hide();
+            _missionCompletionView.Hide();
             _errorView.Hide();
         }
     }

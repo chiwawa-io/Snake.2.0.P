@@ -32,6 +32,7 @@ namespace UI.MissionCompletion.Presenters
         public void Initialize()
         {
             _signalBus.Subscribe<GameStateChangedSignal>(OnStateChanged);
+            _signalBus.Subscribe<LevelCompletedSignal>(StatusUpdate);
         }
 
         public void Dispose()
@@ -47,6 +48,11 @@ namespace UI.MissionCompletion.Presenters
             }
         }
 
+        private void StatusUpdate()
+        {
+            _view.DisplayWonTitle();
+        }
+
         private void ShowMissionResults()
         {
             var sbData = _backendService.GetCachedGameSessionInfo();
@@ -59,7 +65,6 @@ namespace UI.MissionCompletion.Presenters
                 var states = _pluginMissionService.GetMissionStatesByMissionId(mission.MissionId);
                 bool isWin = states.Contains(MissionState.Completed);
 
-                // --- NEW SERVER LOOKUP ---
                 var serverMissionDef = _backendService.GetMissionDefinition(mission.MissionId);
                 
                 string name = serverMissionDef != null ? serverMissionDef.Name : "Unknown Mission";

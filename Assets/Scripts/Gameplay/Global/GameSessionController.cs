@@ -11,6 +11,7 @@ using Gameplay.Board;
 using Services.Backend;
 using Luxodd.Game.Scripts.Game;
 using Luxodd.Game.Scripts.Missions;
+using UI.MainMenu.Presenters;
 
 namespace Gameplay.Global
 {
@@ -29,7 +30,6 @@ namespace Gameplay.Global
         private readonly BoardVisuals _boardVisuals;
         private readonly LevelBoardsConfig _levelBoundsConfig;
         private readonly LuxoddBackendService _backendService;
-        
         private GameDifficulty _currentDifficulty = GameDifficulty.Medium;
         private GameType _currentGameType = GameType.Pay2Play;
         private Vector2Int bounds;

@@ -25,6 +25,7 @@ using UI.Global;
 using UI.Leaderboard.Views;
 using UI.MainMenu.Presenters;
 using UI.MainMenu.Views;
+using UI.MissionCompletion.Presenters;
 using UI.MissionCompletion.Views;
 using UI.Other;
 using UnityEngine;
@@ -146,6 +147,7 @@ namespace Core.Installers
             Container.Bind<GameView>().FromInstance(_hudView).AsSingle();
             Container.Bind<StatsView>().FromInstance(_statsView).AsSingle();
             Container.Bind<ErrorView>().FromInstance(_errorView).AsSingle();
+            Container.Bind<MissionCompletionView>().FromInstance(_missionCompletionView).AsSingle();
             Container.Bind<BaseView>().WithId("Loading").FromInstance(_loadingView);
 
             Container.Bind<AchievementService>().AsSingle().WithArguments(_achievementList);
@@ -155,6 +157,7 @@ namespace Core.Installers
             Container.BindInterfacesAndSelfTo<AchievementsPresenter>().AsSingle();
             Container.BindInterfacesAndSelfTo<GamePresenter>().AsSingle();
             Container.BindInterfacesAndSelfTo<StatsPresenter>().AsSingle();
+            Container.BindInterfacesAndSelfTo<MissionCompletionPresenter>().AsSingle();
 
             Container.BindInterfacesAndSelfTo<UIManager>().AsSingle().NonLazy();
         }
