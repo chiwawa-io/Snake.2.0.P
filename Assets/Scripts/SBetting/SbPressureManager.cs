@@ -9,10 +9,10 @@ namespace SBetting
 {
     public class SbPressureManager : IInitializable, IDisposable
     {
-        private const float MaxGrowthTime = 10f;
         private readonly SignalBus _signalBus;
         private readonly SnakeModel _model;
         
+        private float _maxGrowthTime = 10f;
         private bool _isActive;
         private float _growthTimer;
         
@@ -33,12 +33,17 @@ namespace SBetting
             if (!_isActive) return;
 
             _growthTimer -= dt;
-            _signalBus.Fire(new GrowthTimerUpdatedSignal(_growthTimer, MaxGrowthTime));
+            _signalBus.Fire(new GrowthTimerUpdatedSignal(_growthTimer, _maxGrowthTime));
 
             if (_growthTimer <= 0) ApplySpeedPenalty();
         }
 
-        public void ResetTimer() => _growthTimer = MaxGrowthTime;
+        public void ResetTimer() => _growthTimer = _maxGrowthTime;
+
+        public void SetGrowthTimer(int timer)
+        {
+            _maxGrowthTime = timer;
+        }
 
         private void StartSb(StrategicBettingStartedSignal signal)
         {

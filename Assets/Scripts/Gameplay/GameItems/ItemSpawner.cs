@@ -108,6 +108,11 @@ namespace Gameplay.GameItems
             _lastSpawnPointIndex.Clear();
         }
 
+        public void SetSpawnChallengeChance(float probability)
+        {
+            _challengeChance = probability;
+        }
+
         public void OnFoodCollected()
         {
             if (!_isSpawningActive) return;

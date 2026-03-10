@@ -12,6 +12,7 @@ using Services.Backend;
 using Luxodd.Game.Scripts.Game;
 using Luxodd.Game.Scripts.Missions;
 using UI.MainMenu.Presenters;
+using SBetting;
 
 namespace Gameplay.Global
 {
@@ -30,6 +31,8 @@ namespace Gameplay.Global
         private readonly BoardVisuals _boardVisuals;
         private readonly LevelBoardsConfig _levelBoundsConfig;
         private readonly LuxoddBackendService _backendService;
+        private readonly HardnessEvaluator _hardnessEvaluator;
+
         private GameDifficulty _currentDifficulty = GameDifficulty.Medium;
         private GameType _currentGameType = GameType.Pay2Play;
         private Vector2Int bounds;
@@ -42,7 +45,8 @@ namespace Gameplay.Global
             [Inject(Id = "GameElements")] GameObject gameElements,
             LevelBoardsConfig levelBoardsConfig,
             BoardVisuals boardVisuals,
-            LuxoddBackendService backendService)
+            LuxoddBackendService backendService,
+            HardnessEvaluator hardnessEvaluator)
         {
             _signalBus = signalBus;
             _itemSpawner = itemSpawner;
@@ -52,6 +56,7 @@ namespace Gameplay.Global
             _boardVisuals = boardVisuals;
             _levelBoundsConfig = levelBoardsConfig;
             _backendService = backendService;
+            _hardnessEvaluator = hardnessEvaluator;
         }
 
         public void Initialize()
@@ -133,9 +138,12 @@ namespace Gameplay.Global
             var primaryMission = payload.Missions.FirstOrDefault();
             int targetLength = primaryMission != null ? (int)primaryMission.Value : 20;
             
-            var currentBounds = CalculateBounds((int)primaryMission.CalculatedHardness);
+            var hardness = (int)primaryMission.CalculatedHardness;
+            var spawnChance = _hardnessEvaluator.GetTrapSpawnChance(hardness);
+            var currentBounds = _hardnessEvaluator.GetBoardSize(hardness);
 
             _itemSpawner.Initialize(currentBounds, _snakeModel.Body, difficulty, true); 
+            _itemSpawner.SetSpawnChallengeChance(spawnChance);
             _snakeEngine.Initialize(currentBounds);
             _boardVisuals.GenerateBoard(currentBounds, difficulty);
 
