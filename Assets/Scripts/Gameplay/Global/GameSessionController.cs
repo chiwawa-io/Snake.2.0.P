@@ -11,7 +11,7 @@ using Gameplay.Board;
 using Services.Backend;
 using Luxodd.Game.Scripts.Game;
 using Luxodd.Game.Scripts.Missions;
-using UI.MainMenu.Presenters;
+using Cysharp.Threading.Tasks; 
 
 namespace Gameplay.Global
 {
@@ -30,6 +30,7 @@ namespace Gameplay.Global
         private readonly BoardVisuals _boardVisuals;
         private readonly LevelBoardsConfig _levelBoundsConfig;
         private readonly LuxoddBackendService _backendService;
+        
         private GameDifficulty _currentDifficulty = GameDifficulty.Medium;
         private GameType _currentGameType = GameType.Pay2Play;
         private Vector2Int bounds;
@@ -92,24 +93,29 @@ namespace Gameplay.Global
                     if (payload.SessionType == "sb") _currentGameType = GameType.StrategicBetting;
                     else _currentGameType = GameType.Pay2Play;
 
-                    _gameElements.SetActive(true);
-                    
                     if (_currentGameType == GameType.StrategicBetting)
                     {
                         InitializeStrategicBetting(sbData);
+                        _gameElements.SetActive(true);
+                        _signalBus.Fire(new GameStateChangedSignal(GameState.InGame));
+                        
+                        StartGameWithDelay(3.5f).Forget();
                     }
                     else
                     {
                         InitializeStandardGame();
+                        _gameElements.SetActive(true);
+                        _signalBus.Fire(new GameStateChangedSignal(GameState.InGame));
                     }
-            
-            
-                    _signalBus.Fire(new GameStateChangedSignal(GameState.InGame));
-            
-                    _signalBus.Fire(new GameStartedSignal());
                 },
                 onError: (err, msg) => Debug.LogError(err + msg)
             );
+        }
+
+        private async UniTaskVoid StartGameWithDelay(float delaySeconds)
+        {
+            await UniTask.WaitForSeconds(delaySeconds);
+            _signalBus.Fire(new GameStartedSignal());
         }
 
         private void InitializeStandardGame()
@@ -118,7 +124,6 @@ namespace Gameplay.Global
             {
                 if (boardConfig.gameDifficulty == _currentDifficulty)
                     bounds = boardConfig.boardSize;
-                Debug.LogWarning(bounds + " " + Time.time);
             }
 
             _itemSpawner.Initialize(bounds, _snakeModel.Body, _currentDifficulty, false);
@@ -140,6 +145,7 @@ namespace Gameplay.Global
             _boardVisuals.GenerateBoard(currentBounds, difficulty);
 
             _signalBus.Fire(new StrategicBettingStartedSignal(targetLength, (int)payload.LevelDifficulty));
+            _signalBus.Fire(new LifeUpdatedSignal(1));
             
             Debug.Log($"[SB] Started. Target Length: {targetLength}, Bounds: {currentBounds}");
         }
@@ -156,12 +162,8 @@ namespace Gameplay.Global
 
         private Vector2Int CalculateBounds(int hardness)
         {
-            Debug.LogWarning("Hardness sent to calculate bounds: " + hardness);
             float t = hardness / MaxHardness;
-
             int dynamicWidth = Mathf.RoundToInt(Mathf.Lerp(MaxBoardWidth, MinBoardWidth, t));
-            
-            Debug.LogWarning($"Calculated Bounds: ({dynamicWidth}x{DefaultBoardHeight})");
             return new Vector2Int(dynamicWidth, DefaultBoardHeight);             
         }
     }

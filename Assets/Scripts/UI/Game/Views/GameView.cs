@@ -3,87 +3,150 @@ using DG.Tweening;
 using TMPro;
 using UI.Global;
 using UnityEngine;
+using UnityEngine.UI;
 
-namespace UI.Game.Views
+public class GameView : BaseView
 {
-    public class GameView : BaseView
+    private const float ToastFadeDuration = 0.5f;
+    private const float ToastDisplayTime = 2.0f;
+    private const float VignettePulseSpeed = 15f;[Header("Gameplay Data")]
+    [SerializeField] private TextMeshProUGUI _scoreText;[Header("Lives System")]
+    [SerializeField] private List<GameObject> _lifeIcons;
+
+    [Header("Feedback")]
+    [SerializeField] private TextMeshProUGUI _floatingText;
+    [SerializeField] private float _floatDuration = 1.2f;
+    [SerializeField] private GameObject _achievementToastRoot;
+    [SerializeField] private TextMeshProUGUI _achievementNameText;
+
+    [Header("SB Mode UI")]
+    [SerializeField] private TextMeshProUGUI _goalText;
+    [SerializeField] private GameObject _growthParent;
+    [SerializeField] private TextMeshProUGUI _growthText;
+    
+    [Header("SB Pressure Feedback")]
+    [SerializeField] private Image _vignetteImage; 
+
+    [Header("Mission Briefing")]
+    [SerializeField] private CanvasGroup _briefingGroup; 
+    [SerializeField] private TextMeshProUGUI _briefingTitleText;
+    [SerializeField] private TextMeshProUGUI _briefingRulesText;
+
+    public void SetScoreDisplay(int score)
     {
-        private const float FloatDuration = 1.2f;
-        private const float FloatDistance = 5f;
-        private const float DurationMultiplicator = 0.5f;
-        private const float PopupShowDuration = 2.5f;
+        if (_scoreText) _scoreText.text = score.ToString("D10");
+    }
 
-        [Header("Gameplay Data")] 
-        [SerializeField] private TextMeshProUGUI scoreText;
-        [SerializeField] private TextMeshProUGUI lengthText;
-        [SerializeField] private TextMeshProUGUI growthText;
-        
-        [Header("Visual")]
-        [SerializeField] private GameObject scoreParent;
-        [SerializeField] private GameObject lengthParent;
-        [SerializeField] private GameObject growthParent;
+    public void SetLives(int currentLives)
+    {
+        int safeCount = Mathf.Clamp(currentLives, 0, _lifeIcons.Count);
 
-        [Header("Lives System")] 
-        [SerializeField] private List<GameObject> lifeIcons;
-
-        [Header("Feedback")] 
-        [SerializeField] private TextMeshProUGUI floatingText;
-        [SerializeField] private GameObject achievementToastRoot;
-        [SerializeField] private TextMeshProUGUI achievementNameText;
-
-        public void SetScoreVisibility(bool isVisible) => scoreParent.gameObject.SetActive(isVisible);
-        public void SetGrowthTimerVisibility(bool isVisible) => growthParent.gameObject.SetActive(isVisible);
-        public void SetLengthVisibility(bool isVisible) => lengthParent.gameObject.SetActive(isVisible);
-        public void SetScoreDisplay(int score) => scoreText.text = score.ToString("D10");
-        public void SetLength(int length, int target) => lengthText.text = $"{length}/{target}";
-        public void SetGrowthTimer(int timeRemaining) => growthText.text = timeRemaining.ToString();
-        public void HideFloatingTextImmediate() => floatingText.gameObject.SetActive(false);
-
-        public void SetLives(int currentLives)
+        for (int i = 0; i < _lifeIcons.Count; i++)
         {
-            int safeCount = Mathf.Clamp(currentLives, 0, lifeIcons.Count);
+            _lifeIcons[i].SetActive(i < safeCount);
+        }
+    }
 
-            for (int i = 0; i < lifeIcons.Count; i++)
+    public void ShowFloatingText(string message, Vector2 screenPosition)
+    {
+        if (_floatingText == null) return;
+
+        _floatingText.DOKill(); 
+        _floatingText.transform.DOKill();
+        
+        Vector3 startPos = new Vector3(screenPosition.x, screenPosition.y, _floatingText.transform.position.z);
+        _floatingText.transform.position = startPos;
+        _floatingText.alpha = 1f; 
+        _floatingText.text = message;
+        
+        _floatingText.gameObject.SetActive(true);
+
+        Sequence mySequence = DOTween.Sequence();
+        mySequence.Join(_floatingText.transform.DOMoveY(startPos.y + 5f, _floatDuration).SetEase(Ease.OutQuad));
+        mySequence.Join(_floatingText.DOFade(0f, _floatDuration * 0.5f).SetDelay(_floatDuration * 0.5f));
+        mySequence.OnComplete(() => 
+        {
+            _floatingText.gameObject.SetActive(false);
+        });
+    }
+
+    public void HideFloatingTextImmediate()
+    {
+        if(_floatingText) _floatingText.gameObject.SetActive(false);
+    }
+
+    public void ShowAchievementToast(string achievementName)
+    {
+        if (_achievementToastRoot == null) return;
+
+        _achievementToastRoot.transform.DOKill();
+        _achievementNameText.text = achievementName;
+        _achievementToastRoot.SetActive(true);
+
+        _achievementToastRoot.transform.localScale = Vector3.zero;
+
+        Sequence toastSequence = DOTween.Sequence();
+        toastSequence.Append(_achievementToastRoot.transform.DOScale(Vector3.one, ToastFadeDuration).SetEase(Ease.OutBack));
+        toastSequence.AppendInterval(ToastDisplayTime);
+        toastSequence.Append(_achievementToastRoot.transform.DOScale(Vector3.zero, ToastFadeDuration).SetEase(Ease.InBack));
+        toastSequence.OnComplete(() => _achievementToastRoot.SetActive(false));
+    }
+
+    public void ToggleSbUI()
+    {
+        if (_vignetteImage != null) _vignetteImage.gameObject.SetActive(false);
+        if (_growthText != null) _growthParent.SetActive(true);
+    }
+
+    public void UpdateGoal(int current, int target)
+    {
+        if (_goalText == null) return;
+        _goalText.text = $"{current} / {target}";
+        _goalText.transform.DOKill();
+        _goalText.transform.DOScale(1.2f, 0.1f).OnComplete(() => _goalText.transform.DOScale(1f, 0.1f));
+    }
+
+    public void UpdateTimer(int timeRemaining, bool isCritical)
+    {
+        _growthText.text = timeRemaining.ToString();
+
+        if (_vignetteImage != null)
+        {
+            if (isCritical)
             {
-                lifeIcons[i].SetActive(i < safeCount);
+                if (!_vignetteImage.gameObject.activeSelf) _vignetteImage.gameObject.SetActive(true);
+                
+                float alpha = (Mathf.Sin(Time.time * VignettePulseSpeed) + 1f) / 2f * 0.4f; 
+                var c = _vignetteImage.color;
+                c.a = alpha;
+                _vignetteImage.color = c;
+            }
+            else
+            {
+                if (_vignetteImage.gameObject.activeSelf) _vignetteImage.gameObject.SetActive(false);
             }
         }
+    }
 
-        public void ShowFloatingText(string message, Vector2 screenPosition)
-        {
-            if (floatingText == null) return;
+    public void ShowBriefing(int targetLength)
+    {
+        if (_briefingGroup == null) return;
+        
+        _briefingTitleText.text = $"PRIMARY MISSION:\nREACH LENGTH {targetLength}";
+        _briefingRulesText.text = $"RULES:\n- 1 Life Only\n- Timer Expiry = Speed Penalty\n- Don't Crash!";
+        
+        _briefingGroup.gameObject.SetActive(true);
+        _briefingGroup.alpha = 0f;
+        
+        Sequence seq = DOTween.Sequence();
+        seq.Append(_briefingGroup.DOFade(1f, 0.5f));
+        seq.AppendInterval(2.5f); 
+        seq.Append(_briefingGroup.DOFade(0f, 0.5f));
+        seq.OnComplete(() => _briefingGroup.gameObject.SetActive(false));
+    }
 
-            floatingText.DOKill();
-            floatingText.transform.DOKill();
-
-            Vector3 startPos = new Vector3(screenPosition.x, screenPosition.y, floatingText.transform.position.z);
-            floatingText.transform.position = startPos;
-            floatingText.alpha = 1f;
-            floatingText.text = message;
-
-            floatingText.gameObject.SetActive(true);
-
-            Sequence mySequence = DOTween.Sequence();
-            mySequence.Join(floatingText.transform.DOMoveY(startPos.y + FloatDistance, FloatDuration)
-                .SetEase(Ease.OutQuad));
-            mySequence.Join(floatingText.DOFade(0f, FloatDuration * DurationMultiplicator)
-                .SetDelay(FloatDuration * DurationMultiplicator));
-
-            mySequence.OnComplete(() => { floatingText.gameObject.SetActive(false); });
-        }
-
-        public void ShowAchievementToast(string achievementName)
-        {
-            if (achievementToastRoot == null) return;
-
-            achievementNameText.text = achievementName;
-            achievementToastRoot.SetActive(true);
-
-            CancelInvoke(nameof(HideAchievementToast));
-            Invoke(nameof(HideAchievementToast), PopupShowDuration);
-        }
-
-        private void HideAchievementToast() => achievementToastRoot.SetActive(false);
-
+    private void HideAchievementToast()
+    {
+        _achievementToastRoot.SetActive(false);
     }
 }

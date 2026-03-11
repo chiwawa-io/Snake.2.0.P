@@ -1,14 +1,12 @@
 using System;
+using Core.Enums;
 using Core.Events;
-using UI.Game.Views;
 using Zenject;
 
 namespace UI.Game.Presenters
 {
     public class GamePresenter : IInitializable, IDisposable
     {
-        private const int DefaultLives = 3;
-        private const int StartingLength = 4;
         private readonly SignalBus _signalBus;
         private readonly GameView _view;
 
@@ -26,11 +24,12 @@ namespace UI.Game.Presenters
             _signalBus.Subscribe<AchievementProgressSignal>(OnAchievementUnlocked);
             _signalBus.Subscribe<SnakeEffectSignal>(OnEffectMessage);
             _signalBus.Subscribe<GameOverSignal>(OnGameOver);
+            _signalBus.Subscribe<StrategicBettingStartedSignal>(OnSbStarted);
             _signalBus.Subscribe<LengthUpdatedSignal>(OnLengthUpdated);
             _signalBus.Subscribe<GrowthTimerUpdatedSignal>(OnGrowthTimerUpdated);
-            _signalBus.Subscribe<StrategicBettingStartedSignal>(OnSBStarted);
+            _signalBus.Subscribe<GameStateChangedSignal>(OnStateChanged);
             
-            _view.SetLives(DefaultLives); 
+            _view.SetLives(3); 
             _view.SetScoreDisplay(0);
         }
 
@@ -42,17 +41,10 @@ namespace UI.Game.Presenters
             _signalBus.TryUnsubscribe<AchievementProgressSignal>(OnAchievementUnlocked);
             _signalBus.TryUnsubscribe<SnakeEffectSignal>(OnEffectMessage);
             _signalBus.TryUnsubscribe<GameOverSignal>(OnGameOver);
+            _signalBus.TryUnsubscribe<StrategicBettingStartedSignal>(OnSbStarted);
             _signalBus.TryUnsubscribe<LengthUpdatedSignal>(OnLengthUpdated);
             _signalBus.TryUnsubscribe<GrowthTimerUpdatedSignal>(OnGrowthTimerUpdated);
-        }
-
-        private void OnSBStarted(StrategicBettingStartedSignal signal)
-        {
-            _view.SetScoreVisibility(false);
-            _view.SetGrowthTimerVisibility(true);
-            _view.SetLengthVisibility(true);
-            _view.SetLength(StartingLength, signal.TargetLength);
-            _view.SetGrowthTimer(10);
+            _signalBus.TryUnsubscribe<GameStateChangedSignal>(OnStateChanged);
         }
 
         private void OnScoreUpdated(ScoreUpdatedSignal signal)
@@ -64,16 +56,6 @@ namespace UI.Game.Presenters
         {
             string msg = $"+{signal.Amount}";
             _view.ShowFloatingText(msg, signal.Position);
-        }
-
-        private void OnLengthUpdated(LengthUpdatedSignal signal)
-        {
-            _view.SetLength(signal.CurrentLength, signal.TargetLength);
-        }
-
-        private void OnGrowthTimerUpdated(GrowthTimerUpdatedSignal signal)
-        {
-            _view.SetGrowthTimer((int)signal.TimeRemaining);
         }
 
         private void OnEffectMessage(SnakeEffectSignal signal)
@@ -94,6 +76,34 @@ namespace UI.Game.Presenters
         private void OnGameOver(GameOverSignal signal)
         {
             _view.HideFloatingTextImmediate();
+        }
+
+        private void OnStateChanged(GameStateChangedSignal signal)
+        {
+            if (signal.NewState == GameState.MainMenu)
+            {
+                _view.ToggleSbUI();
+            }
+        }
+
+        private void OnSbStarted(StrategicBettingStartedSignal signal)
+        {
+            _view.ToggleSbUI();
+            _view.UpdateGoal(0, signal.TargetLength);
+            
+            _view.ShowBriefing(signal.TargetLength, signal.Hardness);
+        }
+
+        private void OnLengthUpdated(LengthUpdatedSignal signal)
+        {
+            _view.UpdateGoal(signal.CurrentLength, signal.TargetLength);
+        }
+
+        private void OnGrowthTimerUpdated(GrowthTimerUpdatedSignal signal)
+        {
+            var percent = signal.TimeRemaining / signal.TotalTime;
+            var critical = percent < 0.25f;
+            _view.UpdateTimer((int)signal.TimeRemaining, critical);
         }
     }
 }
