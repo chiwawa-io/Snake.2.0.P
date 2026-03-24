@@ -7,6 +7,7 @@ using Luxodd.Game.Scripts.Missions;
 using Luxodd.Game.Scripts.Network;
 using Luxodd.Game.Scripts.Network.Payloads;
 using Newtonsoft.Json.Linq;
+using SBetting;
 using Services.Gameloop;
 using Services.PlayerData;
 using Services.RNG;
@@ -17,23 +18,22 @@ namespace Services.Backend
 {
     public class LuxoddBackendService : IBackendService, IDisposable
     {
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         private const bool UseMockDataInEditor = true; 
         private const int MockSeed = 12345;
         private const int MockTargetLength = 24; 
         private const DifficultyLevel MockDifficulty = DifficultyLevel.Hard;
         private const string MockPrimaryMissionId = "mission_main_1"; 
-        #endif
-
+#endif
         private const int PostGameFlowWaitTime = 5;
+
         private readonly NetworkManager _networkManager;
         private readonly PlayerDataManager _playerDataManager;
         private readonly SignalBus _signalBus;
         private readonly IRngService _rngService;
         private readonly MissionService _pluginMissionService;
         private StrategicBettingData _currentSbData;
-        private readonly Dictionary<string, MissionDto> _missionDefinitions = new();
-        
+
         public LuxoddBackendService(
             NetworkManager networkManager, 
             PlayerDataManager playerDataManager, 
@@ -59,20 +59,20 @@ namespace Services.Backend
 
         public void Dispose()
         {
-            _signalBus.Unsubscribe<ErrorSignal>(HandleError);
-            _signalBus.Unsubscribe<GameOverSignal>(OnGameOver);
-            _signalBus.Unsubscribe<InactivityTimeOut>(Exit);
+            _signalBus.TryUnsubscribe<ErrorSignal>(HandleError);
+            _signalBus.TryUnsubscribe<GameOverSignal>(OnGameOver);
+            _signalBus.TryUnsubscribe<InactivityTimeOut>(Exit);
         }
 
         public void StartLevel(Action onSuccess, Action<string> onError)
         {
-            #if UNITY_EDITOR
-             if (UseMockDataInEditor)
+#if UNITY_EDITOR
+            if (UseMockDataInEditor)
             {
                 UniTask.Delay(TimeSpan.FromSeconds(0.2f)).ContinueWith(() => onSuccess?.Invoke());
                 return;
             }
-            #endif
+#endif
             _networkManager.WebSocketCommandHandler.SendLevelBeginRequestCommand(
                 0, 
                 () => onSuccess?.Invoke(),
@@ -88,18 +88,18 @@ namespace Services.Backend
         public void HandleError(ErrorSignal signal)
         {
             _networkManager.WebSocketService.BackToSystemWithError(signal.Code.ToString(), signal.Message);
-            
         }
+
         public void TriggerGameOverFlow(int score, int finalLength, GameSessionStats stats, StrategicBettingData sbData, Action onRevive)
         {
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             if (UseMockDataInEditor)
             {
                 Debug.LogWarning("Finalizing session.");
                 FinalizeSession(score, finalLength, stats, sbData);
                 return;
             }
-            #endif
+#endif
             _networkManager.WebSocketService.SendSessionOptionContinue((action) => 
             {
                 if (action == SessionOptionAction.Continue)
@@ -115,19 +115,12 @@ namespace Services.Backend
 
         public StrategicBettingData GetCachedGameSessionInfo()
         {
-            if (_currentSbData != null) return _currentSbData;
-            else
-            {
-                GetGameSessionInfo(
-                    onSuccess: (payload, data) => {},
-                    onError: (i, s) => {});
-            }
             return _currentSbData;
         }
 
         public void GetGameSessionInfo(Action<SessionInfoPayload, StrategicBettingData> onSuccess, Action<int, string> onError)
         {
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             if (UseMockDataInEditor)
             {
                 Debug.LogWarning("Generating Fake Strategic Betting Payload");
@@ -160,7 +153,7 @@ namespace Services.Backend
                 UniTask.Delay(TimeSpan.FromSeconds(0.5f)).ContinueWith(() => onSuccess?.Invoke(mockPayload, _currentSbData));
                 return;
             }
-            #endif
+#endif
             _networkManager.WebSocketCommandHandler.SendGetGameSessionInfoRequestCommand(
                 (payload) =>
                 {
@@ -192,7 +185,6 @@ namespace Services.Backend
                         }
                         
                         _rngService.Initialize(seed);
-                        
                         _pluginMissionService.PrepareSelectedMissionList(_currentSbData);
                     }
 
@@ -201,85 +193,23 @@ namespace Services.Backend
                 onError);
         }
 
-        public void FetchMissionDefinitions(Action onSuccess, Action<string> onError)
-        {
-        #if UNITY_EDITOR
-            if (UseMockDataInEditor)
-            {
-                Debug.LogWarning("<b>[SB MOCK]</b> Generating Fake Mission Definitions");
-                _missionDefinitions[MockPrimaryMissionId] = new MissionDto 
-                { 
-                    Id = MockPrimaryMissionId, 
-                    Name = "Beat the Boss!", 
-                    Description = $"Reach length {MockTargetLength} to win." 
-                };
-                
-                UniTask.Delay(TimeSpan.FromSeconds(0.2f)).ContinueWith(() => onSuccess?.Invoke());
-                return;
-            }
-        #endif
-
-            _networkManager.WebSocketCommandHandler.SendGetBettingSessionMissionsRequestCommand(
-                (payload) =>
-                {
-                    _missionDefinitions.Clear();
-                    if (payload != null && payload.Missions != null)
-                    {
-                        try
-                        {
-                            var token = JToken.FromObject(payload.Missions);
-                            var missionsList = token.ToObject<List<MissionDto>>();
-                            
-                            if (missionsList != null)
-                            {
-                                foreach (var m in missionsList)
-                                {
-                                    _missionDefinitions[m.Id] = m;
-                                }
-                            }
-                            Debug.Log($"Successfully downloaded {_missionDefinitions.Count} mission definitions from server.");
-                        }
-                        catch (Exception e)
-                        {
-                            Debug.LogError($"Failed to parse mission definitions: {e.Message}");
-                        }
-                    }
-                    onSuccess?.Invoke();
-                },
-                (code, msg) => onError?.Invoke(msg)
-            );
-        }
-
-        public MissionDto GetMissionDefinition(string missionId)
-        {
-            if (_missionDefinitions.TryGetValue(missionId, out var dto))
-            {
-                return dto;
-            }
-            return null;
-        }
-
         public void SendStrategicBettingResult(List<MissionResultDto> results, Action onSuccess, Action<int,string> onError)
         {
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             if (UseMockDataInEditor)
             {
-                Debug.LogWarning("Intercepted Results sent to fake server:");
-                foreach (var r in results)
-                {
-                    Debug.Log($"   -> Mission ID: {r.MissionId} | Outcome: {r.Outcome}");
-                }
+                Debug.LogWarning("Intercepted Results sent to fake server");
                 UniTask.Delay(TimeSpan.FromSeconds(0.3f)).ContinueWith(() => onSuccess?.Invoke());
                 return;
             }
-            #endif
-
+#endif
             _networkManager.WebSocketCommandHandler.SendStrategicBettingResultRequest(
                 results,
                 onSuccess, 
                 onError
             );
         }
+
         public void Exit()
         {
             _networkManager.HealthStatusCheckService.Deactivate();
@@ -299,35 +229,22 @@ namespace Services.Backend
                 }
             );
         }
-        
 
         private void FinalizeSession(int score, int finalLength, GameSessionStats stats, StrategicBettingData sbData)
         {
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             if (UseMockDataInEditor)
             {
                 PostGameFlow(score, finalLength, stats, sbData).Forget();
                 return;
             }
-            #endif
+#endif
             _networkManager.WebSocketCommandHandler.SendLevelEndRequestCommand(
                 0,
                 score,
                 () => 
                 {
                     PostGameFlow(score, finalLength, stats, sbData).Forget();
-                    // Restart option will be needed in the future
-                    // _networkManager.WebSocketService.SendSessionOptionRestart((action) => 
-                    // {
-                    //     if (action == SessionOptionAction.Restart)
-                    //     {
-                    //         onFinalize?.Invoke(); 
-                    //     }
-                    //     else
-                    //     {
-                    //         _networkManager.WebSocketService.BackToSystem();
-                    //     }
-                    // });
                 },
                 (code, msg) => Debug.LogError($"Save Failed: {msg}")
             );
@@ -344,7 +261,6 @@ namespace Services.Backend
                 foreach (var mission in sbData.Missions)
                 {
                     var states = _pluginMissionService.GetMissionStatesByMissionId(mission.MissionId);
-                    
                     bool isWin = states.Contains(MissionState.Completed);
 
                     results.Add(new MissionResultDto
@@ -362,6 +278,7 @@ namespace Services.Backend
                 _signalBus.Fire(new GameStateChangedSignal(GameState.MissionCompletion));
                 await UniTask.WaitForSeconds(PostGameFlowWaitTime);
             }
+
             _signalBus.Fire(new GameStateChangedSignal(GameState.PostGameStats)); 
             await UniTask.WaitForSeconds(PostGameFlowWaitTime);
             
@@ -370,7 +287,5 @@ namespace Services.Backend
             
             Exit();
         }
-
     }
 }
-

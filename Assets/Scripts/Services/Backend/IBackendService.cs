@@ -13,8 +13,6 @@ namespace Services.Backend
         void TriggerGameOverFlow(int score, int finalLength, GameSessionStats stats, StrategicBettingData sbData, Action onRevive);        
         StrategicBettingData GetCachedGameSessionInfo();
         void GetGameSessionInfo(Action<SessionInfoPayload, StrategicBettingData> onSuccess, Action<int, string> onError);
-        void FetchMissionDefinitions(Action onSuccess, Action<string> onError);
-        MissionDto GetMissionDefinition(string missionId);
         void GetSeedForRNG(int seed);
         // void SendStrategicBettingResult(List<MissionResultDto> results, Action onSuccess, Action<string> onError);
     }

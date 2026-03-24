@@ -4414,6 +4414,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bfdf3a386d2e2d84585d4ecc52dc013e, type: 2}
   _levelBoardsConfig: {fileID: 11400000, guid: eb39bd3ab4ec7454fabd0b3e37ad0c3b, type: 2}
   _achievementConfig: {fileID: 11400000, guid: b5125b34be9d87e4fa6eebc6cd6cf31c, type: 2}
+  _missionDataBase: {fileID: 11400000, guid: dbb5e3bf71164994d9f5b0e2aada5c92, type: 2}
 --- !u!1 &1966624416
 GameObject:
   m_ObjectHideFlags: 0

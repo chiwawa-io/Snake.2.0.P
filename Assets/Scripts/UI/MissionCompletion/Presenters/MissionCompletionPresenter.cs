@@ -16,23 +16,25 @@ namespace UI.MissionCompletion.Presenters
         private readonly MissionCompletionView _view;
         private readonly IBackendService _backendService;
         private readonly MissionService _pluginMissionService;
+        private readonly MissionDataBase _missionDatabase; 
 
         public MissionCompletionPresenter(
             SignalBus signalBus, 
             MissionCompletionView view, 
             IBackendService backendService,
-            MissionService pluginMissionService) 
+            MissionService pluginMissionService,
+            MissionDataBase missionDatabase) 
         {
             _signalBus = signalBus;
             _view = view;
             _backendService = backendService;
             _pluginMissionService = pluginMissionService;
+            _missionDatabase = missionDatabase;
         }
 
         public void Initialize()
         {
             _signalBus.Subscribe<GameStateChangedSignal>(OnStateChanged);
-            _signalBus.Subscribe<LevelCompletedSignal>(StatusUpdate);
         }
 
         public void Dispose()
@@ -48,11 +50,6 @@ namespace UI.MissionCompletion.Presenters
             }
         }
 
-        private void StatusUpdate()
-        {
-            _view.DisplayWonTitle();
-        }
-
         private void ShowMissionResults()
         {
             var sbData = _backendService.GetCachedGameSessionInfo();
@@ -62,19 +59,24 @@ namespace UI.MissionCompletion.Presenters
 
             foreach (var mission in sbData.Missions)
             {
+                // 1. Get status from the plugin's internal tracker
                 var states = _pluginMissionService.GetMissionStatesByMissionId(mission.MissionId);
                 bool isWin = states.Contains(MissionState.Completed);
 
-                var serverMissionDef = _backendService.GetMissionDefinition(mission.MissionId);
+                // 2. Fetch the local ScriptableObject using the ID provided by the server
+                var missionDef = _missionDatabase.ProvideMissionDataById(mission.MissionId);
                 
-                string name = serverMissionDef != null ? serverMissionDef.Name : "Unknown Mission";
-                string desc = serverMissionDef != null ? serverMissionDef.Description : "";
+                string name = missionDef != null ? missionDef.Name : "Unknown Mission";
+                string desc = missionDef != null ? missionDef.Description : "";
+                MissionType type = missionDef != null ? missionDef.Type : MissionType.Primary;
 
                 uiDataList.Add(new MissionCompletionUIData 
                 {
                     MissionName = name,
                     Description = desc,
-                    IsCompleted = isWin
+                    Type = type,
+                    IsCompleted = isWin,
+                    Payout = isWin ? (mission.Bet * mission.Ratio) : 0f
                 });
             }
 

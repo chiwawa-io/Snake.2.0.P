@@ -60,6 +60,7 @@ namespace Core.Installers
         [SerializeField] private List<AchievementSO> _achievementList;
         [SerializeField] private LevelBoardsConfig _levelBoardsConfig;
         [SerializeField] private AchievementCompletion _achievementConfig;
+        [SerializeField] private MissionDataBase _missionDataBase;
 
         public override void InstallBindings()
         {
@@ -136,6 +137,7 @@ namespace Core.Installers
 
             Container.BindInterfacesAndSelfTo<AchievementTracker>().AsSingle();
             Container.BindInterfacesAndSelfTo<SbPressureManager>().AsSingle();
+            Container.Bind<MissionDataBase>().FromInstance(_missionDataBase).AsSingle();
             
         }
 

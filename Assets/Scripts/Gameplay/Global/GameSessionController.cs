@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Linq;
 using Core.Events;
 using Core.Enums;
+using Cysharp.Threading.Tasks;
 using Gameplay.GameItems;
 using Gameplay.Snake;
 using Gameplay.Global.Data;
@@ -11,17 +12,12 @@ using Gameplay.Board;
 using Services.Backend;
 using Luxodd.Game.Scripts.Game;
 using Luxodd.Game.Scripts.Missions;
-using Cysharp.Threading.Tasks; 
+using SBetting;
 
 namespace Gameplay.Global
 {
     public class GameSessionController : IInitializable, IDisposable
     {
-        private const int MinBoardWidth = 15;
-        private const int MaxBoardWidth = 40;
-        private const int DefaultBoardHeight = 22;
-        private const float MaxHardness = 99f;
-
         private readonly SignalBus _signalBus;
         private readonly ItemSpawner _itemSpawner;
         private readonly SnakeModel _snakeModel;
@@ -30,10 +26,11 @@ namespace Gameplay.Global
         private readonly BoardVisuals _boardVisuals;
         private readonly LevelBoardsConfig _levelBoundsConfig;
         private readonly LuxoddBackendService _backendService;
-        
+        private readonly HardnessEvaluator _hardnessEvaluator;
+
         private GameDifficulty _currentDifficulty = GameDifficulty.Medium;
         private GameType _currentGameType = GameType.Pay2Play;
-        private Vector2Int bounds;
+        private Vector2Int _bounds;
 
         public GameSessionController(
             SignalBus signalBus,
@@ -43,7 +40,8 @@ namespace Gameplay.Global
             [Inject(Id = "GameElements")] GameObject gameElements,
             LevelBoardsConfig levelBoardsConfig,
             BoardVisuals boardVisuals,
-            LuxoddBackendService backendService)
+            LuxoddBackendService backendService,
+            HardnessEvaluator hardnessEvaluator)
         {
             _signalBus = signalBus;
             _itemSpawner = itemSpawner;
@@ -53,6 +51,7 @@ namespace Gameplay.Global
             _boardVisuals = boardVisuals;
             _levelBoundsConfig = levelBoardsConfig;
             _backendService = backendService;
+            _hardnessEvaluator = hardnessEvaluator;
         }
 
         public void Initialize()
@@ -90,8 +89,9 @@ namespace Gameplay.Global
             _backendService.GetGameSessionInfo(
                 onSuccess: (payload, sbData) => 
                 {
-                    if (payload.SessionType == "sb") _currentGameType = GameType.StrategicBetting;
-                    else _currentGameType = GameType.Pay2Play;
+                    _currentGameType = payload.SessionType == "sb"  
+                        ? GameType.StrategicBetting 
+                        : GameType.Pay2Play;
 
                     if (_currentGameType == GameType.StrategicBetting)
                     {
@@ -123,12 +123,12 @@ namespace Gameplay.Global
             foreach(var boardConfig in _levelBoundsConfig.boardConfigs)
             {
                 if (boardConfig.gameDifficulty == _currentDifficulty)
-                    bounds = boardConfig.boardSize;
+                    _bounds = boardConfig.boardSize;
             }
 
-            _itemSpawner.Initialize(bounds, _snakeModel.Body, _currentDifficulty, false);
-            _snakeEngine.Initialize(bounds);
-            _boardVisuals.GenerateBoard(bounds, _currentDifficulty);
+            _itemSpawner.Initialize(_bounds, _snakeModel.Body, _currentDifficulty, false);
+            _snakeEngine.Initialize(_bounds);
+            _boardVisuals.GenerateBoard(_bounds, _currentDifficulty);
         }
 
         private void InitializeStrategicBetting(StrategicBettingData payload)
@@ -136,11 +136,14 @@ namespace Gameplay.Global
             var difficulty = CalculateGameHardness((int)payload.LevelDifficulty); 
 
             var primaryMission = payload.Missions.FirstOrDefault();
-            int targetLength = primaryMission != null ? (int)primaryMission.Value : 20;
+            int targetLength = primaryMission != null ? primaryMission.Value : 20;
             
-            var currentBounds = CalculateBounds((int)primaryMission.CalculatedHardness);
+            var hardness = (int)primaryMission.CalculatedHardness;
+            var spawnChance = _hardnessEvaluator.GetTrapSpawnChance(hardness);
+            var currentBounds = _hardnessEvaluator.GetBoardSize(hardness);
 
             _itemSpawner.Initialize(currentBounds, _snakeModel.Body, difficulty, true); 
+            _itemSpawner.SetSpawnChallengeChance(spawnChance);
             _snakeEngine.Initialize(currentBounds);
             _boardVisuals.GenerateBoard(currentBounds, difficulty);
 
@@ -158,13 +161,6 @@ namespace Gameplay.Global
                 1 => GameDifficulty.Medium,
                 _ => GameDifficulty.Hard
             };
-        }
-
-        private Vector2Int CalculateBounds(int hardness)
-        {
-            float t = hardness / MaxHardness;
-            int dynamicWidth = Mathf.RoundToInt(Mathf.Lerp(MaxBoardWidth, MinBoardWidth, t));
-            return new Vector2Int(dynamicWidth, DefaultBoardHeight);             
         }
     }
 }
