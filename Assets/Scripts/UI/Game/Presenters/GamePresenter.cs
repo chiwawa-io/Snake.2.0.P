@@ -91,7 +91,7 @@ namespace UI.Game.Presenters
             _view.ToggleSbUI();
             _view.UpdateGoal(0, signal.TargetLength);
             
-            _view.ShowBriefing(signal.TargetLength, signal.Hardness);
+            _view.ShowBriefing(signal.TargetLength);
         }
 
         private void OnLengthUpdated(LengthUpdatedSignal signal)

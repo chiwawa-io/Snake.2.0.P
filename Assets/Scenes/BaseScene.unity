@@ -1153,7 +1153,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &428485937
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14499,7 +14499,8 @@ MonoBehaviour:
   _screenRoot: {fileID: 1810369099614542981}
   _defaultFocusButton: {fileID: 0}
   _timerText: {fileID: 0}
-  _scoreText: {fileID: 8034188741771573202}
+  _scoreUIParent: {fileID: 4197907369946157657}
+  _scoreText: {fileID: 4774738608221267682}
   _lifeIcons:
   - {fileID: 5923356050238503771}
   - {fileID: 7609065096136984529}

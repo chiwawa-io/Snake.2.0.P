@@ -9,8 +9,13 @@ public class GameView : BaseView
 {
     private const float ToastFadeDuration = 0.5f;
     private const float ToastDisplayTime = 2.0f;
-    private const float VignettePulseSpeed = 15f;[Header("Gameplay Data")]
-    [SerializeField] private TextMeshProUGUI _scoreText;[Header("Lives System")]
+    private const float VignettePulseSpeed = 5f;
+
+    [Header("Gameplay Data")] 
+    [SerializeField] private GameObject _scoreUIParent;
+    [SerializeField] private TextMeshProUGUI _scoreText;
+    
+    [Header("Lives System")]
     [SerializeField] private List<GameObject> _lifeIcons;
 
     [Header("Feedback")]
@@ -19,7 +24,8 @@ public class GameView : BaseView
     [SerializeField] private GameObject _achievementToastRoot;
     [SerializeField] private TextMeshProUGUI _achievementNameText;
 
-    [Header("SB Mode UI")]
+    [Header("SB Mode UI")] 
+    [SerializeField] private GameObject _goalParent;
     [SerializeField] private TextMeshProUGUI _goalText;
     [SerializeField] private GameObject _growthParent;
     [SerializeField] private TextMeshProUGUI _growthText;
@@ -34,7 +40,8 @@ public class GameView : BaseView
 
     public void SetScoreDisplay(int score)
     {
-        if (_scoreText) _scoreText.text = score.ToString("D10");
+        if (_scoreText && _scoreUIParent.activeSelf) 
+            _scoreText.text = score.ToString("D10");
     }
 
     public void SetLives(int currentLives)
@@ -94,6 +101,9 @@ public class GameView : BaseView
 
     public void ToggleSbUI()
     {
+        if (_scoreUIParent != null) _scoreUIParent.SetActive(false);
+        if (_goalText != null) _goalParent.SetActive(true);
+
         if (_vignetteImage != null) _vignetteImage.gameObject.SetActive(false);
         if (_growthText != null) _growthParent.SetActive(true);
     }
@@ -143,10 +153,5 @@ public class GameView : BaseView
         seq.AppendInterval(2.5f); 
         seq.Append(_briefingGroup.DOFade(0f, 0.5f));
         seq.OnComplete(() => _briefingGroup.gameObject.SetActive(false));
-    }
-
-    private void HideAchievementToast()
-    {
-        _achievementToastRoot.SetActive(false);
     }
 }
