@@ -37,7 +37,7 @@ namespace Utilities
             {
                 Debug.LogWarning("Inactivity time limit reached!.");
 
-                _signalBus.Fire(new GameStateChangedSignal(GameState.InGame));
+                _signalBus.Fire(new GameStateChangedSignal(GameState.LevelLoading));
                 
                 StopDetector(); 
             }

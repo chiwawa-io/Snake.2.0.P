@@ -107,6 +107,7 @@ namespace Core.Installers
             Container.DeclareSignal<GrowthTimerUpdatedSignal>();
             Container.DeclareSignal<StrategicBettingStartedSignal>();
             Container.DeclareSignal<LevelCompletedSignal>();
+            Container.DeclareSignal<UpdateMissionProgressSignal>();
         }
 
         private void InstallGameSystems()
@@ -134,6 +135,7 @@ namespace Core.Installers
             Container.BindInterfacesAndSelfTo<SpawnMapGenerator>().AsSingle();
             Container.BindInterfacesAndSelfTo<RngService>().AsSingle();
             Container.BindInterfacesAndSelfTo<GameSessionController>().AsSingle();
+            Container.BindInterfacesAndSelfTo<HardnessEvaluator>().AsSingle();
 
             Container.BindInterfacesAndSelfTo<AchievementTracker>().AsSingle();
             Container.BindInterfacesAndSelfTo<SbPressureManager>().AsSingle();

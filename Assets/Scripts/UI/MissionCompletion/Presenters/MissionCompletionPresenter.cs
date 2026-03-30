@@ -59,11 +59,9 @@ namespace UI.MissionCompletion.Presenters
 
             foreach (var mission in sbData.Missions)
             {
-                // 1. Get status from the plugin's internal tracker
                 var states = _pluginMissionService.GetMissionStatesByMissionId(mission.MissionId);
                 bool isWin = states.Contains(MissionState.Completed);
 
-                // 2. Fetch the local ScriptableObject using the ID provided by the server
                 var missionDef = _missionDatabase.ProvideMissionDataById(mission.MissionId);
                 
                 string name = missionDef != null ? missionDef.Name : "Unknown Mission";

@@ -42,10 +42,18 @@ namespace Gameplay.SpawnConfig
             
             var speedModifierType = isSbSession ? ItemType.SlowDown : ItemType.SpeedUp;
 
-            map.AddPoint(ItemType.Invulnerability, new Vector2Int(-xBound + PowerUpPadding, yBound - PowerUpPadding));
+            if (isSbSession) 
+            {
+                map.AddPoint(ItemType.Invulnerability, new Vector2Int(-xBound + PowerUpPadding, yBound - PowerUpPadding));
+                map.AddPoint(ItemType.Invulnerability, new Vector2Int(xBound - PowerUpPadding, -yBound + PowerUpPadding));
+                map.AddPoint(ItemType.Invulnerability, new Vector2Int(0, yBound - PowerUpPadding));
+                map.AddPoint(ItemType.Invulnerability, new Vector2Int(0, -yBound + PowerUpPadding));
+            }
+
             map.AddPoint(speedModifierType, new Vector2Int(xBound - PowerUpPadding, yBound - PowerUpPadding));
             map.AddPoint(speedModifierType, new Vector2Int(-xBound + PowerUpPadding, -yBound + PowerUpPadding));
-            map.AddPoint(ItemType.Invulnerability, new Vector2Int(xBound - PowerUpPadding, -yBound + PowerUpPadding));
+            map.AddPoint(speedModifierType, new Vector2Int(xBound - PowerUpPadding, 0));
+            map.AddPoint(speedModifierType, new Vector2Int(-xBound + PowerUpPadding, 0));
             
             if (isSbSession) map.ShuffleAll(_rngService);
             else map.ShuffleAll();

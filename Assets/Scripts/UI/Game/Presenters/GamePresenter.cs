@@ -7,6 +7,7 @@ namespace UI.Game.Presenters
 {
     public class GamePresenter : IInitializable, IDisposable
     {
+        private const int SnakeStartLength = 4;
         private readonly SignalBus _signalBus;
         private readonly GameView _view;
 
@@ -89,7 +90,7 @@ namespace UI.Game.Presenters
         private void OnSbStarted(StrategicBettingStartedSignal signal)
         {
             _view.ToggleSbUI();
-            _view.UpdateGoal(0, signal.TargetLength);
+            _view.UpdateGoal(SnakeStartLength, signal.TargetLength);
             
             _view.ShowBriefing(signal.TargetLength);
         }

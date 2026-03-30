@@ -7,7 +7,6 @@ using Luxodd.Game.Scripts.Missions;
 using Luxodd.Game.Scripts.Network;
 using Luxodd.Game.Scripts.Network.Payloads;
 using Newtonsoft.Json.Linq;
-using SBetting;
 using Services.Gameloop;
 using Services.PlayerData;
 using Services.RNG;
@@ -50,11 +49,19 @@ namespace Services.Backend
 
         public void Initialize(Action onReady, Action onError)
         {
-            _networkManager.WebSocketService.ConnectToServer(onReady, onError);
+            _networkManager.WebSocketService.ConnectToServer(() => 
+            {
+                // Fetch session info immediately after connection to populate SB cache for MainMenu
+                GetGameSessionInfo(
+                    success => onReady?.Invoke(), 
+                    (code, msg) => onError?.Invoke()
+                );
+            }, onError);
             _networkManager.HealthStatusCheckService.Activate();
             _signalBus.Subscribe<ErrorSignal>(HandleError);
             _signalBus.Subscribe<GameOverSignal>(OnGameOver);
             _signalBus.Subscribe<InactivityTimeOut>(Exit);
+            _signalBus.Subscribe<UpdateMissionProgressSignal>(OnUpdateMissionProgress);
         }
 
         public void Dispose()
@@ -62,6 +69,7 @@ namespace Services.Backend
             _signalBus.TryUnsubscribe<ErrorSignal>(HandleError);
             _signalBus.TryUnsubscribe<GameOverSignal>(OnGameOver);
             _signalBus.TryUnsubscribe<InactivityTimeOut>(Exit);
+            _signalBus.TryUnsubscribe<UpdateMissionProgressSignal>(OnUpdateMissionProgress);
         }
 
         public void StartLevel(Action onSuccess, Action<string> onError)
@@ -115,7 +123,18 @@ namespace Services.Backend
 
         public StrategicBettingData GetCachedGameSessionInfo()
         {
+            if (_currentSbData == null)
+                GetGameSessionInfo
+                (
+                    data => _currentSbData = data,
+                    (code, msg) => Debug.LogWarning($"{code} + {msg}")
+                );
             return _currentSbData;
+        }
+
+        public void GetGameSessionInfo(Action<StrategicBettingData> onSuccess, Action<int, string> onError)
+        {
+            GetGameSessionInfo((payload, sbData) => onSuccess?.Invoke(sbData), onError);
         }
 
         public void GetGameSessionInfo(Action<SessionInfoPayload, StrategicBettingData> onSuccess, Action<int, string> onError)
@@ -214,6 +233,16 @@ namespace Services.Backend
         {
             _networkManager.HealthStatusCheckService.Deactivate();
             _networkManager.WebSocketService.BackToSystem();
+        }
+
+        private void OnUpdateMissionProgress(UpdateMissionProgressSignal signal)
+        {
+            if (_currentSbData == null || _currentSbData.Missions == null) return;
+            
+            foreach (var mission in _currentSbData.Missions)
+            {
+                // _pluginMissionService.UpdateProgress(mission.MissionId, signal.CurrentValue);
+            }
         }
 
         private void OnGameOver(GameOverSignal signal)

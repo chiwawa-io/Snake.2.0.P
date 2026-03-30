@@ -18,6 +18,7 @@ namespace Gameplay.Global
 {
     public class GameSessionController : IInitializable, IDisposable
     {
+        private const float MissionBriefDelay = 3.5f; 
         private readonly SignalBus _signalBus;
         private readonly ItemSpawner _itemSpawner;
         private readonly SnakeModel _snakeModel;
@@ -95,16 +96,16 @@ namespace Gameplay.Global
 
                     if (_currentGameType == GameType.StrategicBetting)
                     {
-                        InitializeStrategicBetting(sbData);
                         _gameElements.SetActive(true);
+                        InitializeStrategicBetting(sbData);
                         _signalBus.Fire(new GameStateChangedSignal(GameState.InGame));
                         
-                        StartGameWithDelay(3.5f).Forget();
+                        StartGameWithDelay(MissionBriefDelay).Forget();
                     }
                     else
                     {
-                        InitializeStandardGame();
                         _gameElements.SetActive(true);
+                        InitializeStandardGame();
                         _signalBus.Fire(new GameStateChangedSignal(GameState.InGame));
                     }
                 },
@@ -139,7 +140,7 @@ namespace Gameplay.Global
             int targetLength = primaryMission != null ? primaryMission.Value : 20;
             
             var hardness = (int)primaryMission.CalculatedHardness;
-            var spawnChance = _hardnessEvaluator.GetTrapSpawnChance(hardness);
+            var spawnChance = 0; // temporary solution //TODO: PHASE 2 CALCULATION
             var currentBounds = _hardnessEvaluator.GetBoardSize(hardness);
 
             _itemSpawner.Initialize(currentBounds, _snakeModel.Body, difficulty, true); 

@@ -16,6 +16,11 @@ namespace Core.Events
     }
 
     public readonly struct LevelCompletedSignal { }
+    public readonly struct UpdateMissionProgressSignal 
+    { 
+        public readonly int CurrentValue; 
+        public UpdateMissionProgressSignal(int currentValue) => CurrentValue = currentValue;
+    }
     public readonly struct GameOverSignal
     {
         public readonly int FinalScore; 

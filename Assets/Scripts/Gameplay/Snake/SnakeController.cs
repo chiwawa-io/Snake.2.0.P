@@ -269,11 +269,18 @@ namespace Gameplay.Snake
                     _signalBus.Fire(new PlaySoundSignal(SoundType.SpeedDown));
                 }
             }
+            else
+            {
+                // Ensure MoveFrequency is always in sync with BaseMoveFrequency when no power-up is active
+                _model.MoveFrequency = _model.BaseMoveFrequency;
+            }
         }
 
         private void WinSession()
         {
             _gameIsRunning = false;
+            _signalBus.Fire(new PlaySoundSignal(SoundType.SpeedUp)); // Use a positive sound
+            _signalBus.Fire(new SnakeEffectSignal("MISSION COMPLETE!", _model.Body[0]));
             _signalBus.Fire(new LevelCompletedSignal()); 
             _signalBus.Fire(new GameOverSignal(_score, _model.Body.Count, default));
         }

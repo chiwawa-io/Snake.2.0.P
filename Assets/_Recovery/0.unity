@@ -4414,7 +4414,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bfdf3a386d2e2d84585d4ecc52dc013e, type: 2}
   _levelBoardsConfig: {fileID: 11400000, guid: eb39bd3ab4ec7454fabd0b3e37ad0c3b, type: 2}
   _achievementConfig: {fileID: 11400000, guid: b5125b34be9d87e4fa6eebc6cd6cf31c, type: 2}
-  _missionDataBase: {fileID: 11400000, guid: dbb5e3bf71164994d9f5b0e2aada5c92, type: 2}
+  _missionDataBase: {fileID: 0}
 --- !u!1 &1966624416
 GameObject:
   m_ObjectHideFlags: 0
@@ -5457,7 +5457,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 16, y: 80}
+  m_AnchoredPosition: {x: 0.000016525, y: 80}
   m_SizeDelta: {x: 3324.3828, y: 1731.1941}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &108593285582388483
@@ -5956,8 +5956,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 88cc60a91ed18fa478a6bffb0c000f27, type: 2}
   - {fileID: 11400000, guid: 965a6d6a6b04c044b9dec1c32e2e4b51, type: 2}
   - {fileID: 11400000, guid: 1ce013a5fb142d948bbcb1827ec82a17, type: 2}
-  _speedUpSpawnDelay: 14
-  _speedupSpawnInterval: 28
+  _speedUpSpawnDelay: 7
+  _speedupSpawnInterval: 14
   _invulnerabilitySpawnDelay: 5
   _invulnerabilitySpawnInterval: 25
   _startingFoodPattern: {fileID: 11400000, guid: 70e44f1af10814c4595360e8cb79acd8, type: 2}
@@ -15883,7 +15883,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!222 &3490948814660014916
 CanvasRenderer:
   m_ObjectHideFlags: 0

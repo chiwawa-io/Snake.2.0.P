@@ -111,7 +111,7 @@ public class GameView : BaseView
     public void UpdateGoal(int current, int target)
     {
         if (_goalText == null) return;
-        _goalText.text = $"{current} / {target}";
+        _goalText.text = $"{current}/{target}";
         _goalText.transform.DOKill();
         _goalText.transform.DOScale(1.2f, 0.1f).OnComplete(() => _goalText.transform.DOScale(1f, 0.1f));
     }

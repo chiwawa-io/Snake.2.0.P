@@ -53,19 +53,19 @@ namespace SBetting
 
         private void ApplySpeedPenalty()
         {
-            Debug.LogWarning(_model.MoveFrequency);
-            
+            // Logarithmic speedup: reduce the interval by a fraction of the remaining range to max speed
             float currentGap = _model.BaseMoveFrequency - MaxPlayableFrequency;
+            if (currentGap <= 0.001f) return; // Already at max speed
+
             float reduction = currentGap * PenaltyMultiplier;
-    
             _model.BaseMoveFrequency -= reduction;
             
+            // Immediately apply to current move frequency if not currently under a "slower" power-up influence
             if (_model.MoveFrequency >= _model.BaseMoveFrequency)
             {
                 _model.MoveFrequency = _model.BaseMoveFrequency;
             }
             
-            Debug.LogWarning(_model.MoveFrequency);
             ResetTimer();
             
             _signalBus.Fire(new SnakeEffectSignal("SPEED UP!", _model.Body[0]));
