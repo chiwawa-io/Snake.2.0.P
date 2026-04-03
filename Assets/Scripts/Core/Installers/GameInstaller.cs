@@ -55,6 +55,7 @@ namespace Core.Installers
         [SerializeField] private BaseView _loadingView;
         [SerializeField] private MissionCompletionView _missionCompletionView;
         [SerializeField] private ErrorView _errorView;
+        [SerializeField] private MobileInputView _mobileInputView;
 
         [Header("--- Data & Config ---")] 
         [SerializeField] private List<AchievementSO> _achievementList;
@@ -117,6 +118,16 @@ namespace Core.Installers
             Container.Bind<NetworkManager>().FromInstance(_networkManager).AsSingle();
             Container.Bind<MissionService>().FromInstance(_missionService).AsSingle();
 
+            // --- INPUT BINDINGS ---
+            // Container.Bind<IInputProvider>().To<KeyboardInputProvider>().AsSingle();
+                 Container.Bind<IInputProvider>().To<MobileInputProvider>().AsSingle();
+            
+            // TODO: Link MobileInputProvider binding to Plugin Data later.
+            // if (Application.isMobilePlatform || Application.platform == RuntimePlatform.WebGLPlayer)
+            // {
+            //      // If binding mobile, comment out KeyboardProvider above, or handle swapping in a factory/provider.
+            // }
+
             Container.BindInterfacesTo<InputService>().AsSingle();
 
             Container.BindInterfacesAndSelfTo<LuxoddBackendService>().AsSingle();
@@ -153,6 +164,12 @@ namespace Core.Installers
             Container.Bind<ErrorView>().FromInstance(_errorView).AsSingle();
             Container.Bind<MissionCompletionView>().FromInstance(_missionCompletionView).AsSingle();
             Container.Bind<BaseView>().WithId("Loading").FromInstance(_loadingView);
+
+            if (_mobileInputView != null)
+            {
+                Container.Bind<MobileInputView>().FromInstance(_mobileInputView).AsSingle();
+                Container.BindInterfacesAndSelfTo<MobileInputPresenter>().AsSingle();
+            }
 
             Container.Bind<AchievementService>().AsSingle().WithArguments(_achievementList);
             Container.Bind<LevelBoardsConfig>().FromInstance(_levelBoardsConfig);
