@@ -99,13 +99,13 @@ public class GameView : BaseView
         toastSequence.OnComplete(() => _achievementToastRoot.SetActive(false));
     }
 
-    public void ToggleSbUI()
+    public void SetSbUIActive(bool isActive)
     {
-        if (_scoreUIParent != null) _scoreUIParent.SetActive(false);
-        if (_goalText != null) _goalParent.SetActive(true);
+        if (_scoreUIParent != null) _scoreUIParent.SetActive(!isActive);
+        if (_goalText != null) _goalParent.SetActive(isActive);
 
-        if (_vignetteImage != null) _vignetteImage.gameObject.SetActive(false);
-        if (_growthText != null) _growthParent.SetActive(true);
+        if (_vignetteImage != null && !isActive) _vignetteImage.gameObject.SetActive(false);
+        if (_growthText != null) _growthParent.SetActive(isActive);
     }
 
     public void UpdateGoal(int current, int target)

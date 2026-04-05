@@ -1,7 +1,7 @@
 using Core.Enums;
 using Core.Events;
 using Services.Backend;
-using Services.PlayerData; 
+using Services.PlayerData;
 using UnityEngine;
 using Zenject;
 

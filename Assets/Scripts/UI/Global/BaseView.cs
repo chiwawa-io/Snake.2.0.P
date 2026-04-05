@@ -6,8 +6,8 @@ namespace UI.Global
 {
     public abstract class BaseView : MonoBehaviour
     {
-        [Header("Base Settings")] [SerializeField]
-        protected GameObject _screenRoot;
+        [Header("Base Settings")] 
+        [SerializeField] protected GameObject _screenRoot;
 
         [SerializeField] protected Button _defaultFocusButton;
         [SerializeField] protected TextMeshProUGUI _timerText;

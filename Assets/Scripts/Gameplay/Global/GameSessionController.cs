@@ -107,6 +107,7 @@ namespace Gameplay.Global
                         _gameElements.SetActive(true);
                         InitializeStandardGame();
                         _signalBus.Fire(new GameStateChangedSignal(GameState.InGame));
+                        _signalBus.Fire(new GameStartedSignal());
                     }
                 },
                 onError: (err, msg) => Debug.LogError(err + msg)

@@ -19,11 +19,13 @@ namespace UI.Game.Presenters
 
         public void Initialize()
         {
+            _view.Show();
             _view.OnDirectionPressed += OnDirectionPressed;
         }
 
         public void Dispose()
         {
+            _view.Hide();
             _view.OnDirectionPressed -= OnDirectionPressed;
         }
 

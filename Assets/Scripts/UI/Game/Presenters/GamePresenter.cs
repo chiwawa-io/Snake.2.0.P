@@ -83,13 +83,13 @@ namespace UI.Game.Presenters
         {
             if (signal.NewState == GameState.MainMenu)
             {
-                _view.ToggleSbUI();
+                _view.SetSbUIActive(false);
             }
         }
 
         private void OnSbStarted(StrategicBettingStartedSignal signal)
         {
-            _view.ToggleSbUI();
+            _view.SetSbUIActive(true);
             _view.UpdateGoal(SnakeStartLength, signal.TargetLength);
             
             _view.ShowBriefing(signal.TargetLength);
